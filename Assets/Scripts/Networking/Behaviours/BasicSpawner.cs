@@ -11,6 +11,8 @@ namespace Networking.Behaviours
 {
     public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
+        private const string GAME_LOBBY = "GAME_LOBBY";
+        
         [SerializeField] private NetworkPrefabRef _playerPrefab;
         [SerializeField] private GameObject _connectionUI;
         
@@ -25,7 +27,6 @@ namespace Networking.Behaviours
         private void Start()
         {
             AvailableSessions = new List<SessionInfo>();
-            TryInitNetworkRunner();
             ConnectToLobby();
         }
 
@@ -33,6 +34,7 @@ namespace Networking.Behaviours
         {
             if (_runner == null)
             {
+                Debug.Log("Creating new Runner");
                 _runner = gameObject.AddComponent<NetworkRunner>();
                 _runner.ProvideInput = true;
             }
@@ -48,25 +50,23 @@ namespace Networking.Behaviours
             LaunchSession(sessionName, GameMode.Client);
         }
         
-        private void ConnectToLobby()
+        private async void ConnectToLobby()
         {
             TryInitNetworkRunner();
-            var res = _runner.JoinSessionLobby(SessionLobby.ClientServer);
-            if(!res.IsCompletedSuccessfully)
+            var res = await _runner.JoinSessionLobby(SessionLobby.ClientServer);
+            if(!res.Ok)
                 Destroy(_runner);
         }
         
         private async void LaunchSession(String sessionName, GameMode mode)
         {
             TryInitNetworkRunner();
-            // Create the NetworkSceneInfo from the current scene
             var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
             var sceneInfo = new NetworkSceneInfo();
             if (scene.IsValid) {
                 sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
             }
-
-            // Start or join (depends on gamemode) a session with a specific name
+            
             var res = await _runner.StartGame(new StartGameArgs()
             {
                 GameMode = mode,
@@ -89,7 +89,7 @@ namespace Networking.Behaviours
 
         public void OnPlayerJoined(Fusion.NetworkRunner runner, PlayerRef player)
         {
-            if(runner.SessionInfo.Name.Equals("Lobby"))
+            if(runner.SessionInfo.Name.Equals(GAME_LOBBY))
             {
                 OnConnectedToLobby?.Invoke();
                 return;
