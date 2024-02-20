@@ -8,7 +8,7 @@ namespace Networking.UI
 {
     public class NetworkUI : MonoBehaviour
     {
-        [SerializeField] private BasicSpawner _networkSpawner;
+        [SerializeField] private NetworkManager _networkSpawner;
         [SerializeField] private GameObject waitPanel;
         
         [FormerlySerializedAs("hostButton")]
@@ -45,7 +45,7 @@ namespace Networking.UI
                     _hostMenuStartButton.interactable = !String.IsNullOrEmpty(str);
             });
 
-            _networkSpawner.OnAvailableSessionsListUpdated += () =>
+            _networkSpawner.OnConnectedToLobby += () =>
             {
                 waitPanel.SetActive(false);
             };
@@ -98,6 +98,9 @@ namespace Networking.UI
             foreach (var session in sessions)
             {
                 var s = session;
+                if(s.PlayerCount >= s.MaxPlayers)
+                    continue;
+                
                 var go = Instantiate(_sessionButtonTemplate.gameObject, _sessionsParent);
                 go.SetActive(true);
                 go.GetComponentInChildren<TMPro.TMP_Text>().text = $"{s.Name} ({s.PlayerCount.ToString()}/{s.MaxPlayers.ToString()})";

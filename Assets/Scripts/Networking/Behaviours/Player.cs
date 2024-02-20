@@ -16,9 +16,9 @@ namespace Networking.Behaviours
         public override void FixedUpdateNetwork()
         {
             base.FixedUpdateNetwork();
-            if (GetInput(out NetworkInputData data))
+            if (GetInput(out PlayerInputData data))
             {
-                _controller.Move(data.direction.normalized*3*Runner.DeltaTime);
+                _controller.Move(data.MoveDirection.normalized*3*Runner.DeltaTime);
             }
         }
     }

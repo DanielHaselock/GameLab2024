@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using Fusion;
 using Fusion.Sockets;
 using Networking.Data;
+using Networking.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Networking.Behaviours
 {
-    public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
+    public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         private const string GAME_LOBBY = "GAME_LOBBY";
         
@@ -23,6 +24,8 @@ namespace Networking.Behaviours
         public System.Action OnConnectedToLobby;
         
         public List<SessionInfo> AvailableSessions { get; private set; }
+
+        private PlayerInputData _playerInput = new PlayerInputData();
         
         private void Start()
         {
@@ -34,7 +37,7 @@ namespace Networking.Behaviours
         {
             if (_runner == null)
             {
-                Debug.Log("Creating new Runner");
+                NetworkLogger.Log("Creating new Runner");
                 _runner = gameObject.AddComponent<NetworkRunner>();
                 _runner.ProvideInput = true;
             }
@@ -53,9 +56,14 @@ namespace Networking.Behaviours
         private async void ConnectToLobby()
         {
             TryInitNetworkRunner();
-            var res = await _runner.JoinSessionLobby(SessionLobby.ClientServer);
+            var res = await _runner.JoinSessionLobby(SessionLobby.ClientServer, GAME_LOBBY);
             if(!res.Ok)
                 Destroy(_runner);
+            else
+            {
+                NetworkLogger.Log("Connected to Lobby!");
+                OnConnectedToLobby?.Invoke();
+            }
         }
         
         private async void LaunchSession(String sessionName, GameMode mode)
@@ -89,19 +97,13 @@ namespace Networking.Behaviours
 
         public void OnPlayerJoined(Fusion.NetworkRunner runner, PlayerRef player)
         {
-            if(runner.SessionInfo.Name.Equals(GAME_LOBBY))
-            {
-                OnConnectedToLobby?.Invoke();
-                return;
-            }
-            
             _connectionUI.gameObject.SetActive(false);
             if (!runner.IsServer)
                 return;
 
             if (runner.SessionInfo.PlayerCount >= runner.SessionInfo.MaxPlayers)
             {
-                Debug.Log("All Players Joined!!");
+                NetworkLogger.Log("All Players Joined!!");
             }
             
             var pos = new Vector3(player.RawEncoded % runner.Config.Simulation.PlayerCount * 3, 1, 0);
@@ -120,10 +122,8 @@ namespace Networking.Behaviours
 
         public void OnInput(Fusion.NetworkRunner runner, NetworkInput input)
         {
-            var data = new NetworkInputData();
-            data.direction += new Vector3(Input.GetAxis("Horizontal"),0,0);
-            data.direction += new Vector3(0,0,Input.GetAxis("Vertical"));
-            input.Set(data);
+            _playerInput.Poll();
+            input.Set(_playerInput);
         }
         
         
@@ -131,7 +131,9 @@ namespace Networking.Behaviours
         public void OnShutdown(Fusion.NetworkRunner runner, ShutdownReason shutdownReason) { }
 
         public void OnConnectedToServer(Fusion.NetworkRunner runner)
-        { }
+        {
+
+        }
 
         public void OnDisconnectedFromServer(Fusion.NetworkRunner runner, NetDisconnectReason reason) { }
         public void OnConnectRequest(Fusion.NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
@@ -140,7 +142,6 @@ namespace Networking.Behaviours
 
         public void OnSessionListUpdated(Fusion.NetworkRunner runner, List<SessionInfo> sessionList)
         {
-            Debug.Log($"sessions: {sessionList}");
             AvailableSessions = sessionList;
             OnAvailableSessionsListUpdated?.Invoke();
         }
