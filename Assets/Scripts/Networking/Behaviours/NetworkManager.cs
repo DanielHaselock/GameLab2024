@@ -43,6 +43,8 @@ namespace Networking.Behaviours
             ConnectToLobby();
         }
 
+        public List<PlayerRef> ConnectedPlayers => _connectedPlayers;
+        
         private void TryInitNetworkRunner()
         {
             if (_runner == null)
@@ -142,6 +144,7 @@ namespace Networking.Behaviours
 
         public void OnPlayerLeft(Fusion.NetworkRunner runner, PlayerRef player)
         {
+            _connectedPlayers.Remove(player);
             if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
             {
                 runner.Despawn(networkObject);
