@@ -8,7 +8,7 @@ namespace Networking.UI
 {
     public class NetworkUI : MonoBehaviour
     {
-        [SerializeField] private NetworkManager _networkSpawner;
+        
         [SerializeField] private GameObject waitPanel;
         
         [FormerlySerializedAs("hostButton")]
@@ -30,22 +30,24 @@ namespace Networking.UI
         [FormerlySerializedAs("sessionsParent")] [SerializeField] private Transform _sessionsParent;
         [FormerlySerializedAs("sessionButtonTemplate")] [SerializeField] private Transform _sessionButtonTemplate;
 
+        
+        private NetworkManager _networkManager;
 
-        private void Start()
+        public void Initialise(NetworkManager manager)
         {
+            _networkManager = manager;
             _hostButton.onClick.AddListener(OnClickMainMenuHost);
             _joinButton.onClick.AddListener(OnClickMainMenuJoin);
-            
             _hostMenuCloseButton.onClick.AddListener(OnClickHostMenuClose);
             _hostMenuStartButton.onClick.AddListener(OnClickHostMenuStart);
-            
             _joinMenuCloseButton.onClick.AddListener(OnClickJoinMenuClose);
+            
             _hostSessionNameField.onValueChanged.AddListener((string str) =>
             {
                     _hostMenuStartButton.interactable = !String.IsNullOrEmpty(str);
             });
-
-            _networkSpawner.OnConnectedToLobby += () =>
+            
+            _networkManager.OnConnectedToLobby += () =>
             {
                 waitPanel.SetActive(false);
             };
@@ -68,25 +70,25 @@ namespace Networking.UI
             if (String.IsNullOrEmpty(_hostSessionNameField.text))
                 return;
             
-            _networkSpawner.HostSession(_hostSessionNameField.text);
+            _networkManager.HostSession(_hostSessionNameField.text);
         }
         
         private void OnClickMainMenuJoin()
         {
-            _networkSpawner.OnAvailableSessionsListUpdated += PopulateSessions;
+            _networkManager.OnAvailableSessionsListUpdated += PopulateSessions;
             _joinMenu.gameObject.SetActive(true);
             PopulateSessions();
         }
         
         private void OnClickJoinMenuClose()
         {
-            _networkSpawner.OnAvailableSessionsListUpdated -= PopulateSessions;
+            _networkManager.OnAvailableSessionsListUpdated -= PopulateSessions;
             _joinMenu.gameObject.SetActive(false);
         }
         
         private void PopulateSessions()
         {
-            var sessions = _networkSpawner.AvailableSessions;
+            var sessions = _networkManager.AvailableSessions;
             foreach(Transform child in _sessionsParent)
             {
                 if (child == _sessionButtonTemplate)
@@ -106,7 +108,7 @@ namespace Networking.UI
                 go.GetComponentInChildren<TMPro.TMP_Text>().text = $"{s.Name} ({s.PlayerCount.ToString()}/{s.MaxPlayers.ToString()})";
                 go.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    _networkSpawner.JoinSession(s.Name);
+                    _networkManager.JoinSession(s.Name);
                 });
             }
         }

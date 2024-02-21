@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
 using Networking.Data;
+using Networking.UI;
 using Networking.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,22 +15,30 @@ namespace Networking.Behaviours
     public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         private const string GAME_LOBBY = "GAME_LOBBY";
-        
-        [SerializeField] private NetworkPrefabRef _playerPrefab;
-        [SerializeField] private GameObject _connectionUI;
-        
+        private const string NETWORK_OBJ_SO_NAME = "NetworkProperties";
+        private const string NETWORK_UI = "NetworkCanvas";
+        private NetworkProperties _networkPropertiesRef;
         private NetworkRunner _runner;
         private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
+        private PlayerInputData _playerInput = new PlayerInputData();
 
-        public System.Action OnAvailableSessionsListUpdated;
-        public System.Action OnConnectedToLobby;
+        private List<PlayerRef> _connectedPlayers;
         
+        private NetworkUI _connectionUI;
+        
+        public Action OnAvailableSessionsListUpdated;
+        public Action OnConnectedToLobby;
         public List<SessionInfo> AvailableSessions { get; private set; }
 
-        private PlayerInputData _playerInput = new PlayerInputData();
+        private bool _gameStarted = false;
         
         private void Start()
         {
+            _connectedPlayers = new List<PlayerRef>();
+            _networkPropertiesRef = Resources.Load<NetworkProperties>(NETWORK_OBJ_SO_NAME);
+            _connectionUI = Instantiate(Resources.Load<GameObject>(NETWORK_UI)).GetComponent<NetworkUI>();
+            _connectionUI.Initialise(this);
+            
             AvailableSessions = new List<SessionInfo>();
             ConnectToLobby();
         }
@@ -45,11 +55,13 @@ namespace Networking.Behaviours
 
         public void HostSession(String sessionName)
         {
+            _connectionUI.gameObject.SetActive(false);
             LaunchSession(sessionName, GameMode.Host);
         }
         
         public void JoinSession(String sessionName)
         {
+            _connectionUI.gameObject.SetActive(false);
             LaunchSession(sessionName, GameMode.Client);
         }
         
@@ -69,17 +81,18 @@ namespace Networking.Behaviours
         private async void LaunchSession(String sessionName, GameMode mode)
         {
             TryInitNetworkRunner();
-            var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
+            var scene = SceneRef.FromIndex(0);
             var sceneInfo = new NetworkSceneInfo();
+            
             if (scene.IsValid) {
                 sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
             }
-            
+
             var res = await _runner.StartGame(new StartGameArgs()
             {
                 GameMode = mode,
                 SessionName = sessionName,
-                Scene = scene,
+                Scene = sceneInfo,
                 SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
                 PlayerCount = 2
             });
@@ -92,23 +105,39 @@ namespace Networking.Behaviours
         
         #region Callbacks
         
+        
         public void OnObjectExitAOI(Fusion.NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
         public void OnObjectEnterAOI(Fusion.NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
-
-        public void OnPlayerJoined(Fusion.NetworkRunner runner, PlayerRef player)
+        
+        public async void OnPlayerJoined(Fusion.NetworkRunner runner, PlayerRef player)
         {
-            _connectionUI.gameObject.SetActive(false);
+            
             if (!runner.IsServer)
                 return;
 
-            if (runner.SessionInfo.PlayerCount >= runner.SessionInfo.MaxPlayers)
+            NetworkLogger.Log($"People in Session: {runner.SessionInfo.PlayerCount} / {runner.SessionInfo.MaxPlayers}");
+            _connectedPlayers.Add(player);
+            if (runner.SessionInfo.PlayerCount < runner.SessionInfo.MaxPlayers)
+                return;
+            
+            if (!_gameStarted)
             {
-                NetworkLogger.Log("All Players Joined!!");
+                NetworkLogger.Log("All Players Joined!!, changing the scene to game");
+                var scene = runner.LoadScene(SceneRef.FromIndex(_networkPropertiesRef.GameSceneIndex));
+                while (!scene.IsDone)
+                {
+                    await Task.Yield();
+                }
+                _gameStarted = true;
+            }
+
+            foreach (var cp in _connectedPlayers)
+            {
+                var playerRef = runner.Spawn(_networkPropertiesRef.PlayerPrefab,
+                    new Vector3(_connectedPlayers.IndexOf(cp) * 10, 0, 0), Quaternion.identity, cp); 
             }
             
-            var pos = new Vector3(player.RawEncoded % runner.Config.Simulation.PlayerCount * 3, 1, 0);
-            var playerInstance = runner.Spawn(_playerPrefab, pos, Quaternion.identity, player);
-            _spawnedCharacters.Add(player, playerInstance);
+            // wait for scene to load.
         }
 
         public void OnPlayerLeft(Fusion.NetworkRunner runner, PlayerRef player)
