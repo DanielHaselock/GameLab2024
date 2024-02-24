@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Network Test/Network Test 1.unity
+    guid: 8c51607053e314a958ac575c4ac0b7bf
+  - enabled: 1
+    path: Assets/Scenes/Network Test/NetworkGame.unity
+    guid: bce0b6db8dd0149b193e898890537180
   m_configObjects: {}
