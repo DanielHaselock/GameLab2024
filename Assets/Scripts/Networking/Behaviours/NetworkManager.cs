@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
@@ -11,197 +9,194 @@ using Networking.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Networking.Behaviours
+public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
-    public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
+    private const string GAME_LOBBY = "GAME_LOBBY";
+    private const string NETWORK_OBJ_SO_NAME = "NetworkProperties";
+    private const string NETWORK_UI = "NetworkCanvas";
+    private NetworkProperties _networkPropertiesRef;
+    private NetworkRunner _runner;
+    private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
+    private PlayerInputData _playerInput = new PlayerInputData();
+
+    private List<PlayerRef> _connectedPlayers;
+        
+    private NetworkUI _connectionUI;
+        
+    public Action OnAvailableSessionsListUpdated;
+    public Action OnConnectedToLobby;
+    public List<SessionInfo> AvailableSessions { get; private set; }
+
+    private bool _gameStarted = false;
+        
+    private void Start()
     {
-        private const string GAME_LOBBY = "GAME_LOBBY";
-        private const string NETWORK_OBJ_SO_NAME = "NetworkProperties";
-        private const string NETWORK_UI = "NetworkCanvas";
-        private NetworkProperties _networkPropertiesRef;
-        private NetworkRunner _runner;
-        private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
-        private PlayerInputData _playerInput = new PlayerInputData();
-
-        private List<PlayerRef> _connectedPlayers;
-        
-        private NetworkUI _connectionUI;
-        
-        public Action OnAvailableSessionsListUpdated;
-        public Action OnConnectedToLobby;
-        public List<SessionInfo> AvailableSessions { get; private set; }
-
-        private bool _gameStarted = false;
-        
-        private void Start()
-        {
-            _connectedPlayers = new List<PlayerRef>();
-            _networkPropertiesRef = Resources.Load<NetworkProperties>(NETWORK_OBJ_SO_NAME);
-            _connectionUI = Instantiate(Resources.Load<GameObject>(NETWORK_UI)).GetComponent<NetworkUI>();
-            _connectionUI.Initialise(this);
+        _connectedPlayers = new List<PlayerRef>();
+        _networkPropertiesRef = Resources.Load<NetworkProperties>(NETWORK_OBJ_SO_NAME);
+        _connectionUI = Instantiate(Resources.Load<GameObject>(NETWORK_UI)).GetComponent<NetworkUI>();
+        _connectionUI.Initialise(this);
             
-            AvailableSessions = new List<SessionInfo>();
-            ConnectToLobby();
-        }
+        AvailableSessions = new List<SessionInfo>();
+        ConnectToLobby();
+    }
 
-        public List<PlayerRef> ConnectedPlayers => _connectedPlayers;
+    public List<PlayerRef> ConnectedPlayers => _connectedPlayers;
         
-        private void TryInitNetworkRunner()
+    private void TryInitNetworkRunner()
+    {
+        if (_runner == null)
         {
-            if (_runner == null)
-            {
-                NetworkLogger.Log("Creating new Runner");
-                _runner = gameObject.AddComponent<NetworkRunner>();
-                _runner.ProvideInput = true;
-            }
+            NetworkLogger.Log("Creating new Runner");
+            _runner = gameObject.AddComponent<NetworkRunner>();
+            _runner.ProvideInput = true;
         }
+    }
 
-        public void HostSession(String sessionName)
-        {
-            _connectionUI.gameObject.SetActive(false);
-            LaunchSession(sessionName, GameMode.Host);
-        }
+    public void HostSession(String sessionName)
+    {
+        _connectionUI.gameObject.SetActive(false);
+        LaunchSession(sessionName, GameMode.Host);
+    }
         
-        public void JoinSession(String sessionName)
-        {
-            _connectionUI.gameObject.SetActive(false);
-            LaunchSession(sessionName, GameMode.Client);
-        }
+    public void JoinSession(String sessionName)
+    {
+        _connectionUI.gameObject.SetActive(false);
+        LaunchSession(sessionName, GameMode.Client);
+    }
         
-        private async void ConnectToLobby()
+    private async void ConnectToLobby()
+    {
+        TryInitNetworkRunner();
+        var res = await _runner.JoinSessionLobby(SessionLobby.ClientServer, GAME_LOBBY);
+        if(!res.Ok)
+            Destroy(_runner);
+        else
         {
-            TryInitNetworkRunner();
-            var res = await _runner.JoinSessionLobby(SessionLobby.ClientServer, GAME_LOBBY);
-            if(!res.Ok)
-                Destroy(_runner);
-            else
-            {
-                NetworkLogger.Log("Connected to Lobby!");
-                OnConnectedToLobby?.Invoke();
-            }
+            NetworkLogger.Log("Connected to Lobby!");
+            OnConnectedToLobby?.Invoke();
         }
+    }
         
-        private async void LaunchSession(String sessionName, GameMode mode)
-        {
-            TryInitNetworkRunner();
-            var scene = SceneRef.FromIndex(0);
-            var sceneInfo = new NetworkSceneInfo();
+    private async void LaunchSession(String sessionName, GameMode mode)
+    {
+        TryInitNetworkRunner();
+        var scene = SceneRef.FromIndex(0);
+        var sceneInfo = new NetworkSceneInfo();
             
-            if (scene.IsValid) {
-                sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
-            }
-
-            var res = await _runner.StartGame(new StartGameArgs()
-            {
-                GameMode = mode,
-                SessionName = sessionName,
-                Scene = sceneInfo,
-                SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
-                PlayerCount = 2
-            });
-
-            if (!res.Ok)
-            {
-                Destroy(_runner);
-            }
+        if (scene.IsValid) {
+            sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
         }
-        
-        #region Callbacks
-        
-        
-        public void OnObjectExitAOI(Fusion.NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
-        public void OnObjectEnterAOI(Fusion.NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
-        
-        public async void OnPlayerJoined(Fusion.NetworkRunner runner, PlayerRef player)
+
+        var res = await _runner.StartGame(new StartGameArgs()
         {
+            GameMode = mode,
+            SessionName = sessionName,
+            Scene = sceneInfo,
+            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
+            PlayerCount = 2
+        });
+
+        if (!res.Ok)
+        {
+            Destroy(_runner);
+        }
+    }
+        
+    #region Callbacks
+        
+        
+    public void OnObjectExitAOI(Fusion.NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
+    public void OnObjectEnterAOI(Fusion.NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
+        
+    public async void OnPlayerJoined(Fusion.NetworkRunner runner, PlayerRef player)
+    {
             
-            if (!runner.IsServer)
-                return;
+        if (!runner.IsServer)
+            return;
 
-            NetworkLogger.Log($"People in Session: {runner.SessionInfo.PlayerCount} / {runner.SessionInfo.MaxPlayers}");
-            _connectedPlayers.Add(player);
-            if (runner.SessionInfo.PlayerCount < runner.SessionInfo.MaxPlayers)
-                return;
+        NetworkLogger.Log($"People in Session: {runner.SessionInfo.PlayerCount} / {runner.SessionInfo.MaxPlayers}");
+        _connectedPlayers.Add(player);
+        if (runner.SessionInfo.PlayerCount < runner.SessionInfo.MaxPlayers)
+            return;
 
-            if (!_gameStarted)
+        if (!_gameStarted)
+        {
+            NetworkLogger.Log("All Players Joined!!, changing the scene to game");
+            var scene = runner.LoadScene(SceneRef.FromIndex(_networkPropertiesRef.GameSceneIndex));
+            while (!scene.IsDone)
             {
-                NetworkLogger.Log("All Players Joined!!, changing the scene to game");
-                var scene = runner.LoadScene(SceneRef.FromIndex(_networkPropertiesRef.GameSceneIndex));
-                while (!scene.IsDone)
-                {
-                    await Task.Yield();
-                }
-                _gameStarted = true;
+                await Task.Yield();
             }
+            _gameStarted = true;
+        }
 
-            foreach (var playerRef in _connectedPlayers)
-            {
-                var playerNetObj = _runner.Spawn(_networkPropertiesRef.PlayerPrefab,
-                    new Vector3(/*_connectedPlayers.IndexOf(cp) * 10*/ 0, 2, 0), Quaternion.identity, playerRef);
+        foreach (var playerRef in _connectedPlayers)
+        {
+            var playerNetObj = _runner.Spawn(_networkPropertiesRef.PlayerPrefab,
+                new Vector3(/*_connectedPlayers.IndexOf(cp) * 10*/ 0, 2, 0), Quaternion.identity, playerRef);
                 
-                _runner.SetPlayerObject(playerRef, playerNetObj);
+            _runner.SetPlayerObject(playerRef, playerNetObj);
 
-                if(!_spawnedCharacters.ContainsKey(playerRef))
-                {
-                    _spawnedCharacters.Add(playerRef, playerNetObj);
-                }
-                
-            } 
-            // wait for scene to load.
-        }
-
-        public void OnPlayerLeft(Fusion.NetworkRunner runner, PlayerRef player)
-        {
-            _connectedPlayers.Remove(player);
-            if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
+            if(!_spawnedCharacters.ContainsKey(playerRef))
             {
-                runner.Despawn(networkObject);
-                _spawnedCharacters.Remove(player);
+                _spawnedCharacters.Add(playerRef, playerNetObj);
             }
-        }
+                
+        } 
+        // wait for scene to load.
+    }
 
-        public void OnInput(Fusion.NetworkRunner runner, NetworkInput input)
+    public void OnPlayerLeft(Fusion.NetworkRunner runner, PlayerRef player)
+    {
+        _connectedPlayers.Remove(player);
+        if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
         {
-            _playerInput.Poll();
-            input.Set(_playerInput);
+            runner.Despawn(networkObject);
+            _spawnedCharacters.Remove(player);
         }
+    }
+
+    public void OnInput(Fusion.NetworkRunner runner, NetworkInput input)
+    {
+        _playerInput.Poll();
+        input.Set(_playerInput);
+    }
         
         
-        public void OnInputMissing(Fusion.NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-        public void OnShutdown(Fusion.NetworkRunner runner, ShutdownReason shutdownReason) { }
+    public void OnInputMissing(Fusion.NetworkRunner runner, PlayerRef player, NetworkInput input) { }
+    public void OnShutdown(Fusion.NetworkRunner runner, ShutdownReason shutdownReason) { }
 
-        public void OnConnectedToServer(Fusion.NetworkRunner runner)
-        {
+    public void OnConnectedToServer(Fusion.NetworkRunner runner)
+    {
 
-        }
+    }
 
-        public void OnDisconnectedFromServer(Fusion.NetworkRunner runner, NetDisconnectReason reason) { }
-        public void OnConnectRequest(Fusion.NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
-        public void OnConnectFailed(Fusion.NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
-        public void OnUserSimulationMessage(Fusion.NetworkRunner runner, SimulationMessagePtr message) { }
+    public void OnDisconnectedFromServer(Fusion.NetworkRunner runner, NetDisconnectReason reason) { }
+    public void OnConnectRequest(Fusion.NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
+    public void OnConnectFailed(Fusion.NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
+    public void OnUserSimulationMessage(Fusion.NetworkRunner runner, SimulationMessagePtr message) { }
 
-        public void OnSessionListUpdated(Fusion.NetworkRunner runner, List<SessionInfo> sessionList)
-        {
-            AvailableSessions = sessionList;
-            OnAvailableSessionsListUpdated?.Invoke();
-        }
+    public void OnSessionListUpdated(Fusion.NetworkRunner runner, List<SessionInfo> sessionList)
+    {
+        AvailableSessions = sessionList;
+        OnAvailableSessionsListUpdated?.Invoke();
+    }
         
-        public void OnCustomAuthenticationResponse(Fusion.NetworkRunner runner, Dictionary<string, object> data) { }
-        public void OnHostMigration(Fusion.NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
-        public void OnReliableDataReceived(Fusion.NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
-        public void OnReliableDataProgress(Fusion.NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
-        public void OnSceneLoadDone(Fusion.NetworkRunner runner) { }
-        public void OnSceneLoadStart(Fusion.NetworkRunner runner){ }
-        #endregion
+    public void OnCustomAuthenticationResponse(Fusion.NetworkRunner runner, Dictionary<string, object> data) { }
+    public void OnHostMigration(Fusion.NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
+    public void OnReliableDataReceived(Fusion.NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
+    public void OnReliableDataProgress(Fusion.NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
+    public void OnSceneLoadDone(Fusion.NetworkRunner runner) { }
+    public void OnSceneLoadStart(Fusion.NetworkRunner runner){ }
+    #endregion
 
-        public void CheckMainPlayer()
-        {
+    public void CheckMainPlayer()
+    {
 
-            Debug.Log("LOCAL PLAYER " + _runner.LocalPlayer.ToString());
+        Debug.Log("LOCAL PLAYER " + _runner.LocalPlayer.ToString());
 
-            Debug.Log("Success!!!");
-            _spawnedCharacters.TryGetValue(_runner.LocalPlayer, out NetworkObject obj);
+        Debug.Log("Success!!!");
+        _spawnedCharacters.TryGetValue(_runner.LocalPlayer, out NetworkObject obj);
             
-        }
     }
 }
