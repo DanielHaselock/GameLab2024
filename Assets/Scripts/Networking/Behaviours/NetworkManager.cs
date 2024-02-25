@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
@@ -121,7 +122,7 @@ namespace Networking.Behaviours
             _connectedPlayers.Add(player);
             //if (runner.SessionInfo.PlayerCount < runner.SessionInfo.MaxPlayers)
             //    return;
-            
+
             if (!_gameStarted)
             {
                 NetworkLogger.Log("All Players Joined!!, changing the scene to game");
@@ -136,9 +137,14 @@ namespace Networking.Behaviours
             foreach (var cp in _connectedPlayers)
             {
                 var playerRef = runner.Spawn(_networkPropertiesRef.PlayerPrefab,
-                    new Vector3(/*_connectedPlayers.IndexOf(cp) * 10*/ 0, 2, 0), Quaternion.identity, cp); 
-            }
-            
+                    new Vector3(/*_connectedPlayers.IndexOf(cp) * 10*/ 0, 2, 0), Quaternion.identity, cp);
+
+                if(!_spawnedCharacters.ContainsKey(cp))
+                {
+                    _spawnedCharacters.Add(cp, playerRef);
+                }
+                
+            } 
             // wait for scene to load.
         }
 
@@ -185,5 +191,15 @@ namespace Networking.Behaviours
         public void OnSceneLoadDone(Fusion.NetworkRunner runner) { }
         public void OnSceneLoadStart(Fusion.NetworkRunner runner){ }
         #endregion
+
+        public void CheckMainPlayer()
+        {
+
+            Debug.Log("LOCAL PLAYER " + _runner.LocalPlayer.ToString());
+
+            Debug.Log("Success!!!");
+            _spawnedCharacters.TryGetValue(_runner.LocalPlayer, out NetworkObject obj);
+            
+        }
     }
 }

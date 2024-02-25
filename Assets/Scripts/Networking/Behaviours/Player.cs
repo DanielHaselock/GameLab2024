@@ -1,6 +1,10 @@
 using System;
+using Cinemachine;
 using Fusion;
 using Networking.Data;
+using Networking.Utils;
+using UnityEngine;
+
 
 namespace Networking.Behaviours
 {
@@ -8,16 +12,29 @@ namespace Networking.Behaviours
     {
         private NetworkCharacterController _controller;
 
+
         private void Awake()
         {
             _controller = GetComponent<NetworkCharacterController>();
         }
 
+
+        public override void Spawned()
+        {
+            NetworkObject player = Runner.GetPlayerObject(Runner.LocalPlayer);
+            if (player.GetComponent<Player>() == this)
+            {
+                Debug.Log("Working");
+                GetComponent<SetCamera>().SetCameraParams(gameObject);
+            }
+        }
         public override void FixedUpdateNetwork()
         {
             base.FixedUpdateNetwork();
+
             if (GetInput(out PlayerInputData data))
             {
+                data.MoveDirection.Normalize();
                 _controller.Move(3 * data.MoveDirection * Runner.DeltaTime);
             }
         }
