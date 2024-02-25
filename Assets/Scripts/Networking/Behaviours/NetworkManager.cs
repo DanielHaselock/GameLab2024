@@ -9,6 +9,7 @@ using Networking.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+namespace Networking.Behaviours {
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
     private const string GAME_LOBBY = "GAME_LOBBY";
@@ -20,28 +21,40 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     private PlayerInputData _playerInput = new PlayerInputData();
 
     private List<PlayerRef> _connectedPlayers;
-        
+
     private NetworkUI _connectionUI;
-        
+
     public Action OnAvailableSessionsListUpdated;
     public Action OnConnectedToLobby;
     public List<SessionInfo> AvailableSessions { get; private set; }
 
     private bool _gameStarted = false;
-        
+
+    private static NetworkManager _instance;
+    public static NetworkManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = FindObjectOfType<NetworkManager>();
+
+            return _instance;
+        }
+    }
+    
     private void Start()
     {
         _connectedPlayers = new List<PlayerRef>();
         _networkPropertiesRef = Resources.Load<NetworkProperties>(NETWORK_OBJ_SO_NAME);
         _connectionUI = Instantiate(Resources.Load<GameObject>(NETWORK_UI)).GetComponent<NetworkUI>();
         _connectionUI.Initialise(this);
-            
+
         AvailableSessions = new List<SessionInfo>();
         ConnectToLobby();
     }
 
     public List<PlayerRef> ConnectedPlayers => _connectedPlayers;
-        
+
     private void TryInitNetworkRunner()
     {
         if (_runner == null)
@@ -57,18 +70,18 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         _connectionUI.gameObject.SetActive(false);
         LaunchSession(sessionName, GameMode.Host);
     }
-        
+
     public void JoinSession(String sessionName)
     {
         _connectionUI.gameObject.SetActive(false);
         LaunchSession(sessionName, GameMode.Client);
     }
-        
+
     private async void ConnectToLobby()
     {
         TryInitNetworkRunner();
         var res = await _runner.JoinSessionLobby(SessionLobby.ClientServer, GAME_LOBBY);
-        if(!res.Ok)
+        if (!res.Ok)
             Destroy(_runner);
         else
         {
@@ -76,14 +89,15 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             OnConnectedToLobby?.Invoke();
         }
     }
-        
+
     private async void LaunchSession(String sessionName, GameMode mode)
     {
         TryInitNetworkRunner();
         var scene = SceneRef.FromIndex(0);
         var sceneInfo = new NetworkSceneInfo();
-            
-        if (scene.IsValid) {
+
+        if (scene.IsValid)
+        {
             sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
         }
 
@@ -101,16 +115,21 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             Destroy(_runner);
         }
     }
-        
+
     #region Callbacks
-        
-        
-    public void OnObjectExitAOI(Fusion.NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
-    public void OnObjectEnterAOI(Fusion.NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
-        
+
+
+    public void OnObjectExitAOI(Fusion.NetworkRunner runner, NetworkObject obj, PlayerRef player)
+    {
+    }
+
+    public void OnObjectEnterAOI(Fusion.NetworkRunner runner, NetworkObject obj, PlayerRef player)
+    {
+    }
+
     public async void OnPlayerJoined(Fusion.NetworkRunner runner, PlayerRef player)
     {
-            
+
         if (!runner.IsServer)
             return;
 
@@ -127,22 +146,23 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             {
                 await Task.Yield();
             }
+
             _gameStarted = true;
         }
 
         foreach (var playerRef in _connectedPlayers)
         {
             var playerNetObj = _runner.Spawn(_networkPropertiesRef.PlayerPrefab,
-                new Vector3(/*_connectedPlayers.IndexOf(cp) * 10*/ 0, 2, 0), Quaternion.identity, playerRef);
-                
+                new Vector3( /*_connectedPlayers.IndexOf(cp) * 10*/ 0, 2, 0), Quaternion.identity, playerRef);
+
             _runner.SetPlayerObject(playerRef, playerNetObj);
 
-            if(!_spawnedCharacters.ContainsKey(playerRef))
+            if (!_spawnedCharacters.ContainsKey(playerRef))
             {
                 _spawnedCharacters.Add(playerRef, playerNetObj);
             }
-                
-        } 
+
+        }
         // wait for scene to load.
     }
 
@@ -161,33 +181,69 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         _playerInput.Poll();
         input.Set(_playerInput);
     }
-        
-        
-    public void OnInputMissing(Fusion.NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-    public void OnShutdown(Fusion.NetworkRunner runner, ShutdownReason shutdownReason) { }
+
+
+    public void OnInputMissing(Fusion.NetworkRunner runner, PlayerRef player, NetworkInput input)
+    {
+    }
+
+    public void OnShutdown(Fusion.NetworkRunner runner, ShutdownReason shutdownReason)
+    {
+    }
 
     public void OnConnectedToServer(Fusion.NetworkRunner runner)
     {
 
     }
 
-    public void OnDisconnectedFromServer(Fusion.NetworkRunner runner, NetDisconnectReason reason) { }
-    public void OnConnectRequest(Fusion.NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
-    public void OnConnectFailed(Fusion.NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
-    public void OnUserSimulationMessage(Fusion.NetworkRunner runner, SimulationMessagePtr message) { }
+    public void OnDisconnectedFromServer(Fusion.NetworkRunner runner, NetDisconnectReason reason)
+    {
+    }
+
+    public void OnConnectRequest(Fusion.NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request,
+        byte[] token)
+    {
+    }
+
+    public void OnConnectFailed(Fusion.NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
+    {
+    }
+
+    public void OnUserSimulationMessage(Fusion.NetworkRunner runner, SimulationMessagePtr message)
+    {
+    }
 
     public void OnSessionListUpdated(Fusion.NetworkRunner runner, List<SessionInfo> sessionList)
     {
         AvailableSessions = sessionList;
         OnAvailableSessionsListUpdated?.Invoke();
     }
-        
-    public void OnCustomAuthenticationResponse(Fusion.NetworkRunner runner, Dictionary<string, object> data) { }
-    public void OnHostMigration(Fusion.NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
-    public void OnReliableDataReceived(Fusion.NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
-    public void OnReliableDataProgress(Fusion.NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
-    public void OnSceneLoadDone(Fusion.NetworkRunner runner) { }
-    public void OnSceneLoadStart(Fusion.NetworkRunner runner){ }
+
+    public void OnCustomAuthenticationResponse(Fusion.NetworkRunner runner, Dictionary<string, object> data)
+    {
+    }
+
+    public void OnHostMigration(Fusion.NetworkRunner runner, HostMigrationToken hostMigrationToken)
+    {
+    }
+
+    public void OnReliableDataReceived(Fusion.NetworkRunner runner, PlayerRef player, ReliableKey key,
+        ArraySegment<byte> data)
+    {
+    }
+
+    public void OnReliableDataProgress(Fusion.NetworkRunner runner, PlayerRef player, ReliableKey key, float progress)
+    {
+    }
+
+    public void OnSceneLoadDone(Fusion.NetworkRunner runner)
+    {
+    }
+
+    public void OnSceneLoadStart(Fusion.NetworkRunner runner)
+    {
+    }
+
     #endregion
 
     public void CheckMainPlayer()
@@ -197,6 +253,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
         Debug.Log("Success!!!");
         _spawnedCharacters.TryGetValue(_runner.LocalPlayer, out NetworkObject obj);
-            
+
     }
+}
 }
