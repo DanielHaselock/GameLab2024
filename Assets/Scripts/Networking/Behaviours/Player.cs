@@ -18,7 +18,7 @@ namespace Networking.Behaviours
             base.FixedUpdateNetwork();
             if (GetInput(out PlayerInputData data))
             {
-                _controller.Move(data.MoveDirection.normalized*3*Runner.DeltaTime);
+                _controller.Move(3 * data.MoveDirection * Runner.DeltaTime);
             }
         }
     }

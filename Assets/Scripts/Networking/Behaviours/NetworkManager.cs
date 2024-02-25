@@ -119,8 +119,8 @@ namespace Networking.Behaviours
 
             NetworkLogger.Log($"People in Session: {runner.SessionInfo.PlayerCount} / {runner.SessionInfo.MaxPlayers}");
             _connectedPlayers.Add(player);
-            if (runner.SessionInfo.PlayerCount < runner.SessionInfo.MaxPlayers)
-                return;
+            //if (runner.SessionInfo.PlayerCount < runner.SessionInfo.MaxPlayers)
+            //    return;
             
             if (!_gameStarted)
             {
@@ -136,7 +136,7 @@ namespace Networking.Behaviours
             foreach (var cp in _connectedPlayers)
             {
                 var playerRef = runner.Spawn(_networkPropertiesRef.PlayerPrefab,
-                    new Vector3(_connectedPlayers.IndexOf(cp) * 10, 0, 0), Quaternion.identity, cp); 
+                    new Vector3(/*_connectedPlayers.IndexOf(cp) * 10*/ 0, 2, 0), Quaternion.identity, cp); 
             }
             
             // wait for scene to load.
