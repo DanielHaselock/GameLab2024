@@ -11,7 +11,7 @@ namespace Networking.Behaviours
     public class Player : NetworkBehaviour
     {
         private NetworkCharacterController _controller;
-
+        public bool HasInputAuthority { get; private set; }
 
         private void Awake()
         {
@@ -21,9 +21,10 @@ namespace Networking.Behaviours
 
         public override void Spawned()
         {
-            NetworkObject player = Runner.GetPlayerObject(Runner.LocalPlayer);
-            if (player.GetComponent<Player>() == this)
+            var no = GetComponent<NetworkObject>();
+            if (no.InputAuthority == Runner.LocalPlayer)
             {
+                HasInputAuthority = true;
                 Debug.Log("Working");
                 GetComponent<SetCamera>().SetCameraParams(gameObject);
             }
