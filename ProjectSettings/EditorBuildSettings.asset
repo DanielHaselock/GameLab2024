@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Network Test/NetworkGame.unity
     guid: bce0b6db8dd0149b193e898890537180
+  - enabled: 1
+    path: Assets/Scenes/TestSceneDaniel.unity
+    guid: 2aa639bbc68eecf499d09efb055b23d4
   m_configObjects: {}
