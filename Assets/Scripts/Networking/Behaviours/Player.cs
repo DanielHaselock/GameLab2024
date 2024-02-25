@@ -1,25 +1,37 @@
 using System;
 using Fusion;
 using Networking.Data;
+using UnityEngine;
 
-namespace Networking.Behaviours
+public class Player : NetworkBehaviour
 {
-    public class Player : NetworkBehaviour
+    private NetworkCharacterController _controller;
+    public bool HasInputAuthority { get; private set; }
+
+    private void Awake()
     {
-        private NetworkCharacterController _controller;
+        _controller = GetComponent<NetworkCharacterController>();
+    }
 
-        private void Awake()
+
+    public override void Spawned()
+    {
+        var no = GetComponent<NetworkObject>();
+        if (no.InputAuthority == Runner.LocalPlayer)
         {
-            _controller = GetComponent<NetworkCharacterController>();
+            HasInputAuthority = true;
+            Debug.Log("Working");
+            GetComponent<SetCamera>().SetCameraParams(gameObject);
         }
+    }
+    public override void FixedUpdateNetwork()
+    {
+        base.FixedUpdateNetwork();
 
-        public override void FixedUpdateNetwork()
+        if (GetInput(out PlayerInputData data))
         {
-            base.FixedUpdateNetwork();
-            if (GetInput(out PlayerInputData data))
-            {
-                _controller.Move(data.MoveDirection.normalized*3*Runner.DeltaTime);
-            }
+            data.MoveDirection.Normalize();
+            _controller.Move(3 * data.MoveDirection * Runner.DeltaTime);
         }
     }
 }
