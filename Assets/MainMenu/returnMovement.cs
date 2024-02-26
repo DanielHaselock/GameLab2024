@@ -14,14 +14,12 @@ public class returnMovement : MonoBehaviour
     public GameObject door;
     public GameObject startButton;
     private Transform targetPoint;
-    private bool doorOpened;
     private Transform startingPoint;
 
     void Start()
     {
         returning = false;
         targetPoint = pointB;
-        doorOpened = false;
     }
 
     void Update()

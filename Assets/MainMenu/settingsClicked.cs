@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class creditsClicked : MonoBehaviour
+public class settingsClicked : MonoBehaviour
 {
-    public GameObject creditsObj; 
-    creditMovement creditsMove;
+    public GameObject settingsObj; 
+    settingsMovement settingsMove;
     public TMP_Text gameName;
     public GameObject startButton;
 
     void Start()
     {
-        creditsMove = creditsObj.GetComponent<creditMovement>();
+        settingsMove = settingsObj.GetComponent<settingsMovement>();
     }
 
     void Update(){}
@@ -21,7 +21,8 @@ public class creditsClicked : MonoBehaviour
     {
         gameName.gameObject.SetActive(false);
         startButton.gameObject.SetActive(false);
-        creditsMove.creditsClicked = true;
-        this.gameObject.SetActive(false);
+        settingsMove.settingsClicked = true;
+        gameObject.SetActive(false);
+        
     }
 }
