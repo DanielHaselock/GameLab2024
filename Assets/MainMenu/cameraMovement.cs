@@ -12,13 +12,19 @@ public class CameraMovement : MonoBehaviour
     public GameObject door;
 
     private Transform targetPoint;
-    private bool doorOpened;
+    public bool doorOpened;
+    public Transform startingPoint;
+    public GameObject returnObj; 
+    returnMovement returnMove;
+    public GameObject returnButton;
 
     void Start()
     {
         started = false;
         targetPoint = pointB;
         doorOpened = false;
+        startingPoint = transform;
+        returnMove = returnObj.GetComponent<returnMovement>();
     }
 
     void Update()
@@ -51,7 +57,7 @@ public class CameraMovement : MonoBehaviour
             
         }
         // Check if camera is within 1 unit of pointB
-            if (Vector3.Distance(transform.position, pointB.position) < 1f || targetPoint == pointC)
+            if (Vector3.Distance(transform.position, pointB.position) < 1f || targetPoint == pointC && !returnMove.returning == true)
             {
 
                 targetPoint = pointC;
@@ -60,6 +66,14 @@ public class CameraMovement : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, targetPoint.position, moveSpeed * Time.deltaTime);
                 Quaternion targetCameraRotation = Quaternion.Euler(targetCameraRotationX, targetCameraRotationY, 0f);
                 transform.rotation = Quaternion.Lerp(transform.rotation, targetCameraRotation, rotationSpeedCamera * Time.deltaTime);
+
+                if (Vector3.Distance(transform.position, pointC.position) < 0.1f )
+            {
+
+                started=false;
+                targetPoint = pointB;
+                returnButton.gameObject.SetActive(true);
+            }
             }
         
         

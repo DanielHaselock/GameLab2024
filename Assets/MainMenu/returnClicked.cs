@@ -2,21 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class startClicked : MonoBehaviour
+public class returnClicked : MonoBehaviour
 {
-    public Camera cam; 
-    CameraMovement camScript;
+    public GameObject returnObj; 
+    returnMovement returnMove;
 
     void Start()
     {
-        camScript = cam.GetComponent<CameraMovement>();
+        returnMove = returnObj.GetComponent<returnMovement>();
     }
 
     void Update(){}
 
     public void OnButtonClick()
     {
-        camScript.started = true;
+        returnMove.returning = true;
         this.gameObject.SetActive(false);
     }
 }
