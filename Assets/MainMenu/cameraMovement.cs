@@ -55,8 +55,8 @@ public class CameraMovement : MonoBehaviour
             {
 
                 targetPoint = pointC;
-                float targetCameraRotationY = -155f;
-                float targetCameraRotationX = -10f;
+                float targetCameraRotationY = -170f;
+                float targetCameraRotationX = -5f;
                 transform.position = Vector3.MoveTowards(transform.position, targetPoint.position, moveSpeed * Time.deltaTime);
                 Quaternion targetCameraRotation = Quaternion.Euler(targetCameraRotationX, targetCameraRotationY, 0f);
                 transform.rotation = Quaternion.Lerp(transform.rotation, targetCameraRotation, rotationSpeedCamera * Time.deltaTime);
