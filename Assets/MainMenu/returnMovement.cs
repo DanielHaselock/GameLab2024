@@ -15,6 +15,7 @@ public class returnMovement : MonoBehaviour
     public GameObject startButton;
     private Transform targetPoint;
     private Transform startingPoint;
+    public GameObject goToSettingsButton;
 
     void Start()
     {
@@ -74,12 +75,12 @@ public class returnMovement : MonoBehaviour
                         
                     Quaternion targetRotation = Quaternion.Euler(0f, 0f, 0f);
                     door.transform.rotation = Quaternion.Lerp(door.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                    startButton.gameObject.SetActive(true);
+                        goToSettingsButton.gameObject.SetActive(true);
                     //gameName.gameObject.SetActive(true);
                     if (Quaternion.Angle(door.transform.rotation, targetRotation) < 0.1f)
                     {
                         cam.GetComponent<CameraMovement>().doorOpened = false;
-                        //gameName.gameObject.SetActive(true);
-                        startButton.gameObject.SetActive(true);
                         returning = false;
                         targetPoint = pointB;
                     }

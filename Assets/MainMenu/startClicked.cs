@@ -6,6 +6,7 @@ public class startClicked : MonoBehaviour
 {
     public Camera cam; 
     CameraMovement camScript;
+    public GameObject goToSettingsButton;
 
     void Start()
     {
@@ -17,6 +18,7 @@ public class startClicked : MonoBehaviour
     public void OnButtonClick()
     {
         camScript.started = true;
+        goToSettingsButton.gameObject.SetActive(false);
         this.gameObject.SetActive(false);
     }
 }

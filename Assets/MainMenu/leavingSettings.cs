@@ -39,11 +39,10 @@ public class leavingSettings : MonoBehaviour
                 float targetCameraRotationX = 16f;
                 Quaternion targetCameraRotation = Quaternion.Euler(targetCameraRotationX, targetCameraRotationY, 0f);
                 cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, targetCameraRotation, rotationSpeedCamera * Time.deltaTime);
-                    
+                gameName.gameObject.SetActive(true);
 
                 if(Vector3.Distance(cam.transform.position, targetCameraPosition)<0.01f)
                 {
-                    gameName.gameObject.SetActive(true);
                     startButton.gameObject.SetActive(true);
                     settings.gameObject.SetActive(true);
                     leavingSettingsBool=false;

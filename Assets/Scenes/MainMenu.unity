@@ -1356,7 +1356,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &350513102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2808,6 +2808,7 @@ MonoBehaviour:
   gameName: {fileID: 1188698580}
   door: {fileID: 1045160766}
   startButton: {fileID: 1648893306}
+  goToSettingsButton: {fileID: 1951257308}
 --- !u!4 &691653115
 Transform:
   m_ObjectHideFlags: 0
@@ -5699,6 +5700,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 56334179}
+  goToSettingsButton: {fileID: 1951257308}
 --- !u!1 &1666998467
 GameObject:
   m_ObjectHideFlags: 0
