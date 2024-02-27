@@ -378,7 +378,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         }
         
         var inputdata = _playerInput.GetInputData();
-        Debug.Log(inputdata);
         input.Set(inputdata);
     }
 
