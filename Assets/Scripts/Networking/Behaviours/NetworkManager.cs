@@ -17,12 +17,16 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     
     private NetworkProperties _networkPropertiesRef;
     private NetworkRunner _runner;
-    private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
     private PlayerNetworkedActions _playerInput = null;
     private List<PlayerRef> _connectedPlayers;
     private NetworkUI _connectionUI;
+    
+    
     private bool _gameStarted = false;
     private string _sessionUserNickName;
+    
+    //server only
+    private Dictionary<PlayerRef, NetworkObject> _spawnedCharactersOnServer = new Dictionary<PlayerRef, NetworkObject>();
     
     private NetworkManagerSynchedHelper _netSynchedHelper;
     public List<SessionInfo> AvailableSessions { get; private set; }
@@ -322,9 +326,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
             _runner.SetPlayerObject(playerRef, playerNetObj);
 
-            if (!_spawnedCharacters.ContainsKey(playerRef))
+            if (!_spawnedCharactersOnServer.ContainsKey(playerRef))
             {
-                _spawnedCharacters.Add(playerRef, playerNetObj);
+                _spawnedCharactersOnServer.Add(playerRef, playerNetObj);
             }
         }
         OnPlayersSpawned?.Invoke();
@@ -350,10 +354,10 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private void OnPlayerLeftOnServer(NetworkRunner runner, PlayerRef player)
     {
-        if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
+        if (_spawnedCharactersOnServer.TryGetValue(player, out NetworkObject networkObject))
         {
             runner.Despawn(networkObject);
-            _spawnedCharacters.Remove(player);
+            _spawnedCharactersOnServer.Remove(player);
         }
         
         var id = player.PlayerId;
@@ -369,13 +373,12 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                 return; 
 
             _playerInput = player.GetComponent<PlayerNetworkedActions>();
-
             if (!_playerInput)
                 return;
         }
-
+        
         var inputdata = _playerInput.GetInputData();
-
+        Debug.Log(inputdata);
         input.Set(inputdata);
     }
 
@@ -444,13 +447,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
 
     public NetworkObject GetLocalPlayer()
-    { 
-        foreach(var value in _spawnedCharacters.Values)
-        {
-            if (value.HasStateAuthority)
-                return value;
-        }
-        return null;
+    {
+        return _runner.GetPlayerObject(_runner.LocalPlayer);
     }
 }
 }
