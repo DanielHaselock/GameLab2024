@@ -2,6 +2,7 @@ using System;
 using Fusion;
 using Networking.Data;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Player : NetworkBehaviour
 {
@@ -20,8 +21,8 @@ public class Player : NetworkBehaviour
         if (no.InputAuthority == Runner.LocalPlayer)
         {
             HasInputAuthority = true;
-            Debug.Log("Working");
             GetComponent<SetCamera>().SetCameraParams(gameObject.transform.GetChild(1).gameObject);
+            GetComponent<PlayerController>().OnSpawned();
         }
     }
     public override void FixedUpdateNetwork()

@@ -18,7 +18,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkProperties _networkPropertiesRef;
     private NetworkRunner _runner;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
-    private PlayerInputData _playerInput = new PlayerInputData();
+    //private PlayerInputData _playerInput = new PlayerInputData();
     private List<PlayerRef> _connectedPlayers;
     private NetworkUI _connectionUI;
     private bool _gameStarted = false;
@@ -362,8 +362,12 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     
     public void OnInput(Fusion.NetworkRunner runner, NetworkInput input)
     {
-        _playerInput.Poll();
-        input.Set(_playerInput);
+            NetworkObject player = GetLocalPlayer();
+            if (!player || !player.GetComponent<PlayerNetworkedActions>())
+                return;
+            var inputdata = player.GetComponent<PlayerNetworkedActions>().GetInputData();
+
+            input.Set(inputdata);
     }
 
 
@@ -428,14 +432,16 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     #endregion
-    public void CheckMainPlayer()
-    {
 
-        Debug.Log("LOCAL PLAYER " + _runner.LocalPlayer.ToString());
 
-        Debug.Log("Success!!!");
-        _spawnedCharacters.TryGetValue(_runner.LocalPlayer, out NetworkObject obj);
-
+    public NetworkObject GetLocalPlayer()
+    { 
+        foreach(var value in _spawnedCharacters.Values)
+        {
+            if (value.HasStateAuthority)
+                return value;
+        }
+        return null;
     }
 }
 }
