@@ -18,7 +18,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkProperties _networkPropertiesRef;
     private NetworkRunner _runner;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
-    //private PlayerInputData _playerInput = new PlayerInputData();
+    private PlayerNetworkedActions _playerInput = null;
     private List<PlayerRef> _connectedPlayers;
     private NetworkUI _connectionUI;
     private bool _gameStarted = false;
@@ -362,12 +362,21 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     
     public void OnInput(Fusion.NetworkRunner runner, NetworkInput input)
     {
+        if(!_playerInput)
+        {
             NetworkObject player = GetLocalPlayer();
-            if (!player || !player.GetComponent<PlayerNetworkedActions>())
-                return;
-            var inputdata = player.GetComponent<PlayerNetworkedActions>().GetInputData();
+            if (!player)
+                return; 
 
-            input.Set(inputdata);
+            _playerInput = player.GetComponent<PlayerNetworkedActions>();
+
+            if (!_playerInput)
+                return;
+        }
+
+        var inputdata = _playerInput.GetInputData();
+
+        input.Set(inputdata);
     }
 
 

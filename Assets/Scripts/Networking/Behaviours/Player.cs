@@ -22,7 +22,7 @@ public class Player : NetworkBehaviour
         {
             HasInputAuthority = true;
             GetComponent<SetCamera>().SetCameraParams(gameObject.transform.GetChild(1).gameObject);
-            GetComponent<PlayerController>().OnSpawned();
+            GetComponent<PlayerInputController>().OnSpawned();
         }
     }
     public override void FixedUpdateNetwork()

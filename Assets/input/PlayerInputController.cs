@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerInputController : MonoBehaviour
 {
     [SerializeField] private InputActionAsset playerInput;
 
