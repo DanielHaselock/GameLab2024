@@ -1,8 +1,11 @@
 using System;
+using Fusion;
 using Networking.Behaviours;
+using Networking.Data;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Networking.UI
 {
@@ -10,6 +13,9 @@ namespace Networking.UI
     {
         
         [SerializeField] private GameObject waitPanel;
+
+        [Header("NickName")]
+        [SerializeField] private TMPro.TMP_InputField _nickNameField;
         
         [FormerlySerializedAs("hostButton")]
         [Header("Main menu")]
@@ -41,12 +47,24 @@ namespace Networking.UI
             _hostMenuCloseButton.onClick.AddListener(OnClickHostMenuClose);
             _hostMenuStartButton.onClick.AddListener(OnClickHostMenuStart);
             _joinMenuCloseButton.onClick.AddListener(OnClickJoinMenuClose);
-            
+            var randName = $"Random{Random.Range(1, 300)}";
+            _nickNameField.text = PlayerPrefs.GetString(Constants.MYUSERNAME_KEY,randName);
+            NetworkManager.Instance.SetSessionUserNickName(_nickNameField.text);
+            if (_nickNameField.text.Equals(randName))
+            {
+                PlayerPrefs.SetString(Constants.MYUSERNAME_KEY, randName);
+                PlayerPrefs.Save();
+                NetworkManager.Instance.SetSessionUserNickName(randName);
+            }
+            _nickNameField.onValueChanged.AddListener((text) =>
+            {
+                NetworkManager.Instance.SetSessionUserNickName(text);
+                Debug.Log("Username saved!!");
+            });
             _hostSessionNameField.onValueChanged.AddListener((string str) =>
             {
                     _hostMenuStartButton.interactable = !String.IsNullOrEmpty(str);
             });
-            
             _networkManager.OnConnectedToLobby += () =>
             {
                 waitPanel.SetActive(false);
@@ -111,6 +129,12 @@ namespace Networking.UI
                     _networkManager.JoinSession(s.Name);
                 });
             }
+        }
+
+        private void OnDestroy()
+        {
+            PlayerPrefs.SetString(Constants.MYUSERNAME_KEY, _nickNameField.text);
+            PlayerPrefs.Save();
         }
     }
 }
