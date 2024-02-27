@@ -9,6 +9,6 @@ namespace Networking.Data
     {
         public int GameSceneIndex;
         public NetworkPrefabRef PlayerPrefab;
-        public NetworkPrefabRef Ball;
+        public int MaxPlayers=2;
     }
 }
