@@ -28,5 +28,9 @@ public class PlayerInputController : MonoBehaviour
             Vector3 Movement = new Vector3(Direction.x, 0, Direction.y);
             OnMoved.Raise(this, Movement);
         }
+        else
+        {
+            OnMoved.Raise(this, Vector3.zero);
+        }
     }
 }
