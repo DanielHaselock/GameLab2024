@@ -21,7 +21,7 @@ public class Player : NetworkBehaviour
         {
             HasInputAuthority = true;
             Debug.Log("Working");
-            GetComponent<SetCamera>().SetCameraParams(gameObject);
+            GetComponent<SetCamera>().SetCameraParams(gameObject.transform.GetChild(1).gameObject);
         }
     }
     public override void FixedUpdateNetwork()
