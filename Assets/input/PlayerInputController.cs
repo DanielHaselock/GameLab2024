@@ -12,6 +12,10 @@ public class PlayerInputController : MonoBehaviour
     [Header("GameEvents")]
     public GameEvent OnMoved;
 
+    public GameEvent OnInteract;
+
+    public GameEvent OnDrop;
+
     private void Start()
     {
     }
@@ -32,5 +36,30 @@ public class PlayerInputController : MonoBehaviour
         {
             OnMoved.Raise(this, Vector3.zero);
         }
+    }
+
+
+    public void Interact(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        { 
+            OnInteract.Raise(this, true);
+        }
+        //else
+        //{
+        //    OnInteract.Raise(this, false);
+        //}
+    }
+
+    public void DropInteract(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnDrop.Raise(this, true);
+        }
+        //else
+        //{
+        //    OnDrop.Raise(this, false);
+        //}
     }
 }

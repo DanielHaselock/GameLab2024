@@ -13,6 +13,21 @@ public class PlayerNetworkedActions : MonoBehaviour
         InputData.MoveDirection = (Vector3)data;
     }
 
+    public void BroadcastInteract(Component Sender, object data)
+    {
+        InputData.Interact = (bool)data;
+    }
+
+    public void BroadcastDrop(Component Sender, object data)
+    {
+        InputData.Drop = (bool)data;
+    }
+
+
+    public void RefreshInputData()
+    {
+        InputData.RefreshInputs();
+    }
     public PlayerInputData GetInputData() 
     {
         return InputData; 
