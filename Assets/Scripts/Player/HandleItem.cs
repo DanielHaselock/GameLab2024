@@ -24,7 +24,7 @@ public class HandleItem : MonoBehaviour
     {
         if(other.gameObject.tag == tag)
         {
-            ItemsAvailable.Add(other.gameObject);
+            ItemsAvailable.Add(other.gameObject.transform.parent.gameObject);
         }
         
     }
@@ -33,7 +33,7 @@ public class HandleItem : MonoBehaviour
     {
         if (other.gameObject.tag == tag)
         {
-            ItemsAvailable.Remove(other.gameObject);
+            ItemsAvailable.Remove(other.gameObject.transform.parent.gameObject);
         }
         
     }

@@ -1,7 +1,7 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class Inventory : MonoBehaviour
 {
     public List<GameObject> Items;
@@ -18,21 +18,33 @@ public class Inventory : MonoBehaviour
         Items = new List<GameObject>();
     }
 
-    public void addItem(GameObject item)
+    public void addItem(GameObject item) //Main Obj
     {
+        Item itemClass = item.GetComponent<Item>();
+        GameObject LocalObj = itemClass.GetLocalGameobject();
+        NetworkObject NetObj = itemClass.GetNetworkGameobject();
+        LocalObj.SetActive(true);
+        LocalObj.transform.SetParent(transform);
+        NetObj.GetComponent<NetworkTransform>().Teleport(new Vector3(1000, 0, 1000));
+        NetObj.GetComponent<Rigidbody>().isKinematic = true;
+
         Items.Add(item);
-        item.gameObject.transform.SetParent(transform, true);
-        item.gameObject.GetComponent<Rigidbody>().isKinematic = true;
         Vector3 pos = Vector3.zero;
-        pos.y += SpaceBetween2Items * Items.Count; 
-        item.gameObject.transform.localPosition = pos;
+        pos.y += SpaceBetween2Items * Items.Count;
+        LocalObj.gameObject.transform.localPosition = pos;
     }
 
     public void removeItem(GameObject item) 
     {
+        Item itemClass = item.GetComponent<Item>();
+        GameObject LocalObj = itemClass.GetLocalGameobject();
+        NetworkObject NetObj = itemClass.GetNetworkGameobject();
+        LocalObj.transform.SetParent(item.transform);
+        LocalObj.SetActive(false);
+        NetObj.GetComponent<NetworkTransform>().Teleport(transform.position);
+        NetObj.GetComponent<Rigidbody>().isKinematic = false;
+
         Items.Remove(item);
-        item.gameObject.transform.SetParent(null, true);
-        item.gameObject.GetComponent<Rigidbody>().isKinematic = false;
     }
 
     public void RemoveLatestItem()
