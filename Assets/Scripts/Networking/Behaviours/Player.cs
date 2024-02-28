@@ -54,6 +54,10 @@ public class Player : NetworkBehaviour
         {
             RPC_DropItem();
         }
+        else if(data.Throw)
+        {
+            RPC_ThrowItem();
+        }
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -66,6 +70,12 @@ public class Player : NetworkBehaviour
     public void RPC_DropItem()
     {
         itemHandler.InputDropItem();
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_ThrowItem()
+    {
+        itemHandler.InputThrowItem();
     }
 
 

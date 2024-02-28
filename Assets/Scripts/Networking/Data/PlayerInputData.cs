@@ -8,6 +8,7 @@ namespace Networking.Data
         public Vector3 MoveDirection;
         public bool Jump;
         public bool Attack;
+        public bool Throw;
        [Networked] public bool Interact { get => default; set { } }
         public bool Drop;
 
@@ -19,6 +20,7 @@ namespace Networking.Data
             Attack = false;
             Interact = false;
             Drop = false;
+            Throw = false;
         }
     }
 }

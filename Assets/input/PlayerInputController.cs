@@ -16,6 +16,8 @@ public class PlayerInputController : MonoBehaviour
 
     public GameEvent OnDrop;
 
+    public GameEvent OnThrow;
+
     public GameEvent OnJump;
 
     private void Start()
@@ -54,6 +56,14 @@ public class PlayerInputController : MonoBehaviour
         if (context.started)
         {
             OnDrop.Raise(this, true);
+        }
+    }
+
+    public void Throw(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnThrow.Raise(this, true);
         }
     }
 
