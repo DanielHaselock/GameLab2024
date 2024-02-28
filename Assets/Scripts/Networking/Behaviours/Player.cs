@@ -7,11 +7,14 @@ using UnityEngine.Events;
 public class Player : NetworkBehaviour
 {
     private NetworkCharacterController _controller;
+
+    private HandleItem itemHandler;
     public bool HasInputAuthority { get; private set; }
 
     private void Awake()
     {
         _controller = GetComponent<NetworkCharacterController>();
+        itemHandler = transform.Find("ItemSlot").GetComponent<HandleItem>();
     }
 
 
@@ -32,7 +35,46 @@ public class Player : NetworkBehaviour
         if (GetInput(out PlayerInputData data))
         {
             data.MoveDirection.Normalize();
-            _controller.Move(3 * data.MoveDirection * Runner.DeltaTime);
+            HandleInteract(data);
+            HandleJump(data);
+
+            _controller.Move(3 * (data.MoveDirection) * Runner.DeltaTime);
+            
+        }
+    }
+
+
+    public void HandleInteract(PlayerInputData data)
+    {
+        if (data.Interact)
+        {
+            RPC_PickItem();
+        }
+        else if (data.Drop)
+        {
+            RPC_DropItem();
+        }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_PickItem()
+    {
+        itemHandler.InputPickItem();
+    }
+    
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_DropItem()
+    {
+        itemHandler.InputDropItem();
+    }
+
+
+
+    public void HandleJump(PlayerInputData data)
+    {
+        if (data.Jump)
+        { 
+            _controller.Jump();
         }
     }
 }

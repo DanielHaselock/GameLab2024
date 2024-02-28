@@ -8,15 +8,17 @@ namespace Networking.Data
         public Vector3 MoveDirection;
         public bool Jump;
         public bool Attack;
-        public bool Interact;
+       [Networked] public bool Interact { get => default; set { } }
+        public bool Drop;
 
 
         public void RefreshInputs()
         {
-            MoveDirection = Vector3.zero;
+           // MoveDirection = Vector3.zero; Movement is handled on it's own
             Jump = false;
             Attack = false;
             Interact = false;
+            Drop = false;
         }
     }
 }
