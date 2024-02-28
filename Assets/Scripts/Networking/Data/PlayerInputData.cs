@@ -8,7 +8,7 @@ namespace Networking.Data
         public Vector3 MoveDirection;
         public bool Jump;
         public bool Attack;
-        public bool Interact;
+       [Networked] public bool Interact { get => default; set { } }
         public bool Drop;
 
 

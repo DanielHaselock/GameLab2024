@@ -1,3 +1,4 @@
+using Fusion;
 using Networking.Data;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,12 +13,10 @@ public class PlayerNetworkedActions : MonoBehaviour
     {
         InputData.MoveDirection = (Vector3)data;
     }
-
     public void BroadcastInteract(Component Sender, object data)
     {
         InputData.Interact = (bool)data;
     }
-
     public void BroadcastDrop(Component Sender, object data)
     {
         InputData.Drop = (bool)data;

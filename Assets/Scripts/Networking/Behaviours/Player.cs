@@ -11,6 +11,10 @@ public class Player : NetworkBehaviour
     private HandleItem itemHandler;
     public bool HasInputAuthority { get; private set; }
 
+    public delegate void InteractDelegate();
+
+    private InteractDelegate interactDelegate;
+
     private void Awake()
     {
         _controller = GetComponent<NetworkCharacterController>();
@@ -40,15 +44,27 @@ public class Player : NetworkBehaviour
         }
     }
 
+
     public void HandleInteract(PlayerInputData data)
     {
         if (data.Interact)
         {
-            itemHandler.InputPickItem();
+            RPC_PickItem();
         }
-        else if(data.Drop)
+        else if (data.Drop)
         {
-            itemHandler.InputDropItem();
+            RPC_DropItem();
         }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_PickItem()
+    {
+        itemHandler.InputPickItem();
+    }
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_DropItem()
+    {
+        itemHandler.InputDropItem();
     }
 }

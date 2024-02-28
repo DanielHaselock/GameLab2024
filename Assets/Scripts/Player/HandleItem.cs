@@ -1,3 +1,4 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -36,7 +37,6 @@ public class HandleItem : MonoBehaviour
         }
         
     }
-
     public void InputPickItem()
     {
         if (ItemsAvailable.Count == 0)
@@ -57,7 +57,7 @@ public class HandleItem : MonoBehaviour
             inventory.addItem(ItemsAvailable[i]);
         }
     }
-
+   
     public void InputDropItem()
     {
         inventory.RemoveLatestItem();
