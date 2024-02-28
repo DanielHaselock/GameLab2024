@@ -9,12 +9,14 @@ namespace Networking.Data
         public bool Jump;
         public bool Attack;
         public bool Interact;
-        public void Poll()
+
+
+        public void RefreshInputs()
         {
-            //Todo: Update with Input logic later
             MoveDirection = Vector3.zero;
-            MoveDirection += Vector3.forward * Input.GetAxis("Vertical");
-            MoveDirection += Vector3.right * Input.GetAxis("Horizontal");
+            Jump = false;
+            Attack = false;
+            Interact = false;
         }
     }
 }

@@ -9,10 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f9df731ee934edab6969427f6812fe9, type: 3}
-  m_Name: NetworkProperties
+  m_Script: {fileID: 11500000, guid: 04d5e0867a7a6054ebb17eff366ce1df, type: 3}
+  m_Name: OnPlayerMove
   m_EditorClassIdentifier: 
-  GameSceneIndex: 2
-  PlayerPrefab:
-    RawGuidValue: 84bb177b727c34779a356fe8958bbf63
-  MaxPlayers: 2
+  listeners: []

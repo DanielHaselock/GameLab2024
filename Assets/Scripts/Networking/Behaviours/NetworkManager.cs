@@ -17,12 +17,16 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     
     private NetworkProperties _networkPropertiesRef;
     private NetworkRunner _runner;
-    private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
-    private PlayerInputData _playerInput = new PlayerInputData();
+    private PlayerNetworkedActions _playerInput = null;
     private List<PlayerRef> _connectedPlayers;
     private NetworkUI _connectionUI;
+    
+    
     private bool _gameStarted = false;
     private string _sessionUserNickName;
+    
+    //server only
+    private Dictionary<PlayerRef, NetworkObject> _spawnedCharactersOnServer = new Dictionary<PlayerRef, NetworkObject>();
     
     private NetworkManagerSynchedHelper _netSynchedHelper;
     public List<SessionInfo> AvailableSessions { get; private set; }
@@ -322,9 +326,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
             _runner.SetPlayerObject(playerRef, playerNetObj);
 
-            if (!_spawnedCharacters.ContainsKey(playerRef))
+            if (!_spawnedCharactersOnServer.ContainsKey(playerRef))
             {
-                _spawnedCharacters.Add(playerRef, playerNetObj);
+                _spawnedCharactersOnServer.Add(playerRef, playerNetObj);
             }
         }
         OnPlayersSpawned?.Invoke();
@@ -350,10 +354,10 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private void OnPlayerLeftOnServer(NetworkRunner runner, PlayerRef player)
     {
-        if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
+        if (_spawnedCharactersOnServer.TryGetValue(player, out NetworkObject networkObject))
         {
             runner.Despawn(networkObject);
-            _spawnedCharacters.Remove(player);
+            _spawnedCharactersOnServer.Remove(player);
         }
         
         var id = player.PlayerId;
@@ -362,8 +366,19 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     
     public void OnInput(Fusion.NetworkRunner runner, NetworkInput input)
     {
-        _playerInput.Poll();
-        input.Set(_playerInput);
+        if(!_playerInput)
+        {
+            NetworkObject player = GetLocalPlayer();
+            if (!player)
+                return; 
+
+            _playerInput = player.GetComponent<PlayerNetworkedActions>();
+            if (!_playerInput)
+                return;
+        }
+        
+        var inputdata = _playerInput.GetInputData();
+        input.Set(inputdata);
     }
 
 
@@ -428,14 +443,11 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     #endregion
-    public void CheckMainPlayer()
+
+
+    public NetworkObject GetLocalPlayer()
     {
-
-        Debug.Log("LOCAL PLAYER " + _runner.LocalPlayer.ToString());
-
-        Debug.Log("Success!!!");
-        _spawnedCharacters.TryGetValue(_runner.LocalPlayer, out NetworkObject obj);
-
+        return _runner.GetPlayerObject(_runner.LocalPlayer);
     }
 }
 }

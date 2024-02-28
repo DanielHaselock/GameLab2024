@@ -60,17 +60,17 @@ namespace Networking.Tests
 
         private void Update()
         {
-            if(!NetworkManager.Instance.IsServer)
-                return;
+            //if(!NetworkManager.Instance.IsServer) This causes bugs
+            //    return;
             
-            if(Input.GetButtonDown("Jump"))
-                NetworkManager.Instance.GameOver();
+            //if(Input.GetButtonDown("Jump")) Deprecated Inputs
+            //    NetworkManager.Instance.GameOver();
             
-            if(Input.GetButtonDown("Fire1"))
-                NetworkManager.Instance.StartTimer(TimeSpan.FromSeconds(5));
+            //if(Input.GetButtonDown("Fire1"))
+            //    NetworkManager.Instance.StartTimer(TimeSpan.FromSeconds(5));
             
-            if(Input.GetButtonDown("Fire2"))
-                NetworkManager.Instance.StopTimer();
+            //if(Input.GetButtonDown("Fire2"))
+            //    NetworkManager.Instance.StopTimer();
             
         }
     }
