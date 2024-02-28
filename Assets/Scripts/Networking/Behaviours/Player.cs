@@ -49,20 +49,26 @@ public class Player : NetworkBehaviour
     {
         if (data.Interact)
         {
-            RPC_PickItem();
+            if(Runner.IsServer)
+                itemHandler.InputPickItem();
+            else
+                RPC_PickItem();
         }
         else if (data.Drop)
-        {
-            RPC_DropItem();
+        { 
+            if(Runner.IsServer)
+                itemHandler.InputDropItem();
+            else
+                RPC_DropItem();
         }
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_PickItem()
     {
         itemHandler.InputPickItem();
     }
-    [Rpc(RpcSources.All, RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_DropItem()
     {
         itemHandler.InputDropItem();
