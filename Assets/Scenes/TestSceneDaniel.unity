@@ -182,6 +182,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
       insertIndex: -1
       addedObject: {fileID: 288587786}
+    - targetCorrespondingSourceObject: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 288587787}
   m_SourcePrefab: {fileID: 100100000, guid: 28620502e440cfc478b41110643345de, type: 3}
 --- !u!1 &288587785 stripped
 GameObject:
@@ -202,9 +205,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 1603194889
   ObjectInterest: 1
-  Flags: 1
+  Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 288587787}
+--- !u!114 &288587787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288587785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncScale: 1
+  SyncParent: 1
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &442223941
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,6 +525,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
       insertIndex: -1
       addedObject: {fileID: 997283989}
+    - targetCorrespondingSourceObject: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 997283990}
   m_SourcePrefab: {fileID: 100100000, guid: 28620502e440cfc478b41110643345de, type: 3}
 --- !u!1 &997283988 stripped
 GameObject:
@@ -527,7 +550,24 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 1
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 997283990}
+--- !u!114 &997283990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997283988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncScale: 1
+  SyncParent: 1
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1001 &1578672321
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -587,6 +627,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1578672323}
+    - targetCorrespondingSourceObject: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1578672324}
   m_SourcePrefab: {fileID: 100100000, guid: 28620502e440cfc478b41110643345de, type: 3}
 --- !u!1 &1578672322 stripped
 GameObject:
@@ -609,7 +652,24 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 1578672324}
+--- !u!114 &1578672324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578672322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncScale: 1
+  SyncParent: 1
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1001 &1769338666
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -669,6 +729,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1769338668}
+    - targetCorrespondingSourceObject: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1769338669}
   m_SourcePrefab: {fileID: 100100000, guid: 28620502e440cfc478b41110643345de, type: 3}
 --- !u!1 &1769338667 stripped
 GameObject:
@@ -691,7 +754,24 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 1
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 1769338669}
+--- !u!114 &1769338669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769338667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncScale: 1
+  SyncParent: 1
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1001 &1892009991
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -751,6 +831,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1892009993}
+    - targetCorrespondingSourceObject: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1892009994}
   m_SourcePrefab: {fileID: 100100000, guid: 28620502e440cfc478b41110643345de, type: 3}
 --- !u!1 &1892009992 stripped
 GameObject:
@@ -773,7 +856,24 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 1
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 1892009994}
+--- !u!114 &1892009994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892009992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncScale: 1
+  SyncParent: 1
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1001 &2113614960
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -833,6 +933,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2113614962}
+    - targetCorrespondingSourceObject: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2113614963}
   m_SourcePrefab: {fileID: 100100000, guid: 28620502e440cfc478b41110643345de, type: 3}
 --- !u!1 &2113614961 stripped
 GameObject:
@@ -855,7 +958,24 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 1
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 2113614963}
+--- !u!114 &2113614963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2113614961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncScale: 1
+  SyncParent: 1
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1001 &2105010494984985870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1064,6 +1184,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8384564407724755792}
+    - targetCorrespondingSourceObject: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8384564407724755793}
   m_SourcePrefab: {fileID: 100100000, guid: 28620502e440cfc478b41110643345de, type: 3}
 --- !u!1 &8384564407724755791 stripped
 GameObject:
@@ -1084,9 +1207,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 3506885651
   ObjectInterest: 1
-  Flags: 1
+  Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 8384564407724755793}
+--- !u!114 &8384564407724755793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8384564407724755791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncScale: 1
+  SyncParent: 1
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
