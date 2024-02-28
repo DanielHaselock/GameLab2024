@@ -48,7 +48,7 @@ public class Inventory : MonoBehaviour
         NetObj.GetComponent<Rigidbody>().isKinematic = false;
         if(Throw)
         {
-            NetObj.GetComponent<Rigidbody>().AddForce(transform.forward * ThrowForce);
+            NetObj.GetComponent<Rigidbody>().AddForce(transform.parent.forward * ThrowForce);
         }
 
 
