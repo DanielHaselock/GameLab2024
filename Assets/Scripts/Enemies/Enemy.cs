@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using Networking.Data;
+using UnityEngine.AI;
 
 public class Enemy : NetworkBehaviour
 {
     protected List<GameObject> _seenPlayers = new List<GameObject>();
     protected GameObject _targetPlayer = null;
-    [SerializeField] protected float moveSpeed;
 
+    protected NavMeshAgent navMeshAgent;
     // Start is called before the first frame update
+    private void Awake()
+    {
+        navMeshAgent = GetComponent<NavMeshAgent>();
+    }
     private IEnumerator Start()
     {
         yield return new WaitWhile(() => Runner == null);
@@ -36,6 +41,5 @@ public class Enemy : NetworkBehaviour
             ChangeTargeting();
         }
     }
-
     public virtual void ChangeTargeting() { }
 }
