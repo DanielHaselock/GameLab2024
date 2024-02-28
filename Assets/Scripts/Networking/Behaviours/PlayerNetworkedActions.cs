@@ -22,6 +22,10 @@ public class PlayerNetworkedActions : MonoBehaviour
         InputData.Drop = (bool)data;
     }
 
+    public void BroadcastJump(Component Sender, object data)
+    {
+        InputData.Jump = (bool)data;
+    }
 
     public void RefreshInputData()
     {

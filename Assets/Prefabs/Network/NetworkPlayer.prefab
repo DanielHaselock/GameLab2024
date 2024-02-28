@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 8736044973911044039}
   - component: {fileID: 7638832565137749540}
   - component: {fileID: 4533500781688616240}
+  - component: {fileID: 4586042961015775864}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -199,6 +200,7 @@ MonoBehaviour:
   OnMoved: {fileID: 11400000, guid: c7cd1d5641cc40d4fbdee8e9ab0831e3, type: 2}
   OnInteract: {fileID: 11400000, guid: 5484c2394b4cf3e47bc47c67aa50682a, type: 2}
   OnDrop: {fileID: 11400000, guid: 516131ac622c0e44f9f0970f9f6eba0b, type: 2}
+  OnJump: {fileID: 11400000, guid: d3521b317a198a146b170baa9793ad84, type: 2}
 --- !u!114 &3865790411665046194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,6 +274,22 @@ MonoBehaviour:
         m_CallState: 1
     m_ActionId: 8c875125-fb33-42cb-903d-038979823129
     m_ActionName: Player/Drop[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2997162649293212676}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: Jump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+    m_ActionId: f5b9a1aa-619d-41a9-b88c-12d5f84c1a5f
+    m_ActionName: Player/Jump[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -364,6 +382,34 @@ MonoBehaviour:
       - m_Target: {fileID: 6848934553511822739}
         m_TargetAssemblyTypeName: PlayerNetworkedActions, Assembly-CSharp
         m_MethodName: BroadcastDrop
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+--- !u!114 &4586042961015775864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096714271386515055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e8fcea3e3113d84b8ed6719c9d621b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: d3521b317a198a146b170baa9793ad84, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6848934553511822739}
+        m_TargetAssemblyTypeName: PlayerNetworkedActions, Assembly-CSharp
+        m_MethodName: BroadcastJump
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
