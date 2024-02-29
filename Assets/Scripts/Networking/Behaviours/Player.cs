@@ -1,4 +1,5 @@
 using System;
+using Cinemachine;
 using Fusion;
 using Networking.Data;
 using UnityEngine;
@@ -11,10 +12,13 @@ public class Player : NetworkBehaviour
     private HandleItem itemHandler;
     public bool HasInputAuthority { get; private set; }
 
+    private GameObject _camera;
+
     private void Awake()
     {
         _controller = GetComponent<NetworkCharacterController>();
         itemHandler = transform.Find("ItemSlot").GetComponent<HandleItem>();
+        _camera = GameObject.Find("Camera");
     }
 
 
@@ -39,8 +43,17 @@ public class Player : NetworkBehaviour
             HandleJump(data);
             HandleAttack(data);
 
-            _controller.Move(3 * (data.MoveDirection) * Runner.DeltaTime);
-            
+            Vector3 Forward = _camera.transform.forward;
+            Vector3 Right = _camera.transform.right;
+
+            Vector3 forwardRelative = data.MoveDirection.z * Forward;
+            Vector3 rightRelative = data.MoveDirection.x * Right;
+
+            Vector3 MoveDir = forwardRelative + rightRelative;
+            MoveDir.y = 0;
+
+            _controller.Move(3 * (MoveDir) * Runner.DeltaTime);
+           
         }
     }
 
