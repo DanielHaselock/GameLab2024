@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
@@ -6,6 +7,7 @@ public class DamageComponent : NetworkBehaviour
 {
     public float AttackDamage;
 
+    [SerializeField] private LayerMask _layerMask;
     [SerializeField] private float attackRadius;
     [SerializeField] private List<HealthComponent> hittableObjects = new List<HealthComponent>();
 
@@ -46,7 +48,7 @@ public class DamageComponent : NetworkBehaviour
     private List<HealthComponent> GetAllHealthAroundMe()
     {
         var list = new List<HealthComponent>();
-        var colliders = Physics.OverlapSphere(transform.position, attackRadius, LayerMask.NameToLayer("Health"));
+        var colliders = Physics.OverlapSphere(transform.position, attackRadius, _layerMask);
         foreach (var collider in colliders)
         {
             var health = collider.GetComponent<HealthComponent>();
@@ -57,5 +59,13 @@ public class DamageComponent : NetworkBehaviour
         }
 
         return list;
+    }
+
+    private void OnDrawGizmos()
+    {
+        var color = Color.yellow;
+        color.a = 0.25f;
+        Gizmos.color = color;
+        Gizmos.DrawSphere(transform.position, attackRadius);
     }
 }
