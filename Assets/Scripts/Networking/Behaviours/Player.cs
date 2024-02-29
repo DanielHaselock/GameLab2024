@@ -12,8 +12,6 @@ public class Player : NetworkBehaviour
     private HandleItem itemHandler;
     public bool HasInputAuthority { get; private set; }
 
-    private GameObject _camera;
-
     private void Awake()
     {
         _controller = GetComponent<NetworkCharacterController>();
@@ -29,33 +27,18 @@ public class Player : NetworkBehaviour
             HasInputAuthority = true;
             GetComponent<SetCamera>().SetCameraParams(gameObject.transform.GetChild(1).gameObject);
             GetComponent<PlayerInputController>().OnSpawned();
-            _camera = GameObject.Find("Camera");
         }
     }
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
-        if (_camera == null)
-            return;
         
         if (GetInput(out PlayerInputData data))
         {
-            data.MoveDirection.Normalize();
             HandleInteract(data);
             HandleJump(data);
             HandleAttack(data);
-
-            Vector3 Forward = _camera.transform.forward;
-            Vector3 Right = _camera.transform.right;
-
-            Vector3 forwardRelative = data.MoveDirection.z * Forward;
-            Vector3 rightRelative = data.MoveDirection.x * Right;
-
-            Vector3 MoveDir = forwardRelative + rightRelative;
-            MoveDir.y = 0;
-
-            _controller.Move(3 * (MoveDir) * Runner.DeltaTime);
-           
+            _controller.Move(3 * data.MoveDirection.normalized * Runner.DeltaTime);
         }
     }
 
