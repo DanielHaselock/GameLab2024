@@ -47,7 +47,7 @@ public class HealthComponent : NetworkBehaviour
             switch (change)
             {
                 case nameof(Health):
-                    Debug.Log("HEALTH: " + Health);
+                    Debug.Log( $"{(Runner.IsServer?"Server":"Client")} HEALTH: {Health}");
                     break;
             }
         }
