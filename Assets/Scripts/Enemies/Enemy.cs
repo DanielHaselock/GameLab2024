@@ -11,6 +11,9 @@ public class Enemy : NetworkBehaviour
     protected GameObject _targetPlayer = null;
 
     protected NavMeshAgent navMeshAgent;
+
+    public int maxHealth;
+    protected int health;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -23,6 +26,7 @@ public class Enemy : NetworkBehaviour
             yield break;
 
         //Go crazy        
+        health = maxHealth;
     }
     
     private void OnTriggerEnter(Collider other)
@@ -42,4 +46,8 @@ public class Enemy : NetworkBehaviour
         }
     }
     public virtual void ChangeTargeting() { }
+
+    public virtual void OnAttack(int damage) {
+        health -= damage;
+    }
 }
