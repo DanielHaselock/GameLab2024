@@ -10,6 +10,7 @@ public class Player : NetworkBehaviour
     private NetworkCharacterController _controller;
 
     private HandleItem itemHandler;
+    private DamageComponent _damager;
     public bool HasInputAuthority { get; private set; }
 
     private void Awake()
@@ -102,19 +103,9 @@ public class Player : NetworkBehaviour
     {
         if (data.Attack && HasInputAuthority)
         {
-            RPC_HandleAttack();
+            if (_damager == null)
+                _damager = GetComponentInChildren<DamageComponent>();
+            _damager.InitiateAttack();
         }
-    }
-
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)] //This is the only method that works up to now
-    public void RPC_HandleAttack()
-    {
-        RPC_Mul_HandleAttack();
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_Mul_HandleAttack()
-    {
-         GetComponentInChildren<DamageComponent>().InputAttack();
     }
 }

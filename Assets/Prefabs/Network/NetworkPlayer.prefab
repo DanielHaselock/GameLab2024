@@ -70,6 +70,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 7270890141607610612}
   - {fileID: 2212100915775459320}
+  - {fileID: 2278421735639293224}
 --- !u!143 &7015598308163729212
 CharacterController:
   m_ObjectHideFlags: 0
@@ -160,6 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 0}
+  _virtualcamera: {fileID: 0}
 --- !u!114 &2997162649293212676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -745,6 +747,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2663355878851893730, guid: ec9bb1ff1bcbee64e8a0a982e20d7f8b, type: 3}
   m_PrefabInstance: {fileID: 2490297404659131577}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2278421735639293224 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4400514041295403409, guid: ec9bb1ff1bcbee64e8a0a982e20d7f8b, type: 3}
+  m_PrefabInstance: {fileID: 2490297404659131577}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1197a7ab60e46c4bb7262a04fffbc4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6960127973039101953
 PrefabInstance:
   m_ObjectHideFlags: 0

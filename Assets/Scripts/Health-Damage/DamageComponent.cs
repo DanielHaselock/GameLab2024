@@ -1,19 +1,12 @@
-using Fusion;
-using Mono.Cecil;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using Fusion;
 using UnityEngine;
 
-public interface Damage
-{
-    public void Attack(HealthComponent other);
-}
-
-public class DamageComponent : MonoBehaviour, Damage
+public class DamageComponent : NetworkBehaviour
 {
     public float AttackDamage;
 
+    [SerializeField] private float attackRadius;
     [SerializeField] private List<HealthComponent> hittableObjects = new List<HealthComponent>();
 
     HealthComponent selfheal;
@@ -26,44 +19,43 @@ public class DamageComponent : MonoBehaviour, Damage
 
     public void Attack(HealthComponent other)
     {
-        Debug.Log("REMOVING HEALTH");
-        other.RemoveHealth(AttackDamage);
+        other.UpdateHealth(-AttackDamage);
     }
-    public void InputAttack()
+    public void InitiateAttack()
     {
-        List<HealthComponent> healthtoDestroy = new List<HealthComponent> ();
+        if(Runner.IsServer)
+            DoAttack();
+        else
+            RPC_InitiateAttackOnServer();
+    }
 
-        foreach (HealthComponent obj in hittableObjects)
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_InitiateAttackOnServer()
+    {
+        DoAttack();
+    }
+    
+    private void DoAttack()
+    {
+        foreach (var hc in GetAllHealthAroundMe())
         {
-            if (!obj)
-            {
-                healthtoDestroy.Add(obj);
+            Attack(hc);
+        }
+    }
+    
+    private List<HealthComponent> GetAllHealthAroundMe()
+    {
+        var list = new List<HealthComponent>();
+        var colliders = Physics.OverlapSphere(transform.position, attackRadius, LayerMask.NameToLayer("Health"));
+        foreach (var collider in colliders)
+        {
+            var health = collider.GetComponent<HealthComponent>();
+            if(health.Equals(selfheal))
                 continue;
-            }
-
-            Attack(obj);
+            
+            list.Add(health);
         }
 
-        foreach (HealthComponent obj in healthtoDestroy)
-        {
-            hittableObjects.Remove(obj);
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.GetComponent<HealthComponent>() != transform.parent.GetComponentInChildren<HealthComponent>())
-        {
-            hittableObjects.Add(other.GetComponent<HealthComponent>());
-        }
-
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.GetComponent<HealthComponent>() != transform.parent.GetComponentInChildren<HealthComponent>())
-        {
-            hittableObjects.Remove(other.GetComponent<HealthComponent>());
-        }
+        return list;
     }
 }

@@ -5,58 +5,45 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public interface IHealth
-{ 
-    public void RemoveHealth(float Value);
-    public void AddHealth(float Value);
-
-    public void SetHealth(float Value);
-
-    public void Death();
-}
-
-
-public class HealthComponent : MonoBehaviour, IHealth
+public class HealthComponent : NetworkBehaviour
 {
 
     public float MaxHealth;
-    public float Health = 10;
+    [Networked] public float Health { get; set; }
 
 
     private void Start()
     {
-        Health = MaxHealth;
+        if (Runner.IsServer)
+            Health = MaxHealth;
     }
-    public void RemoveHealth(float Value)
+    
+    public void UpdateHealth(float Value)
     {
-        Health -= Value;
-        Debug.Log(gameObject.transform.parent.gameObject.name + " is Taking Damage");
-        Debug.Log("Current Health : " + Health);
-
+        if (!Runner.IsServer)
+            return;
+        
+        Health += Value;
+        
         if (Health <= 0)
             Death();
     }
-
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void AddHealth(float Value) 
-    {
-        Health += Value;
-    }
-
-    [Rpc(RpcSources.All, RpcTargets.All)]
+    
     public void SetHealth(float Value)
     {
+        if (!Runner.IsServer)
+            return;
+        
         Health = Value;
     }
 
 
     public void Death()
     {
+        if (!Runner.IsServer)
+            return;
+        
         Debug.Log("DEATH!");
         gameObject.transform.parent.GetComponent<NetworkObject>().Runner.Despawn(gameObject.transform.parent.GetComponent<NetworkObject>());
     }
-
-
-
-
 }
