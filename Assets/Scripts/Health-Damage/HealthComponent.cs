@@ -12,7 +12,7 @@ public class HealthComponent : NetworkBehaviour
     [Networked] public float Health { get; set; }
 
 
-    private void Start()
+    public override void Spawned()
     {
         if (Runner.IsServer)
             Health = MaxHealth;
