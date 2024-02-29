@@ -2,6 +2,7 @@ using Fusion;
 using Mono.Cecil;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public interface Damage
@@ -30,9 +31,22 @@ public class DamageComponent : MonoBehaviour, Damage
     }
     public void InputAttack()
     {
+        List<HealthComponent> healthtoDestroy = new List<HealthComponent> ();
+
         foreach (HealthComponent obj in hittableObjects)
         {
+            if (!obj)
+            {
+                healthtoDestroy.Add(obj);
+                continue;
+            }
+
             Attack(obj);
+        }
+
+        foreach (HealthComponent obj in healthtoDestroy)
+        {
+            hittableObjects.Remove(obj);
         }
     }
 

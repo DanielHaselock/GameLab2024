@@ -1,4 +1,5 @@
 using Fusion;
+using Networking.Behaviours;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -52,6 +53,7 @@ public class HealthComponent : MonoBehaviour, IHealth
     public void Death()
     {
         Debug.Log("DEATH!");
+        gameObject.transform.parent.GetComponent<NetworkObject>().Runner.Despawn(gameObject.transform.parent.GetComponent<NetworkObject>());
     }
 
 
