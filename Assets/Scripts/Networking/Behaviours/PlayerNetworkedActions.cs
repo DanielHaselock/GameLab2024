@@ -1,3 +1,4 @@
+using System;
 using Fusion;
 using Networking.Data;
 using System.Collections;
@@ -9,26 +10,34 @@ public class PlayerNetworkedActions : MonoBehaviour
 {
     private Camera _camera;
     private PlayerInputData InputData = new PlayerInputData();
-    public void BroadcastMove(Component Sender, object data)
-    {
-        if (_camera == null)
-            _camera = Camera.main;
-        
-        if(_camera == null)
-            return;
+    private Vector3 moveInput;
 
-        var input = (Vector3)data;
+    private void Start()
+    {
+        _camera = Camera.main;
+    }
+
+    private void Update()
+    {
+        if(!_camera)
+            return;
         
+        //keep updating the move
+        var input = moveInput;
         Vector3 Forward = _camera.transform.forward;
         Vector3 Right = _camera.transform.right;
-
         Vector3 forwardRelative = input.z * Forward;
         Vector3 rightRelative = input.x * Right;
-
         Vector3 MoveDir = forwardRelative + rightRelative;
         MoveDir.y = 0;
-        
         InputData.MoveDirection = MoveDir;
+    }
+
+    public void BroadcastMove(Component Sender, object data)
+    {
+       
+
+        moveInput = (Vector3)data;
     }
     public void BroadcastInteract(Component Sender, object data)
     {
