@@ -32,6 +32,11 @@ public class PlayerNetworkedActions : MonoBehaviour
         InputData.Throw = (bool)data;
     }
 
+    public void BroadcastAttack(Component Sender, object data)
+    {
+        InputData.Attack = (bool)data;
+    }
+
     public void RefreshInputData()
     {
         InputData.RefreshInputs();

@@ -71,6 +71,15 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""685b1633-dc67-48f5-a48a-a4ab7c58a902"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -172,6 +181,17 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
                     ""action"": ""Throw"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2a95d7b2-391e-4517-877c-91bdb1525d10"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -185,6 +205,7 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
         m_Player_Drop = m_Player.FindAction("Drop", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
+        m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -251,6 +272,7 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Drop;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Throw;
+    private readonly InputAction m_Player_Attack;
     public struct PlayerActions
     {
         private @IA_Player m_Wrapper;
@@ -260,6 +282,7 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
         public InputAction @Drop => m_Wrapper.m_Player_Drop;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Throw => m_Wrapper.m_Player_Throw;
+        public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -284,6 +307,9 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
             @Throw.started += instance.OnThrow;
             @Throw.performed += instance.OnThrow;
             @Throw.canceled += instance.OnThrow;
+            @Attack.started += instance.OnAttack;
+            @Attack.performed += instance.OnAttack;
+            @Attack.canceled += instance.OnAttack;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -303,6 +329,9 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
             @Throw.started -= instance.OnThrow;
             @Throw.performed -= instance.OnThrow;
             @Throw.canceled -= instance.OnThrow;
+            @Attack.started -= instance.OnAttack;
+            @Attack.performed -= instance.OnAttack;
+            @Attack.canceled -= instance.OnAttack;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -327,5 +356,6 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
         void OnDrop(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnThrow(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
     }
 }
