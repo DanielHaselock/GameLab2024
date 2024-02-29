@@ -18,7 +18,6 @@ public class Player : NetworkBehaviour
     {
         _controller = GetComponent<NetworkCharacterController>();
         itemHandler = transform.Find("ItemSlot").GetComponent<HandleItem>();
-        _camera = GameObject.Find("Camera");
     }
 
 
@@ -30,12 +29,15 @@ public class Player : NetworkBehaviour
             HasInputAuthority = true;
             GetComponent<SetCamera>().SetCameraParams(gameObject.transform.GetChild(1).gameObject);
             GetComponent<PlayerInputController>().OnSpawned();
+            _camera = GameObject.Find("Camera");
         }
     }
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
-
+        if (_camera == null)
+            return;
+        
         if (GetInput(out PlayerInputData data))
         {
             data.MoveDirection.Normalize();
