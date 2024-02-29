@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2584804532549207908}
-  - component: {fileID: 2850138924196827389}
   - component: {fileID: 7120317423451592865}
   - component: {fileID: 9121222436034898561}
   - component: {fileID: 1525321890491747926}
+  - component: {fileID: 3101162570715333155}
   m_Layer: 0
   m_Name: NetGameObject
   m_TagString: Item
@@ -36,22 +36,6 @@ Transform:
   - {fileID: 770791961028077715}
   m_Father: {fileID: 6839165396057142207}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2850138924196827389
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5596950267508212133}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
 --- !u!114 &7120317423451592865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,12 +48,12 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 3253511546
+  SortKey: 3382396213
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 2850138924196827389}
+  - {fileID: 3101162570715333155}
 --- !u!54 &9121222436034898561
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -118,6 +102,28 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3101162570715333155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5596950267508212133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a591d221a634417e9827eb58e17de84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncScale: 0
+  SyncParent: 0
+  _interpolationTarget: {fileID: 770791961028077715}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0.01
+    Scale: 0.01
 --- !u!1 &6175185005389330792
 GameObject:
   m_ObjectHideFlags: 0

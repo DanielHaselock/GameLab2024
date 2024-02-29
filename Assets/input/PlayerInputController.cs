@@ -16,7 +16,11 @@ public class PlayerInputController : MonoBehaviour
 
     public GameEvent OnDrop;
 
+    public GameEvent OnThrow;
+
     public GameEvent OnJump;
+
+    public GameEvent OnAttack;
 
     private void Start()
     {
@@ -57,11 +61,27 @@ public class PlayerInputController : MonoBehaviour
         }
     }
 
+    public void Throw(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnThrow.Raise(this, true);
+        }
+    }
+
     public void Jump(InputAction.CallbackContext context)
     {
         if (context.started)
         {
             OnJump.Raise(this, true);
+        }
+    }
+
+    public void Attack(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnAttack.Raise(this, true);
         }
     }
 }

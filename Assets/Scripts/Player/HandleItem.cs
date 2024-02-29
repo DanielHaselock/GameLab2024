@@ -8,16 +8,14 @@ public class HandleItem : MonoBehaviour
 {
     private List<GameObject> ItemsAvailable;
 
-    private Collider collidertocheck;
-
     [SerializeField] private string tag;
 
     Inventory inventory;
+
     void Start()
     {
         ItemsAvailable = new List<GameObject>();
         inventory = GetComponent<Inventory>();
-        collidertocheck = GetComponent<Collider>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -61,5 +59,10 @@ public class HandleItem : MonoBehaviour
     public void InputDropItem()
     {
         inventory.RemoveLatestItem();
+    }
+
+    public void InputThrowItem()
+    {
+        inventory.RemoveLatestItem(true);
     }
 }

@@ -37,6 +37,7 @@ public class Player : NetworkBehaviour
             data.MoveDirection.Normalize();
             HandleInteract(data);
             HandleJump(data);
+            RPC_HandleAttack(data);
 
             _controller.Move(3 * (data.MoveDirection) * Runner.DeltaTime);
             
@@ -54,6 +55,10 @@ public class Player : NetworkBehaviour
         {
             RPC_DropItem();
         }
+        else if(data.Throw)
+        {
+            RPC_ThrowItem();
+        }
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -68,6 +73,12 @@ public class Player : NetworkBehaviour
         itemHandler.InputDropItem();
     }
 
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_ThrowItem()
+    {
+        itemHandler.InputThrowItem();
+    }
+
 
 
     public void HandleJump(PlayerInputData data)
@@ -75,6 +86,21 @@ public class Player : NetworkBehaviour
         if (data.Jump)
         { 
             _controller.Jump();
+        }
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)] //This is the only method that works up to now
+    public void RPC_HandleAttack(PlayerInputData data)
+    {
+        RPC_Mul_HandleAttack(data);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
+    public void RPC_Mul_HandleAttack(PlayerInputData data)
+    {
+        if (data.Attack)
+        {
+            GetComponentInChildren<DamageComponent>().InputAttack();
         }
     }
 }
