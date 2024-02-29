@@ -89,7 +89,7 @@ public class Player : NetworkBehaviour
         }
     }
 
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)] //This is the only method that works up to now
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)] //This is the only method that works up to now
     public void RPC_HandleAttack(PlayerInputData data)
     {
         RPC_Mul_HandleAttack(data);
