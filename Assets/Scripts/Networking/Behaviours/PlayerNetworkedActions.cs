@@ -1,3 +1,4 @@
+using System;
 using Fusion;
 using Networking.Data;
 using System.Collections;
@@ -7,11 +8,36 @@ using UnityEngine.EventSystems;
 
 public class PlayerNetworkedActions : MonoBehaviour
 {
-
+    private Camera _camera;
     private PlayerInputData InputData = new PlayerInputData();
+    private Vector3 moveInput;
+
+    private void Start()
+    {
+        _camera = Camera.main;
+    }
+
+    private void Update()
+    {
+        if(!_camera)
+            return;
+        
+        //keep updating the move
+        var input = moveInput;
+        Vector3 Forward = _camera.transform.forward;
+        Vector3 Right = _camera.transform.right;
+        Vector3 forwardRelative = input.z * Forward;
+        Vector3 rightRelative = input.x * Right;
+        Vector3 MoveDir = forwardRelative + rightRelative;
+        MoveDir.y = 0;
+        InputData.MoveDirection = MoveDir;
+    }
+
     public void BroadcastMove(Component Sender, object data)
     {
-        InputData.MoveDirection = (Vector3)data;
+       
+
+        moveInput = (Vector3)data;
     }
     public void BroadcastInteract(Component Sender, object data)
     {
