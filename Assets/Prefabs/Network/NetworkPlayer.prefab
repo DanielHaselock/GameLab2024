@@ -70,6 +70,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 7270890141607610612}
   - {fileID: 2212100915775459320}
+  - {fileID: 4033705484262005209}
   - {fileID: 2278421735639293224}
 --- !u!143 &7015598308163729212
 CharacterController:
@@ -824,3 +825,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6274466031980251180, guid: c342c6952a482c2449c59e6be8198c86, type: 3}
   m_PrefabInstance: {fileID: 6960127973039101953}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4033705484262005209 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6299918261684928984, guid: c342c6952a482c2449c59e6be8198c86, type: 3}
+  m_PrefabInstance: {fileID: 6960127973039101953}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 117a369fff712734f8b3cdf5a48e330a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
