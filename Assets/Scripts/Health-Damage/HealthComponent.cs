@@ -47,7 +47,7 @@ public class HealthComponent : NetworkBehaviour
             switch (change)
             {
                 case nameof(Health):
-                    Debug.Log( $"{(Runner.IsServer?"Server":"Client")} HEALTH: {Health}");
+                    Debug.Log( $"{NetworkManager.Instance.GetPlayerNickNameById(Runner.LocalPlayer.PlayerId)} HEALTH: {Health}");
                     break;
             }
         }
