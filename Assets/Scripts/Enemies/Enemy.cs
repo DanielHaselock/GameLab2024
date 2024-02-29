@@ -29,7 +29,7 @@ public class Enemy : NetworkBehaviour
         health = maxHealth;
     }
     
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Player") && !_seenPlayers.Contains(other.gameObject))
         {
@@ -37,7 +37,7 @@ public class Enemy : NetworkBehaviour
             ChangeTargeting();
         }
     }
-    private void OnTriggerExit(Collider other)
+    protected virtual void OnTriggerExit(Collider other)
     {
         if (other.tag.Equals("Player"))
         {
