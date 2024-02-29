@@ -11,9 +11,11 @@ public class HealthComponent : NetworkBehaviour
     public float MaxHealth;
     [Networked] public float Health { get; set; }
 
+    private ChangeDetector _change;
 
     public override void Spawned()
     {
+        _change = GetChangeDetector(ChangeDetector.Source.SimulationState);
         if (Runner.IsServer)
             Health = MaxHealth;
     }
@@ -37,6 +39,19 @@ public class HealthComponent : NetworkBehaviour
         Health = Value;
     }
 
+    public override void Render()
+    {
+        base.Render();
+        foreach (var change in _change.DetectChanges(this))
+        {
+            switch (change)
+            {
+                case nameof(Health):
+                    Debug.Log("HEALTH: " + Health);
+                    break;
+            }
+        }
+    }
 
     public void Death()
     {
