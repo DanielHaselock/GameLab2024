@@ -37,7 +37,7 @@ public class Player : NetworkBehaviour
             data.MoveDirection.Normalize();
             HandleInteract(data);
             HandleJump(data);
-            RPC_HandleAttack(data);
+            HandleAttack(data);
 
             _controller.Move(3 * (data.MoveDirection) * Runner.DeltaTime);
             
@@ -89,18 +89,23 @@ public class Player : NetworkBehaviour
         }
     }
 
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)] //This is the only method that works up to now
-    public void RPC_HandleAttack(PlayerInputData data)
+    public void HandleAttack(PlayerInputData data)
     {
-        RPC_Mul_HandleAttack(data);
+        if (data.Attack && HasInputAuthority)
+        {
+            RPC_HandleAttack();
+        }
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)] //This is the only method that works up to now
+    public void RPC_HandleAttack()
+    {
+        RPC_Mul_HandleAttack();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_Mul_HandleAttack(PlayerInputData data)
+    public void RPC_Mul_HandleAttack()
     {
-        if (data.Attack)
-        {
-            GetComponentInChildren<DamageComponent>().InputAttack();
-        }
+         GetComponentInChildren<DamageComponent>().InputAttack();
     }
 }
