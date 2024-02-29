@@ -57,7 +57,7 @@ public class Player : NetworkBehaviour
         }
         else if(data.Throw)
         {
-            RPC_ThrowItem();
+            ThrowItem(data);
         }
     }
 
@@ -73,13 +73,24 @@ public class Player : NetworkBehaviour
         itemHandler.InputDropItem();
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
+
+    public void ThrowItem(PlayerInputData data)
+    {
+        if(data.Throw && HasInputAuthority)
+            RPC_ThrowItem();
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
     public void RPC_ThrowItem()
+    {
+        RPC_Mul_ThrowItem();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
+    public void RPC_Mul_ThrowItem()
     {
         itemHandler.InputThrowItem();
     }
-
-
 
     public void HandleJump(PlayerInputData data)
     {
