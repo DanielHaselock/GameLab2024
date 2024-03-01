@@ -4,9 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Item
+- Item
   - Health
-  layers:
+layers:
   - Default
   - TransparentFX
   - Ignore Raycast

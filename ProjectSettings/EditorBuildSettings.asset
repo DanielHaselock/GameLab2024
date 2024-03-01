@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestSceneDaniel.unity
     guid: 2aa639bbc68eecf499d09efb055b23d4
+  - enabled: 1
+    path: Assets/Scenes/TestSceneEnemyNavmesh.unity
+    guid: 15f34ad2e9cabfe47be134bcf566726d
   m_configObjects: {}
