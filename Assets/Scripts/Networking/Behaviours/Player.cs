@@ -10,6 +10,7 @@ public class Player : NetworkBehaviour
     private NetworkCharacterController _controller;
 
     private HandleItem itemHandler;
+    private DamageComponent _damager;
     public bool HasInputAuthority { get; private set; }
 
     private void Awake()
@@ -45,52 +46,69 @@ public class Player : NetworkBehaviour
 
     public void HandleInteract(PlayerInputData data)
     {
+        if (!HasInputAuthority)
+            return;
+        
         if (data.Interact)
         {
-            RPC_PickItem();
+            PickItem();
         }
         else if (data.Drop)
         {
-            RPC_DropItem();
+            DropItem();
         }
         else if(data.Throw)
         {
             ThrowItem(data);
         }
     }
+    
+    public void PickItem()
+    {
+       if(Runner.IsServer)
+           itemHandler.InputPickItem();
+       else
+        RPC_PickItemOnServer();
+    }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void RPC_PickItem()
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_PickItemOnServer()
     {
         itemHandler.InputPickItem();
     }
     
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void RPC_DropItem()
+    private void DropItem()
     {
-        itemHandler.InputDropItem();
+        if (Runner.IsServer)
+            itemHandler.InputDropItem();
+        else
+            RPC_DropItemOnServer();
     }
 
-
-    public void ThrowItem(PlayerInputData data)
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_DropItemOnServer()
     {
-        if(data.Throw && HasInputAuthority)
+        Debug.Log("RPC");
+        itemHandler.InputDropItem();
+    }
+    
+
+    private void ThrowItem(PlayerInputData data)
+    {
+        if(Runner.IsServer)
+            itemHandler.InputThrowItem();
+        else
             RPC_ThrowItem();
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    public void RPC_ThrowItem()
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_ThrowItem()
     {
-        RPC_Mul_ThrowItem();
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_Mul_ThrowItem()
-    {
+        Debug.Log("RPC");
         itemHandler.InputThrowItem();
     }
-
-    public void HandleJump(PlayerInputData data)
+    
+    private void HandleJump(PlayerInputData data)
     {
         if (data.Jump)
         { 
@@ -102,19 +120,9 @@ public class Player : NetworkBehaviour
     {
         if (data.Attack && HasInputAuthority)
         {
-            RPC_HandleAttack();
+            if (_damager == null)
+                _damager = GetComponentInChildren<DamageComponent>();
+            _damager.InitiateAttack();
         }
-    }
-
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)] //This is the only method that works up to now
-    public void RPC_HandleAttack()
-    {
-        RPC_Mul_HandleAttack();
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_Mul_HandleAttack()
-    {
-         GetComponentInChildren<DamageComponent>().InputAttack();
     }
 }

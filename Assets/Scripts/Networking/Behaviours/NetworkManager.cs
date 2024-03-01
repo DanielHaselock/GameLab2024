@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Fusion;
+using Fusion.Addons.Physics;
 using Fusion.Sockets;
 using Networking.Data;
 using Networking.UI;
@@ -154,6 +155,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             NetworkLogger.Log("Creating new Runner");
             _runner = gameObject.AddComponent<NetworkRunner>();
+            gameObject.AddComponent<RunnerSimulatePhysics3D>();
             _runner.ProvideInput = true;
         }
     }

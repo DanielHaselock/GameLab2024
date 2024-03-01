@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class HandleItem : MonoBehaviour
+public class HandleItem : NetworkBehaviour
 {
     private List<GameObject> ItemsAvailable;
 
@@ -22,7 +22,7 @@ public class HandleItem : MonoBehaviour
     {
         if(other.gameObject.tag == tag)
         {
-            ItemsAvailable.Add(other.gameObject.transform.parent.gameObject);
+            ItemsAvailable.Add(other.gameObject);
         }
         
     }
@@ -31,7 +31,7 @@ public class HandleItem : MonoBehaviour
     {
         if (other.gameObject.tag == tag)
         {
-            ItemsAvailable.Remove(other.gameObject.transform.parent.gameObject);
+            ItemsAvailable.Remove(other.gameObject);
         }
         
     }
