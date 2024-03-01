@@ -46,6 +46,9 @@ public class Player : NetworkBehaviour
 
     public void HandleInteract(PlayerInputData data)
     {
+        if (!HasInputAuthority)
+            return;
+        
         if (data.Interact)
         {
             PickItem();
@@ -76,9 +79,19 @@ public class Player : NetworkBehaviour
     
     private void DropItem()
     {
-        itemHandler.InputDropItem();
+        if (Runner.IsServer)
+            itemHandler.InputDropItem();
+        else
+            RPC_DropItemOnServer();
     }
 
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_DropItemOnServer()
+    {
+        Debug.Log("RPC");
+        itemHandler.InputDropItem();
+    }
+    
 
     private void ThrowItem(PlayerInputData data)
     {
@@ -91,6 +104,7 @@ public class Player : NetworkBehaviour
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     private void RPC_ThrowItem()
     {
+        Debug.Log("RPC");
         itemHandler.InputThrowItem();
     }
     
