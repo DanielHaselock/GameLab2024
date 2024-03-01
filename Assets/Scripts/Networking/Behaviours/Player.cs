@@ -1,4 +1,5 @@
 using System;
+using Cinemachine;
 using Fusion;
 using Networking.Data;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class Player : NetworkBehaviour
     private NetworkCharacterController _controller;
 
     private HandleItem itemHandler;
+    private DamageComponent _damager;
     public bool HasInputAuthority { get; private set; }
 
     private void Awake()
@@ -31,50 +33,96 @@ public class Player : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
-
+        
         if (GetInput(out PlayerInputData data))
         {
-            data.MoveDirection.Normalize();
             HandleInteract(data);
             HandleJump(data);
-
-            _controller.Move(3 * (data.MoveDirection) * Runner.DeltaTime);
-            
+            HandleAttack(data);
+            _controller.Move(3 * data.MoveDirection.normalized * Runner.DeltaTime);
         }
     }
 
 
     public void HandleInteract(PlayerInputData data)
     {
+        if (!HasInputAuthority)
+            return;
+        
         if (data.Interact)
         {
-            RPC_PickItem();
+            PickItem();
         }
         else if (data.Drop)
         {
-            RPC_DropItem();
+            DropItem();
+        }
+        else if(data.Throw)
+        {
+            ThrowItem(data);
         }
     }
+    
+    public void PickItem()
+    {
+       if(Runner.IsServer)
+           itemHandler.InputPickItem();
+       else
+        RPC_PickItemOnServer();
+    }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void RPC_PickItem()
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_PickItemOnServer()
     {
         itemHandler.InputPickItem();
     }
     
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void RPC_DropItem()
+    private void DropItem()
     {
-        itemHandler.InputDropItem();
+        if (Runner.IsServer)
+            itemHandler.InputDropItem();
+        else
+            RPC_DropItemOnServer();
     }
 
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_DropItemOnServer()
+    {
+        Debug.Log("RPC");
+        itemHandler.InputDropItem();
+    }
+    
 
+    private void ThrowItem(PlayerInputData data)
+    {
+        if(Runner.IsServer)
+            itemHandler.InputThrowItem();
+        else
+            RPC_ThrowItem();
+    }
 
-    public void HandleJump(PlayerInputData data)
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_ThrowItem()
+    {
+        Debug.Log("RPC");
+        itemHandler.InputThrowItem();
+    }
+    
+    private void HandleJump(PlayerInputData data)
     {
         if (data.Jump)
         { 
             _controller.Jump();
+        }
+    }
+
+    public void HandleAttack(PlayerInputData data)
+    {
+        if (data.Attack && HasInputAuthority)
+        {
+            if (_damager == null)
+                _damager = GetComponentInChildren<DamageComponent>();
+            _damager.InitiateAttack();
         }
     }
 }

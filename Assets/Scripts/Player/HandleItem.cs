@@ -4,27 +4,25 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class HandleItem : MonoBehaviour
+public class HandleItem : NetworkBehaviour
 {
     private List<GameObject> ItemsAvailable;
-
-    private Collider collidertocheck;
 
     [SerializeField] private string tag;
 
     Inventory inventory;
+
     void Start()
     {
         ItemsAvailable = new List<GameObject>();
         inventory = GetComponent<Inventory>();
-        collidertocheck = GetComponent<Collider>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == tag)
         {
-            ItemsAvailable.Add(other.gameObject.transform.parent.gameObject);
+            ItemsAvailable.Add(other.gameObject);
         }
         
     }
@@ -33,7 +31,7 @@ public class HandleItem : MonoBehaviour
     {
         if (other.gameObject.tag == tag)
         {
-            ItemsAvailable.Remove(other.gameObject.transform.parent.gameObject);
+            ItemsAvailable.Remove(other.gameObject);
         }
         
     }
@@ -61,5 +59,10 @@ public class HandleItem : MonoBehaviour
     public void InputDropItem()
     {
         inventory.RemoveLatestItem();
+    }
+
+    public void InputThrowItem()
+    {
+        inventory.RemoveLatestItem(true);
     }
 }

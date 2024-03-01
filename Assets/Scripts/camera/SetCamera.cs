@@ -7,12 +7,13 @@ using UnityEngine;
 public class SetCamera : MonoBehaviour
 {
     [SerializeField] private GameObject _camera;
-    private CinemachineVirtualCamera _virtualcamera;
+    public CinemachineFreeLook _virtualcamera;
 
     public void SetCameraParams(GameObject obj)
     {
         _camera = GameObject.Find("Virtual Camera");
-        _virtualcamera = _camera.GetComponent<CinemachineVirtualCamera>();
+        _virtualcamera = _camera.GetComponent<CinemachineFreeLook>();
         _virtualcamera.Follow = obj.transform;
+        _virtualcamera.LookAt = obj.transform;
     }
 }
