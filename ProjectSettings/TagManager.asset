@@ -4,17 +4,18 @@
 TagManager:
   serializedVersion: 2
   tags:
-- Item
+  - Item
   - Health
-layers:
+  - Enemy
+  layers:
   - Default
   - TransparentFX
   - Ignore Raycast
   - 
   - Water
   - UI
-  - Attack
-  - Health
+  - 
+  - 
   - 
   - 
   - 
