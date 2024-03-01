@@ -3,17 +3,17 @@ using Fusion.Addons.Physics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class Inventory : MonoBehaviour
+public class Inventory : NetworkBehaviour
 {
-    public List<GameObject> Items;
-
+    [SerializeField] private Transform throwPoint;
     [SerializeField] private int MaxItemNumb = 5;
-
-    [HideInInspector] public bool IsFull => Items.Count == MaxItemNumb;
-
+    [SerializeField] private float throwForce=10;
+    private List<GameObject> Items;
+    public bool IsFull => Items.Count == MaxItemNumb;
     public float SpaceBetween2Items = 0.5f;
 
-    public float ThrowForce;
+    private List<GameObject> itemsToThrow;
+    private List<GameObject> itemsToDrop;
 
     // Start is called before the first frame update
     void Start()
@@ -24,34 +24,29 @@ public class Inventory : MonoBehaviour
     public void addItem(GameObject item) //Main Obj
     {
         Item itemClass = item.GetComponent<Item>();
-        GameObject LocalObj = itemClass.GetLocalGameobject();
-        NetworkObject NetObj = itemClass.GetNetworkGameobject();
-        LocalObj.SetActive(true);
-        LocalObj.transform.SetParent(transform);
-        NetObj.GetComponent<NetworkRigidbody3D>().Teleport(new Vector3(1000, 0, 1000));
-        NetObj.GetComponent<Rigidbody>().isKinematic = true;
+        item.transform.SetParent(transform);
+        item.GetComponent<Rigidbody>().isKinematic = true;
 
         Items.Add(item);
         Vector3 pos = Vector3.zero;
         pos.y += SpaceBetween2Items * Items.Count;
-        LocalObj.gameObject.transform.localPosition = pos;
+        item.gameObject.transform.localPosition = pos;
     }
 
-    public void removeItem(GameObject item, bool Throw) 
+    public void removeItem(GameObject item, bool Throw)
     {
-        Item itemClass = item.GetComponent<Item>();
-        GameObject LocalObj = itemClass.GetLocalGameobject();
-        NetworkObject NetObj = itemClass.GetNetworkGameobject();
-        LocalObj.transform.SetParent(item.transform);
-        LocalObj.SetActive(false);
-        NetObj.GetComponent<NetworkRigidbody3D>().Teleport(transform.position);
-        NetObj.GetComponent<Rigidbody>().isKinematic = false;
+        Debug.Log($"Kya re {Throw}");
+        if (itemsToThrow == null)
+            itemsToThrow = new List<GameObject>();
+        
+        if (itemsToDrop == null)
+            itemsToDrop = new List<GameObject>();
+        
         if(Throw)
-        {
-            NetObj.GetComponent<Rigidbody>().AddForce(transform.parent.forward * ThrowForce);
-        }
-
-
+            itemsToThrow.Add(item);
+        else
+            itemsToDrop.Add(item);
+        
         Items.Remove(item);
     }
 
@@ -61,6 +56,44 @@ public class Inventory : MonoBehaviour
             removeItem(Items[Items.Count - 1], Throw);
     }
 
+    public override void FixedUpdateNetwork()
+    {
+        base.FixedUpdateNetwork();
+        HandleThrow();
+        HandleDrop();
+    }
 
-
+    private void HandleThrow()
+    {
+        if (itemsToThrow == null || itemsToThrow.Count <= 0)
+            return;
+        var clones = new List<GameObject>(itemsToThrow);
+        itemsToThrow.Clear();
+        foreach (var item in clones)
+        {
+            Item itemClass = item.GetComponent<Item>();
+            var nrb = item.GetComponent<NetworkRigidbody3D>();
+            var rb = item.GetComponent<Rigidbody>();
+            item.transform.SetParent(null);
+            nrb.Teleport(throwPoint.position);
+            nrb.RBIsKinematic = false;
+            nrb.ResetRigidbody();
+            rb.AddForce(transform.parent.forward * throwForce, ForceMode.Impulse);
+        }
+    }
+    private void HandleDrop()
+    {
+        if (itemsToDrop == null || itemsToDrop.Count <= 0)
+            return;
+        var clones = new List<GameObject>(itemsToDrop);
+        itemsToDrop.Clear();
+        foreach (var item in clones)
+        {
+            Item itemClass = item.GetComponent<Item>();
+            var nrb = item.GetComponent<NetworkRigidbody3D>();
+            item.transform.SetParent(null);
+            nrb.Teleport(throwPoint.position);
+            nrb.RBIsKinematic = false;
+        }
+    }
 }
