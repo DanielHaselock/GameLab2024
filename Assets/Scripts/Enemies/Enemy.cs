@@ -12,21 +12,30 @@ public class Enemy : NetworkBehaviour
 
     protected NavMeshAgent navMeshAgent;
 
-    public int maxHealth;
-    protected int health;
+    protected float health;
+
+    [SerializeField] protected Material corpseMaterial;
+    [SerializeField] protected GameObject eyes;
+    [SerializeField] protected GameObject body;
+    [SerializeField] protected Animator animator;
+
+    protected bool dead = false;
+    protected bool stunned = false;
+
+    [SerializeField] protected HealthComponent healthComponent;
+    [SerializeField] protected DamageComponent damageComponent;
+
+    protected float speed;
     // Start is called before the first frame update
     private void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
-    private IEnumerator Start()
+    protected virtual void Start()
     {
-        yield return new WaitWhile(() => Runner == null);
-        if (Runner.IsServer)
-            yield break;
-
         //Go crazy        
-        health = maxHealth;
+        health = healthComponent.MaxHealth;
+        speed = GetComponent<NavMeshAgent>().speed;
     }
     
     protected virtual void OnTriggerEnter(Collider other)
@@ -47,7 +56,28 @@ public class Enemy : NetworkBehaviour
     }
     public virtual void ChangeTargeting() { }
 
-    public virtual void OnAttack(int damage) {
-        health -= damage;
+    public virtual void OnAttack() {
+        health = healthComponent.Health;
+        if (health > 0)
+            StartCoroutine(stun());
+        else
+        {
+            body.GetComponent<Renderer>().material = corpseMaterial;
+            eyes.SetActive(false);
+            dead = true;
+            navMeshAgent.speed = 0;
+            GetComponent<Rigidbody>().AddForce((_targetPlayer.transform.position - transform.position).normalized * 1f, ForceMode.Impulse);
+        }
+    }
+    IEnumerator stun()
+    {
+        navMeshAgent.speed = 0;
+        animator.CrossFade("Hit", .01f);
+        stunned = true;
+        yield return new WaitForSecondsRealtime(.5f);
+        animator.CrossFade("Idle", .25f);
+        yield return new WaitForSecondsRealtime(1.5f);
+        stunned = false;
+        navMeshAgent.speed = speed;
     }
 }
