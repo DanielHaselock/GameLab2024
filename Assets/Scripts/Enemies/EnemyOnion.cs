@@ -51,6 +51,10 @@ public class EnemyOnion : Enemy
                 }
                 if (_seenPlayers.Count > 1)
                     ChangeTargeting();
+                if (canAttack && !stunned && Vector3.Distance(transform.position, _targetPlayer.transform.position) < 3)
+                {
+                    StartCoroutine(waitAttack());
+                }
             }
             if (!stunned)
             {
@@ -58,7 +62,7 @@ public class EnemyOnion : Enemy
                     idle = false;
                 else
                     idle = true;
-                if (idle != prevIdle)
+                if (idle != prevIdle && !attacking)
                 {
                     if (idle)
                     {
@@ -104,6 +108,29 @@ public class EnemyOnion : Enemy
         }
         passive = happy;
         GetComponent<SphereCollider>().radius = 35;
+    }
+
+    IEnumerator waitAttack()
+    {
+        canAttack = false;
+        attacking = true;
+        navMeshAgent.speed = 0;
+        animator.CrossFade("Attack", .1f);
+        //attack windup
+        yield return new WaitForSecondsRealtime(.35f);
+        if (stunned)
+        {
+            attacking = false;
+            yield break;
+        }
+        damageComponent.InitiateAttack("Player");
+        //attack recovery
+        yield return new WaitForSecondsRealtime(.17f);
+        attacking = false;
+        navMeshAgent.speed = speed;
+        //attack delay
+        yield return new WaitForSecondsRealtime(3f);
+        canAttack = true;
     }
     public override void OnAttack()
     {

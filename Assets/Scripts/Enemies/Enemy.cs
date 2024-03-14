@@ -21,6 +21,8 @@ public class Enemy : NetworkBehaviour
 
     protected bool dead = false;
     protected bool stunned = false;
+    protected bool canAttack = false;
+    protected bool attacking = false;
 
     [SerializeField] protected HealthComponent healthComponent;
     [SerializeField] protected DamageComponent damageComponent;
@@ -62,6 +64,7 @@ public class Enemy : NetworkBehaviour
             StartCoroutine(stun());
         else
         {
+            animator.StopPlayback();
             body.GetComponent<Renderer>().material = corpseMaterial;
             eyes.SetActive(false);
             dead = true;
@@ -71,6 +74,7 @@ public class Enemy : NetworkBehaviour
     }
     IEnumerator stun()
     {
+        canAttack = false;
         navMeshAgent.speed = 0;
         animator.CrossFade("Hit", .01f);
         stunned = true;
@@ -79,5 +83,6 @@ public class Enemy : NetworkBehaviour
         yield return new WaitForSecondsRealtime(1.5f);
         stunned = false;
         navMeshAgent.speed = speed;
+        canAttack = true;
     }
 }

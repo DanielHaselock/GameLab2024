@@ -59,6 +59,6 @@ public class HealthComponent : NetworkBehaviour
             return;
         
         Debug.Log("DEATH!");
-        gameObject.transform.parent.GetComponent<NetworkObject>().Runner.Despawn(gameObject.transform.parent.GetComponent<NetworkObject>());
+        //gameObject.transform.parent.GetComponent<NetworkObject>().Runner.Despawn(gameObject.transform.parent.GetComponent<NetworkObject>());
     }
 }
