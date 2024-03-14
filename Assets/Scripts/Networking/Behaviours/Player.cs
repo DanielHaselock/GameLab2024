@@ -9,6 +9,7 @@ using UnityEngine.Events;
 public class Player : NetworkBehaviour
 {
     private NetworkCharacterController _controller;
+    private NetworkMecanimAnimator _anim;
     private HandlePickup _pickupHandler;
     private DamageComponent _damager;
     private PlayerPickupable _myPickupable;
@@ -17,6 +18,7 @@ public class Player : NetworkBehaviour
     private void Awake()
     {
         _controller = GetComponent<NetworkCharacterController>();
+        _anim = GetComponent<NetworkMecanimAnimator>();
         _pickupHandler = GetComponentInChildren<HandlePickup>();
         _myPickupable = GetComponent<PlayerPickupable>();
     }
@@ -47,6 +49,18 @@ public class Player : NetworkBehaviour
             HandleAttack(data);
             _controller.Move(3 * data.MoveDirection.normalized * Runner.DeltaTime);
         }
+    }
+
+    public override void Render()
+    {
+        base.Render();
+        if (IsProxy )
+            return;
+
+        if (!Runner.IsForward)
+            return;
+        
+        _anim.Animator.SetFloat("Move", _controller.Velocity.normalized.magnitude);
     }
 
 
@@ -119,6 +133,7 @@ public class Player : NetworkBehaviour
         if (data.Jump)
         { 
             _controller.Jump();
+            _anim.SetTrigger("Jump", true);
         }
     }
 

@@ -152,8 +152,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2350adaf9ac44f3884fc01aff3b27015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotsNeeded: 1
   _IsPickedUp: 0
+  _Thrown: 0
+  slotsNeeded: 1
+  _throwMaxHeight: 3
+  _throwInterpolation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.60004723
+      outSlope: -0.60004723
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.50193053
+      value: 0.69881797
+      inSlope: 0.002325803
+      outSlope: 0.002325803
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.60469884
+      outSlope: 0.60469884
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  interpolationDur: 0.25
 --- !u!1 &8236707962166746892
 GameObject:
   m_ObjectHideFlags: 0

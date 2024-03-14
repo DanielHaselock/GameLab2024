@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Fusion;
 using Fusion.Addons.Physics;
 using UnityEngine;
@@ -9,21 +10,31 @@ namespace Interactables
 {
     public class PlayerPickupable : NetworkBehaviour
     {
+        [Networked] public bool IsPickedUp { get; private set; }
+        [Networked] public bool Thrown { get; private set; }
+        
         [SerializeField] private int slotsNeeded;
-        [SerializeField] private float _ccImpulseMult = 5;
+        [SerializeField] private float _throwMaxHeight = 1f;
+        [SerializeField] private AnimationCurve _throwInterpolation;
+        [SerializeField] private float interpolationDur=0.25f;
+        
         private NetworkRigidbody3D _nrb;
         private Rigidbody _rb;
         private CharacterController _controller;
         private NetworkCharacterController _networkController;
         private NetworkObject _no;
+
+       
+        private float _throwTimeStep = 0;
+        private Vector3 _throwStartPos;
+        private Vector3 _throwMidPos;
+        private Vector3 _throwFinalPos;
+
+        private float _maxSpeedOg;
+        private float _maxAccelOg;
+        
         public int SlotNeeded => slotsNeeded;
-        [Networked] public bool IsPickedUp { get; set; }
-
-        private bool _thrown;
-        private float _throwForce;
-        private Vector3 _throwDir;
-
-        public bool AllowInputs => !IsPickedUp && !_thrown;
+        public bool AllowInputs => !IsPickedUp && !Thrown;
         
         private void Start()
         {
@@ -32,7 +43,12 @@ namespace Interactables
             _controller = GetComponent<CharacterController>();
             _networkController = GetComponent<NetworkCharacterController>();
             _no = GetComponent<NetworkObject>();
-            
+
+            if (_networkController)
+            {
+                _maxAccelOg = _networkController.acceleration;
+                _maxSpeedOg = _networkController.maxSpeed;
+            }
         }
         
         public void PrepareForParenting(bool pickup)
@@ -121,37 +137,52 @@ namespace Interactables
             _rb.velocity = velocity;
         }
 
-        public void Throw(Vector3 dir, float force)
+        public void Throw(Vector3 dir, float throwDist)
         {
-            if (_networkController)
-            {
-                _thrown = true;
-                _throwDir = dir;
-                _throwForce = force*_ccImpulseMult;
-            }
-            else if (_rb)
-            {
-                _rb.AddForce(dir*force,ForceMode.Impulse);   
-            }
+            if (_nrb)
+                _nrb.RBIsKinematic = true;
+           
+            _evaluationStep = 0;
+            _throwStartPos = transform.position;
+            _throwFinalPos = transform.position + (dir * throwDist);
+            _throwMidPos = (_throwStartPos + _throwFinalPos) / 2;
+            _throwMidPos.y = _throwMaxHeight;
+            _throwTimeStep = 0;
+            
+            Thrown = true;
         }
-        
+
+        private float _evaluationStep = 0;
         public override void FixedUpdateNetwork()
         {
             base.FixedUpdateNetwork();
             if(!Runner.IsServer)
                 return;
-            
-            if (_thrown)
+            if (Thrown)
             {
-                if (_throwForce <= 0.1f)
+                if (_throwTimeStep > 1)
                 {
-                    _throwForce = 0;
-                    _thrown = false;
+                    Thrown = false;
+                    if (_rb)
+                        _rb.isKinematic = false;
                     return;
                 }
 
-                _networkController.Teleport(_networkController.transform.position + (_throwDir*_throwForce * Runner.DeltaTime));
-                _throwForce = Mathf.Lerp(_throwForce, 0, 5 * Runner.DeltaTime);
+                var currPos = transform.position;
+                var pos1 = Vector3.Lerp(_throwStartPos, _throwMidPos, _throwTimeStep);
+                var pos2 = Vector3.Lerp(_throwMidPos, _throwFinalPos, _throwTimeStep);
+                
+                var estimated = Vector3.Lerp(pos1, pos2, _throwTimeStep);
+                var dir = (estimated - currPos).normalized;
+                
+                if(_nrb)
+                    _nrb.RBPosition = estimated;
+                else if(_controller)
+                    _controller.transform.position = estimated;
+                
+                var eval = _throwInterpolation.Evaluate(_evaluationStep);
+                _evaluationStep += Runner.DeltaTime / interpolationDur;
+                _throwTimeStep += (Runner.DeltaTime / interpolationDur) * eval;
             }
         }
     }
