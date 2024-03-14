@@ -144,6 +144,7 @@ public class Player : NetworkBehaviour
             if (_damager == null)
                 _damager = GetComponentInChildren<DamageComponent>();
             _damager.InitiateAttack();
+            _anim.SetTrigger("Attack", true);
         }
     }
 }
