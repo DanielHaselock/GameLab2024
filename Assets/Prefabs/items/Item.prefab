@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7973135579920395517}
   - component: {fileID: 4319332544764334035}
   - component: {fileID: 3552337259200878183}
+  - component: {fileID: 4316603767043654682}
   m_Layer: 0
   m_Name: Item
   m_TagString: Item
@@ -50,10 +51,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemClass: 0
-  LocalTomatoObj: {fileID: 0}
-  LocalCheezeObj: {fileID: 0}
-  TomatoObj: {fileID: 0}
-  CheezeObj: {fileID: 0}
 --- !u!114 &7005245570521251642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,6 +69,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 4319332544764334035}
+  - {fileID: 4316603767043654682}
 --- !u!54 &7973135579920395517
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -142,6 +140,56 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4316603767043654682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8110762694264403655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2350adaf9ac44f3884fc01aff3b27015, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _IsPickedUp: 0
+  _Thrown: 0
+  slotsNeeded: 1
+  _throwMaxHeight: 3
+  _throwInterpolation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.60004723
+      outSlope: -0.60004723
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.50193053
+      value: 0.69881797
+      inSlope: 0.002325803
+      outSlope: 0.002325803
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.60469884
+      outSlope: 0.60469884
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  interpolationDur: 0.25
 --- !u!1 &8236707962166746892
 GameObject:
   m_ObjectHideFlags: 0
