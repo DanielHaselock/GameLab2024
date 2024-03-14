@@ -176,7 +176,7 @@ namespace Interactables
                 var dir = (estimated - currPos).normalized;
                 
                 if(_nrb)
-                    _nrb.RBPosition = estimated;
+                    _rb.MovePosition(estimated);
                 else if(_controller)
                     _controller.transform.position = estimated;
                 
