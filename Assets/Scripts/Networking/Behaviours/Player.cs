@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Cinemachine;
 using Fusion;
 using Interactables;
@@ -14,7 +15,7 @@ public class Player : NetworkBehaviour
     private DamageComponent _damager;
     private PlayerPickupable _myPickupable;
     public bool HasInputAuthority { get; private set; }
-
+    
     private void Awake()
     {
         _controller = GetComponent<NetworkCharacterController>();
