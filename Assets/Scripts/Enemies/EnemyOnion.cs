@@ -8,32 +8,73 @@ public class EnemyOnion : Enemy
     protected List<GameObject> _seenOnions = new List<GameObject>();
     float delta = 0;
     int targetTime = 7;
-    private void Start()
+
+    private Vector3 lastPosition;
+    private float velocity;
+    bool idle = true;
+    bool prevIdle = true;
+
+    protected override void Start()
     {
-        
+        base.Start();
+        //Go crazy        
+        lastPosition = transform.position;
+        animator.CrossFade("Idle", .25f);
     }
 
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
-        if (passive)
+        if (!dead)
         {
-            delta += Runner.DeltaTime;
-            if (delta > targetTime)
+            if (healthComponent.Health < health)
+                OnAttack();
+            
+            
+            velocity = Vector3.Distance(transform.position, lastPosition) / Time.deltaTime;
+            lastPosition = transform.position;
+            if (passive)
             {
-                delta = 0;
-                targetTime = Random.Range(1, 10);
-                navMeshAgent.destination = new Vector3(transform.position.x + Random.Range(-10f, 10f), transform.position.y, transform.position.z + Random.Range(-10f, 10f));
+                delta += Runner.DeltaTime;
+                if (delta > targetTime)
+                {
+                    delta = 0;
+                    targetTime = Random.Range(1, 10);
+                    navMeshAgent.destination = new Vector3(transform.position.x + Random.Range(-20f, 20f), transform.position.y, transform.position.z + Random.Range(-10f, 10f));
+                }
             }
-        }
-        else //aggressive
-        {
-            if (_targetPlayer != null)
+            else //aggressive
             {
-                navMeshAgent.destination = _targetPlayer.transform.position;
+                if (_targetPlayer != null)
+                {
+                    navMeshAgent.destination = _targetPlayer.transform.position;
+                }
+                if (_seenPlayers.Count > 1)
+                    ChangeTargeting();
+                if (canAttack && !stunned && Vector3.Distance(transform.position, _targetPlayer.transform.position) < 3)
+                {
+                    StartCoroutine(waitAttack());
+                }
             }
-            if (_seenPlayers.Count > 1)
-                ChangeTargeting();
+            if (!stunned)
+            {
+                if (velocity > 0.2f)
+                    idle = false;
+                else
+                    idle = true;
+                if (idle != prevIdle && !attacking)
+                {
+                    if (idle)
+                    {
+                        animator.CrossFade("Idle", .25f);
+                    }
+                    else
+                    {
+                        animator.CrossFade("Run", .25f);
+                    }
+                }
+                prevIdle = idle;
+            }
         }
     }
     public override void ChangeTargeting()
@@ -68,19 +109,45 @@ public class EnemyOnion : Enemy
         passive = happy;
         GetComponent<SphereCollider>().radius = 35;
     }
-    public override void OnAttack(int damage)
+
+    IEnumerator waitAttack()
     {
-        base.OnAttack(damage);
-        if (passive)
+        canAttack = false;
+        attacking = true;
+        navMeshAgent.speed = 0;
+        animator.CrossFade("Attack", .1f);
+        //attack windup
+        yield return new WaitForSecondsRealtime(.35f);
+        if (stunned)
         {
-            passive = false;
-            navMeshAgent.destination = _targetPlayer.transform.position;
-            GetComponent<SphereCollider>().radius = 15;
+            attacking = false;
+            yield break;
         }
-        foreach (GameObject onion in _seenOnions)
+        damageComponent.InitiateAttack("Player");
+        //attack recovery
+        yield return new WaitForSecondsRealtime(.17f);
+        attacking = false;
+        navMeshAgent.speed = speed;
+        //attack delay
+        yield return new WaitForSecondsRealtime(3f);
+        canAttack = true;
+    }
+    public override void OnAttack()
+    {
+        base.OnAttack();
+        if (!dead)
         {
-            if (onion.GetComponent<EnemyOnion>().passive)
-                onion.GetComponent<EnemyOnion>().alert(_targetPlayer);
+            if (passive)
+            {
+                passive = false;
+                navMeshAgent.destination = _targetPlayer.transform.position;
+                GetComponent<SphereCollider>().radius = 15;
+            }
+            foreach (GameObject onion in _seenOnions)
+            {
+                if (onion.GetComponent<EnemyOnion>().passive)
+                    onion.GetComponent<EnemyOnion>().alert(_targetPlayer);
+            }
         }
     }
     public void alert(GameObject player)
