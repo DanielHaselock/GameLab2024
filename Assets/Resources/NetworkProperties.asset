@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9df731ee934edab6969427f6812fe9, type: 3}
   m_Name: NetworkProperties
   m_EditorClassIdentifier: 
-  GameSceneIndex: 2
+  GameSceneIndex: 4
   PlayerPrefab:
     RawGuidValue: 84bb177b727c34779a356fe8958bbf63
   MaxPlayers: 2
