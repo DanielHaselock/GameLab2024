@@ -42,6 +42,7 @@ public class HealthComponent : NetworkBehaviour
     public override void Render()
     {
         base.Render();
+        if (_change==null) { return; }
         foreach (var change in _change.DetectChanges(this))
         {
             switch (change)
@@ -59,6 +60,6 @@ public class HealthComponent : NetworkBehaviour
             return;
         
         Debug.Log("DEATH!");
-        gameObject.transform.parent.GetComponent<NetworkObject>().Runner.Despawn(gameObject.transform.parent.GetComponent<NetworkObject>());
+        //gameObject.transform.parent.GetComponent<NetworkObject>().Runner.Despawn(gameObject.transform.parent.GetComponent<NetworkObject>());
     }
 }

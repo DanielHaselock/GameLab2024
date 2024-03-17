@@ -44,7 +44,30 @@ public class DamageComponent : NetworkBehaviour
             Attack(hc);
         }
     }
-    
+
+    public void InitiateAttack(string tag)
+    {
+        if (Runner.IsServer)
+            DoAttack(tag);
+        else
+            RPC_InitiateAttackOnServer(tag);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_InitiateAttackOnServer(string tag)
+    {
+        DoAttack(tag);
+    }
+
+    private void DoAttack(string tag)
+    {
+        foreach (var hc in GetAllHealthAroundMe())
+        {
+            if (hc.GetComponentInParent<GameObject>().tag.Contains(tag))
+                Attack(hc);
+        }
+    }
+
     private List<HealthComponent> GetAllHealthAroundMe()
     {
         var list = new List<HealthComponent>();

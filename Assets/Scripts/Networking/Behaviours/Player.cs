@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using Cinemachine;
 using Fusion;
+using Interactables;
 using Networking.Data;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,39 +10,64 @@ using UnityEngine.Events;
 public class Player : NetworkBehaviour
 {
     private NetworkCharacterController _controller;
-
-    private HandleItem itemHandler;
+    private NetworkMecanimAnimator _anim;
+    private HandlePickup _pickupHandler;
     private DamageComponent _damager;
+    private PlayerPickupable _myPickupable;
     public bool HasInputAuthority { get; private set; }
+    private bool isPaused;
+
+    public PauseMenu pauseMenuUI;
 
     private void Awake()
     {
         _controller = GetComponent<NetworkCharacterController>();
-        itemHandler = transform.Find("ItemSlot").GetComponent<HandleItem>();
+        _anim = GetComponent<NetworkMecanimAnimator>();
+        _pickupHandler = GetComponentInChildren<HandlePickup>();
+        _myPickupable = GetComponent<PlayerPickupable>();
+        pauseMenuUI = GameObject.FindWithTag("PauseMenu").GetComponent<PauseMenu>();
     }
-
-
+    
     public override void Spawned()
     {
         var no = GetComponent<NetworkObject>();
+        this.name = "Player_" + no.InputAuthority.PlayerId;
         if (no.InputAuthority == Runner.LocalPlayer)
         {
             HasInputAuthority = true;
             GetComponent<SetCamera>().SetCameraParams(gameObject.transform.GetChild(1).gameObject);
             GetComponent<PlayerInputController>().OnSpawned();
+            isPaused = false;
         }
     }
+    
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
+        
+        if(!_myPickupable.AllowInputs)
+            return;
         
         if (GetInput(out PlayerInputData data))
         {
             HandleInteract(data);
             HandleJump(data);
             HandleAttack(data);
+            HandlePause(data);
             _controller.Move(3 * data.MoveDirection.normalized * Runner.DeltaTime);
         }
+    }
+
+    public override void Render()
+    {
+        base.Render();
+        if (IsProxy )
+            return;
+
+        if (!Runner.IsForward)
+            return;
+        
+        _anim.Animator.SetFloat("Move", _controller.Velocity.normalized.magnitude);
     }
 
 
@@ -66,7 +93,7 @@ public class Player : NetworkBehaviour
     public void PickItem()
     {
        if(Runner.IsServer)
-           itemHandler.InputPickItem();
+           _pickupHandler.InputPick();
        else
         RPC_PickItemOnServer();
     }
@@ -74,13 +101,13 @@ public class Player : NetworkBehaviour
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     private void RPC_PickItemOnServer()
     {
-        itemHandler.InputPickItem();
+        _pickupHandler.InputPick();
     }
     
     private void DropItem()
     {
         if (Runner.IsServer)
-            itemHandler.InputDropItem();
+            _pickupHandler.InputDrop();
         else
             RPC_DropItemOnServer();
     }
@@ -89,14 +116,14 @@ public class Player : NetworkBehaviour
     private void RPC_DropItemOnServer()
     {
         Debug.Log("RPC");
-        itemHandler.InputDropItem();
+        _pickupHandler.InputDrop();
     }
     
 
     private void ThrowItem(PlayerInputData data)
     {
         if(Runner.IsServer)
-            itemHandler.InputThrowItem();
+            _pickupHandler.InputThrow();
         else
             RPC_ThrowItem();
     }
@@ -105,7 +132,7 @@ public class Player : NetworkBehaviour
     private void RPC_ThrowItem()
     {
         Debug.Log("RPC");
-        itemHandler.InputThrowItem();
+        _pickupHandler.InputThrow();
     }
     
     private void HandleJump(PlayerInputData data)
@@ -113,6 +140,7 @@ public class Player : NetworkBehaviour
         if (data.Jump)
         { 
             _controller.Jump();
+            _anim.SetTrigger("Jump", true);
         }
     }
 
@@ -123,6 +151,50 @@ public class Player : NetworkBehaviour
             if (_damager == null)
                 _damager = GetComponentInChildren<DamageComponent>();
             _damager.InitiateAttack();
+            _anim.SetTrigger("Attack", true);
+        }
+    }
+    public void HandlePause(PlayerInputData data)
+    {
+        if (!HasInputAuthority)
+        {
+            return;
+        }
+        if (data.Pause)
+        {
+            if (Runner.IsServer)
+            {
+                TogglePause();
+            }
+            else
+            {
+                RPC_PauseOnServer();
+            }
+        }
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_PauseOnServer()
+    {
+        Debug.Log("RPC");
+        TogglePause();
+    }
+
+    private void TogglePause()
+    {
+        isPaused = !isPaused;
+        TogglePauseUI();
+    }
+
+    private void TogglePauseUI()
+    {
+        if (isPaused)
+        {
+            pauseMenuUI.Pause();
+        }
+        else
+        {
+            pauseMenuUI.Resume();
         }
     }
 }

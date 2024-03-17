@@ -3,6 +3,7 @@ using Fusion;
 using Networking.Data;
 using System.Collections;
 using System.Collections.Generic;
+using Interactables;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -11,7 +12,6 @@ public class PlayerNetworkedActions : MonoBehaviour
     private Camera _camera;
     private PlayerInputData InputData = new PlayerInputData();
     private Vector3 moveInput;
-
     private void Start()
     {
         _camera = Camera.main;
@@ -62,7 +62,10 @@ public class PlayerNetworkedActions : MonoBehaviour
     {
         InputData.Attack = (bool)data;
     }
-
+    public void BroadcastPause(Component Sender, object data)
+    {
+        InputData.Pause = (bool)data;
+    }
     public void RefreshInputData()
     {
         InputData.RefreshInputs();
