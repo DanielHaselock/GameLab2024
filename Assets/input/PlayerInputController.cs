@@ -22,6 +22,8 @@ public class PlayerInputController : MonoBehaviour
 
     public GameEvent OnAttack;
 
+    public GameEvent OnPause;
+
     private void Start()
     {
     }
@@ -82,6 +84,14 @@ public class PlayerInputController : MonoBehaviour
         if (context.started)
         {
             OnAttack.Raise(this, true);
+        }
+    }
+
+    public void Pause(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnPause.Raise(this, true);
         }
     }
 }

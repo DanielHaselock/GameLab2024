@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 4586042961015775864}
   - component: {fileID: 6735831048369288863}
   - component: {fileID: 9147191511612870722}
+  - component: {fileID: -1199267271034270224}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -130,6 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7f4d042369e4a19b989e003a91b47b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseMenuUI: {fileID: 0}
 --- !u!65 &7732335574680059868
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -184,6 +186,7 @@ MonoBehaviour:
   OnThrow: {fileID: 11400000, guid: e3658a7badc5d7846a2bad022dd90ed2, type: 2}
   OnJump: {fileID: 11400000, guid: d3521b317a198a146b170baa9793ad84, type: 2}
   OnAttack: {fileID: 11400000, guid: 94e074cdcce97e04ab4ec736fcbd181a, type: 2}
+  OnPause: {fileID: 11400000, guid: f4969d23e6f01234d95b5b0b2c00b415, type: 2}
 --- !u!114 &3865790411665046194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,6 +308,10 @@ MonoBehaviour:
         m_CallState: 1
     m_ActionId: 685b1633-dc67-48f5-a48a-a4ab7c58a902
     m_ActionName: Player/Attack[/Keyboard/v]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3b885f2f-73ff-440a-8cd9-22146da6761d
+    m_ActionName: Player/Pause[/Keyboard/escape]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -481,6 +488,34 @@ MonoBehaviour:
       - m_Target: {fileID: 6848934553511822739}
         m_TargetAssemblyTypeName: PlayerNetworkedActions, Assembly-CSharp
         m_MethodName: BroadcastAttack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+--- !u!114 &-1199267271034270224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096714271386515055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e8fcea3e3113d84b8ed6719c9d621b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: f4969d23e6f01234d95b5b0b2c00b415, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6848934553511822739}
+        m_TargetAssemblyTypeName: PlayerNetworkedActions, Assembly-CSharp
+        m_MethodName: BroadcastPause
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

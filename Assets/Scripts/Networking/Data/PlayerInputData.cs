@@ -11,6 +11,7 @@ namespace Networking.Data
         public bool Throw;
        [Networked] public bool Interact { get => default; set { } }
         public bool Drop;
+        public bool Pause;
 
 
         public void RefreshInputs()
@@ -21,6 +22,7 @@ namespace Networking.Data
             Interact = false;
             Drop = false;
             Throw = false;
+            Pause = false;
         }
     }
 }
