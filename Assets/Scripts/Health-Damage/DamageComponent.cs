@@ -63,7 +63,7 @@ public class DamageComponent : NetworkBehaviour
     {
         foreach (var hc in GetAllHealthAroundMe())
         {
-            if (hc.GetComponentInParent<GameObject>().tag.Contains(tag))
+            if (hc.transform.parent.tag.Contains(tag))
                 Attack(hc);
         }
     }
