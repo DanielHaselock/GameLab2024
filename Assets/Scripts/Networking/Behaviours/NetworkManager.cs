@@ -334,6 +334,10 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             }
         }
         OnPlayersSpawned?.Invoke();
+        foreach (var spawnInfo in _networkPropertiesRef.NetworkObjectsToSpawnOnGameStart)
+        {
+            _runner.Spawn(spawnInfo.ObjectToSpawn,spawnInfo.Position,Quaternion.Euler(spawnInfo.Rotation));
+        }
         _gameStarted = true;
         OnGameStarted?.Invoke();
     }
