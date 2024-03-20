@@ -307,7 +307,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     private async Task OnPlayerJoinedOnServer(NetworkRunner runner, PlayerRef player)
     {
         NetworkLogger.Log($"People in Session: {runner.SessionInfo.PlayerCount} / {runner.SessionInfo.MaxPlayers}");
-        if (runner.SessionInfo.PlayerCount < runner.SessionInfo.MaxPlayers - 1)
+        if (runner.SessionInfo.PlayerCount < runner.SessionInfo.MaxPlayers)
             return;
 
         if (!_gameStarted)

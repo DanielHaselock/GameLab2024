@@ -14,9 +14,6 @@ public class Enemy : NetworkBehaviour
 
     protected float health;
 
-    [SerializeField] protected Material corpseMaterial;
-    [SerializeField] protected GameObject eyes;
-    [SerializeField] protected GameObject body;
     [SerializeField] protected Animator animator;
 
     protected bool dead = false;
@@ -65,8 +62,7 @@ public class Enemy : NetworkBehaviour
         else
         {
             animator.StopPlayback();
-            body.GetComponent<Renderer>().material = corpseMaterial;
-            eyes.SetActive(false);
+            // TODO spawn the collectible corpse here
             dead = true;
             navMeshAgent.speed = 0;
             GetComponent<Rigidbody>().AddForce((_targetPlayer.transform.position - transform.position).normalized * 1f, ForceMode.Impulse);
