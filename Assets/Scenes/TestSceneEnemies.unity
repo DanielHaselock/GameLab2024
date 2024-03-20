@@ -1327,6 +1327,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: bellPepper
       objectReference: {fileID: 0}
+    - target: {fileID: 5246578315717163138, guid: 175a7d8593bfcdc4d8bdac7eabc09319, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 5717532187212651838, guid: 175a7d8593bfcdc4d8bdac7eabc09319, type: 3}
       propertyPath: m_LocalPosition.x
       value: 19.33654
