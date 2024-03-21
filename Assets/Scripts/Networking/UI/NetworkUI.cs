@@ -58,12 +58,14 @@ namespace Networking.UI
             }
             _nickNameField.onValueChanged.AddListener((text) =>
             {
+                AudioManager.Instance?.PlaySFX("type");
                 NetworkManager.Instance.SetSessionUserNickName(text);
                 Debug.Log("Username saved!!");
             });
             _hostSessionNameField.onValueChanged.AddListener((string str) =>
-            {
-                    _hostMenuStartButton.interactable = !String.IsNullOrEmpty(str);
+            { 
+                AudioManager.Instance?.PlaySFX("type");
+                _hostMenuStartButton.interactable = !String.IsNullOrEmpty(str);
             });
             _networkManager.OnConnectedToLobby += () =>
             {
@@ -73,6 +75,7 @@ namespace Networking.UI
 
         private void OnClickMainMenuHost()
         {
+            AudioManager.Instance?.PlaySFX("click");
             _hostMenuStartButton.interactable = false;
             _hostSessionNameField.text = string.Empty;
             _hostMenu.gameObject.SetActive(true);
@@ -80,11 +83,13 @@ namespace Networking.UI
 
         private void OnClickHostMenuClose()
         {
+            AudioManager.Instance?.PlaySFX("click");
             _hostMenu.gameObject.SetActive(false);
         }
         
         private void OnClickHostMenuStart()
         {
+            AudioManager.Instance?.PlaySFX("click");
             if (String.IsNullOrEmpty(_hostSessionNameField.text))
                 return;
             
@@ -93,6 +98,7 @@ namespace Networking.UI
         
         private void OnClickMainMenuJoin()
         {
+            AudioManager.Instance?.PlaySFX("click");
             _networkManager.OnAvailableSessionsListUpdated += PopulateSessions;
             _joinMenu.gameObject.SetActive(true);
             PopulateSessions();
@@ -100,6 +106,7 @@ namespace Networking.UI
         
         private void OnClickJoinMenuClose()
         {
+            AudioManager.Instance?.PlaySFX("click");
             _networkManager.OnAvailableSessionsListUpdated -= PopulateSessions;
             _joinMenu.gameObject.SetActive(false);
         }

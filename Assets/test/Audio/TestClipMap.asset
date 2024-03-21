@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3a2077d7bbc4fb192ed3d204d6ad4f6, type: 3}
+  m_Name: TestClipMap
+  m_EditorClassIdentifier: 
+  _bgClips:
+    _items:
+    - Key: mainmenu
+      Value: {fileID: 8300000, guid: 4352f31601660c940bfacdaea912921b, type: 3}
+  _ambianceClips:
+    _items: []
+  _sfxClips:
+    _items:
+    - Key: click
+      Value:
+      - {fileID: 8300000, guid: a72ee8e1f09986c439fbe68da40ae48f, type: 3}
+    - Key: type
+      Value:
+      - {fileID: 8300000, guid: 6bb0d86f26e165c4f8426cb4ace0296b, type: 3}
+  InitialBackgroundMusic: mainmenu
+  InitialAmbiance: 
