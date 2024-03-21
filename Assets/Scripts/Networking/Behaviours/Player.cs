@@ -48,7 +48,16 @@ public class Player : NetworkBehaviour
             HandleInteract(data);
             HandleJump(data);
             HandleAttack(data);
+            HandlePause(data);
             _controller.Move(3 * data.MoveDirection.normalized * Runner.DeltaTime);
+        }
+    }
+
+    private void HandlePause(PlayerInputData data)
+    {
+        if (data.Pause && GameManager.instance.IsPausable)
+        {
+            GameManager.instance.IsPaused = !GameManager.instance.IsPaused;
         }
     }
 

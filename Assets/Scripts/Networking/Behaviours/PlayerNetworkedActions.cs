@@ -63,6 +63,11 @@ public class PlayerNetworkedActions : MonoBehaviour
         InputData.Attack = (bool)data;
     }
 
+    public void BroadcastPause(Component Sender, object data)
+    {
+        InputData.Pause = (bool)data;
+    }
+
     public void RefreshInputData()
     {
         InputData.RefreshInputs();

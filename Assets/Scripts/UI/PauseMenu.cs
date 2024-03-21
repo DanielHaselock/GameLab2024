@@ -42,4 +42,27 @@ public class PauseMenu : MonoBehaviour
     {
         
     }
+
+    void OnEnable()
+    {
+        GameManager.instance.OnPauseStatusChanged += HandlePauseStatusChanged;
+    }
+
+    void OnDisable()
+    {
+        GameManager.instance.OnPauseStatusChanged -= HandlePauseStatusChanged;
+    }
+
+    void HandlePauseStatusChanged(bool isPaused)
+    {
+        if (isPaused)
+        {
+            Pause();
+        }
+        else
+        {
+            Resume();
+        }
+    }
+
 }

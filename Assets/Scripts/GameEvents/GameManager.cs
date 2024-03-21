@@ -11,8 +11,25 @@ public class GameManager : NetworkBehaviour
 {
     public static GameManager instance;
     public GameState CurrentGameState { get; private set; }
-    [Networked] public bool IsPaused { get; set; }
+
+    //stores the variable so the event does not get called when no actual value change exists
+    private bool isPaused;
+    [Networked] public bool IsPaused
+    {
+        get { return isPaused; }
+        set
+        {
+            if (isPaused != value)
+            {
+                isPaused = value;
+                OnPauseStatusChanged?.Invoke(isPaused);
+            }
+        }
+    }
+    [Networked] public bool IsPausable { get; set; } //checks if the player is allowed to pause (For example, cannot pause from main menu)
     public static event Action<GameState> OnGameStateChanged;
+    public event Action<bool> OnPauseStatusChanged;
+
     void Awake()
     {
         if (instance == null)
@@ -24,7 +41,8 @@ public class GameManager : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       // UpdateGameState(GameState.MainMenu);
+        Debug.Log("Game Manager started");
+        IsPausable = true;//for testing
     }
 
     // Update is called once per frame
@@ -40,13 +58,14 @@ public class GameManager : NetworkBehaviour
         switch (newState)
         {
             case GameState.MainMenu:
+                //place holder for now
+                
                 SceneManager.LoadScene("Network Test 1");
+                
                 break;
-            case GameState.ActiveRound:
+            case GameState.ActiveLevel:
                 break;
-            case GameState.Settings:
-                break;
-            case GameState.BetweenRounds:
+            case GameState.BetweenLevels:
                 break;
             case GameState.GameOver:
                 break;
@@ -61,10 +80,8 @@ public class GameManager : NetworkBehaviour
     public enum GameState
     {
         MainMenu,
-        ActiveRound,
-        BossRound,
-        Settings,
-        BetweenRounds,
+        ActiveLevel,
+        BetweenLevels,
         GameOver,
         Win
     }
