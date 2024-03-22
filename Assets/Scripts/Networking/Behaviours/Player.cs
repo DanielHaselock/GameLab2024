@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Audio;
 using Cinemachine;
 using Fusion;
 using Interactables;
@@ -9,19 +10,25 @@ using UnityEngine.Events;
 
 public class Player : NetworkBehaviour
 {
+    private NetworkObject _no;
     private NetworkCharacterController _controller;
     private NetworkMecanimAnimator _anim;
     private HandlePickup _pickupHandler;
     private DamageComponent _damager;
+    private HealthComponent _health;
     private PlayerPickupable _myPickupable;
-    public bool HasInputAuthority { get; private set; }
+    private PlayerReviver _reviver;
     
     private void Awake()
     {
+        _reviver = GetComponentInChildren<PlayerReviver>();
+        _health = GetComponentInChildren<HealthComponent>();
+        _no = GetComponent<NetworkObject>();
         _controller = GetComponent<NetworkCharacterController>();
         _anim = GetComponent<NetworkMecanimAnimator>();
         _pickupHandler = GetComponentInChildren<HandlePickup>();
         _myPickupable = GetComponent<PlayerPickupable>();
+        _health.OnHealthDepleted += OnHealthDepleted;
     }
     
     public override void Spawned()
@@ -30,7 +37,6 @@ public class Player : NetworkBehaviour
         this.name = "Player_" + no.InputAuthority.PlayerId;
         if (no.InputAuthority == Runner.LocalPlayer)
         {
-            HasInputAuthority = true;
             GetComponent<SetCamera>().SetCameraParams(gameObject.transform.GetChild(1).gameObject);
             GetComponent<PlayerInputController>().OnSpawned();
         }
@@ -43,11 +49,15 @@ public class Player : NetworkBehaviour
         if(!_myPickupable.AllowInputs)
             return;
         
+        if(_health.HealthDepleted)
+            return;
+
         if (GetInput(out PlayerInputData data))
         {
             HandleInteract(data);
             HandleJump(data);
             HandleAttack(data);
+            HandleRevive(data, Runner.DeltaTime);
             _controller.Move(3 * data.MoveDirection.normalized * Runner.DeltaTime);
         }
     }
@@ -55,7 +65,7 @@ public class Player : NetworkBehaviour
     public override void Render()
     {
         base.Render();
-        if (IsProxy )
+        if (IsProxy)
             return;
 
         if (!Runner.IsForward)
@@ -64,10 +74,15 @@ public class Player : NetworkBehaviour
         _anim.Animator.SetFloat("Move", _controller.Velocity.normalized.magnitude);
     }
 
-
     public void HandleInteract(PlayerInputData data)
     {
         if (!HasInputAuthority)
+            return;
+        
+        if(_no.InputAuthority != Runner.LocalPlayer)
+            return;
+        
+        if(_myPickupable.IsPickedUp)
             return;
         
         if (data.Interact)
@@ -135,10 +150,12 @@ public class Player : NetworkBehaviour
         { 
             _controller.Jump();
             _anim.SetTrigger("Jump", true);
+            
+            AudioManager.Instance.PlaySFX(SFXConstants.Jump);
         }
     }
 
-    public void HandleAttack(PlayerInputData data)
+    private void HandleAttack(PlayerInputData data)
     {
         if (data.Attack && HasInputAuthority)
         {
@@ -146,6 +163,18 @@ public class Player : NetworkBehaviour
                 _damager = GetComponentInChildren<DamageComponent>();
             _damager.InitiateAttack();
             _anim.SetTrigger("Attack", true);
+            
+            AudioManager.Instance.PlaySFX(SFXConstants.Attack);
         }
+    }
+
+    private void HandleRevive(PlayerInputData data, float deltaTime)
+    {
+        _reviver.TryReviveOther(data.Revive, deltaTime);   
+    }
+    
+    private void OnHealthDepleted()
+    {
+        AudioManager.Instance.PlaySFX(SFXConstants.Help, syncNetwork:true);
     }
 }

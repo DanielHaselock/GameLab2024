@@ -22,6 +22,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     private List<PlayerRef> _connectedPlayers;
     private NetworkUI _connectionUI;
     
+    private Dictionary<string, List<Action<NetworkEvent>>> _generalNetworkMessages;
     
     private bool _gameStarted = false;
     private string _sessionUserNickName;
@@ -235,7 +236,44 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         
         OnGameOver?.Invoke();
     }
- 
+
+    public void RegisterToGeneralNetworkEvents(string eventName, Action<NetworkEvent> action)
+    {
+        if (_generalNetworkMessages == null)
+            _generalNetworkMessages = new Dictionary<string, List<Action<NetworkEvent>>>();
+        
+        if(_generalNetworkMessages.ContainsKey(eventName))
+            _generalNetworkMessages[eventName].Add(action);
+        else
+            _generalNetworkMessages.Add(eventName, new List<Action<NetworkEvent>>(){action});
+    }
+    
+    public void DeRegisterToGeneralNetworkEvents(string eventName, Action<NetworkEvent> action)
+    {
+        if (_generalNetworkMessages == null)
+           return;
+        
+        if(_generalNetworkMessages.ContainsKey(eventName))
+            _generalNetworkMessages[eventName].Remove(action);
+    }
+    
+    public void SendGlobalSimpleNetworkMessage(NetworkEvent data)
+    {
+        _netSynchedHelper.SendGlobalSimpleNetworkMessage(data);
+    }
+
+    private void OnSimpleNetworkEventReceived(NetworkEvent data)
+    {
+        if(_generalNetworkMessages==null)
+            return;
+        if(!_generalNetworkMessages.ContainsKey(data.EventName))
+            return;
+        foreach (var evnt in _generalNetworkMessages[data.EventName])
+        {
+            evnt?.Invoke(data);
+        }
+    }
+    
     #region Callbacks
     
     public void OnObjectExitAOI(Fusion.NetworkRunner runner, NetworkObject obj, PlayerRef player)
@@ -298,16 +336,18 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         _netSynchedHelper.OnTimerStarted -= OnTimerStarted;
         _netSynchedHelper.OnTimerTick -= OnTimerTick;
         _netSynchedHelper.OnTimerEnded -= OnTimerEnded;
-        
+        _netSynchedHelper.OnSimpleNetworkMessageRecieved -= OnSimpleNetworkEventReceived;
         _netSynchedHelper.OnTimerStarted += OnTimerStarted;
         _netSynchedHelper.OnTimerTick += OnTimerTick;
         _netSynchedHelper.OnTimerEnded += OnTimerEnded;
+
+        _netSynchedHelper.OnSimpleNetworkMessageRecieved += OnSimpleNetworkEventReceived;
     }
     
     private async Task OnPlayerJoinedOnServer(NetworkRunner runner, PlayerRef player)
     {
-        NetworkLogger.Log($"People in Session: {runner.SessionInfo.PlayerCount} / {runner.SessionInfo.MaxPlayers}");
-        if (runner.SessionInfo.PlayerCount < runner.SessionInfo.MaxPlayers - 1)
+        NetworkLogger.Log($"People in Session: {runner.SessionInfo.PlayerCount.ToString()} / {runner.SessionInfo.MaxPlayers.ToString()}");
+        if (runner.SessionInfo.PlayerCount < runner.SessionInfo.MaxPlayers)
             return;
 
         if (!_gameStarted)
@@ -446,11 +486,11 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     #endregion
-
-
+    
     public NetworkObject GetLocalPlayer()
     {
         return _runner.GetPlayerObject(_runner.LocalPlayer);
     }
-}
+    
+    }
 }

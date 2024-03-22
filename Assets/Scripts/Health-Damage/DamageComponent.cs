@@ -21,6 +21,10 @@ public class DamageComponent : NetworkBehaviour
 
     public void Attack(HealthComponent other)
     {
+        //block depletion
+        if(!other.CanDeplete)
+            return;
+        
         other.UpdateHealth(-AttackDamage);
     }
     public void InitiateAttack()
@@ -63,7 +67,7 @@ public class DamageComponent : NetworkBehaviour
     {
         foreach (var hc in GetAllHealthAroundMe())
         {
-            if (hc.GetComponentInParent<GameObject>().tag.Contains(tag))
+            if (hc.transform.tag.Contains(tag))
                 Attack(hc);
         }
     }

@@ -27,7 +27,7 @@ public class EnemyOnion : Enemy
         base.FixedUpdateNetwork();
         if (!dead)
         {
-            if (healthComponent.Health < health)
+            if (healthComponent.Health < Health)
                 OnAttack();
             
             

@@ -12,7 +12,18 @@ public class Enemy : NetworkBehaviour
 
     protected NavMeshAgent navMeshAgent;
 
-    protected float health;
+    protected float Health
+    {
+        get
+        {
+            if (healthComponent == null)
+                return 0;
+            if (!healthComponent.IsInitialised)
+                return 0;
+
+            return healthComponent.Health;
+        }
+    }
 
     [SerializeField] protected Material corpseMaterial;
     [SerializeField] protected GameObject eyes;
@@ -36,7 +47,6 @@ public class Enemy : NetworkBehaviour
     protected virtual void Start()
     {
         //Go crazy        
-        health = healthComponent.MaxHealth;
         speed = GetComponent<NavMeshAgent>().speed;
     }
     
@@ -59,8 +69,7 @@ public class Enemy : NetworkBehaviour
     public virtual void ChangeTargeting() { }
 
     public virtual void OnAttack() {
-        health = healthComponent.Health;
-        if (health > 0)
+        if (Health > 0)
             StartCoroutine(stun());
         else
         {
