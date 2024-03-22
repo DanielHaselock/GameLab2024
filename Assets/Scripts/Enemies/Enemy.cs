@@ -76,7 +76,7 @@ public class Enemy : NetworkBehaviour
         if (Mathf.Approximately(dir.magnitude, 0))
             return;
         Quaternion lookRotation = Quaternion.LookRotation(dir);
-        rb.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, navMeshAgent.angularSpeed);
+        rb.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, navMeshAgent.angularSpeed * deltaTime);
     }
     
     protected virtual void OnTriggerEnter(Collider other)

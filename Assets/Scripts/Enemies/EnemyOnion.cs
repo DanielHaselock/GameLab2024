@@ -149,6 +149,7 @@ public class EnemyOnion : Enemy
         damageComponent.InitiateAttack("Player");
         //attack recovery
         yield return new WaitForSeconds(.17f);
+        animator.CrossFade("Idle", .5f);
         attacking = false;
         navMeshAgent.speed = speed;
         //attack delay
@@ -158,7 +159,7 @@ public class EnemyOnion : Enemy
     public override void OnAttack()
     {
         base.OnAttack();
-        if (!healthComponent.HealthDepleted)
+        if (healthComponent.HealthDepleted)
         {
             if (myState == OnionState.Passive)
             {
