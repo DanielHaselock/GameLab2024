@@ -25,6 +25,8 @@ public class Enemy : NetworkBehaviour
     [SerializeField] protected DamageComponent damageComponent;
 
     protected float speed;
+
+    [SerializeField] protected GameObject deathDrops;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -63,9 +65,12 @@ public class Enemy : NetworkBehaviour
         {
             animator.StopPlayback();
             // TODO spawn the collectible corpse here
+            GameObject drops = Instantiate(deathDrops);
+            drops.transform.position = transform.position;
             dead = true;
             navMeshAgent.speed = 0;
             GetComponent<Rigidbody>().AddForce((_targetPlayer.transform.position - transform.position).normalized * 1f, ForceMode.Impulse);
+            Destroy(gameObject);
         }
     }
     IEnumerator stun()

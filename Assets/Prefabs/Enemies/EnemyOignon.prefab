@@ -334,12 +334,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6166c025f2d04bf4f80b4bef2f8591a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  corpseMaterial: {fileID: 2100000, guid: 51ffb230e363f36459c65ff2d09cf1e3, type: 2}
-  eyes: {fileID: 5248564372801618642}
-  body: {fileID: 1078722312964010627}
   animator: {fileID: 4036227695846802860}
   healthComponent: {fileID: 2823890417148120425}
   damageComponent: {fileID: 3841068705945149367}
+  deathDrops: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
 --- !u!95 &4036227695846802860
 Animator:
   serializedVersion: 5

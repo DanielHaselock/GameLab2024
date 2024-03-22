@@ -362,7 +362,7 @@ GameObject:
   - component: {fileID: 530985136842706475}
   m_Layer: 0
   m_Name: EnemyBellPepper
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -530,6 +530,7 @@ MonoBehaviour:
   animator: {fileID: 530985136842706475}
   healthComponent: {fileID: 2581797083029905090}
   damageComponent: {fileID: 720489286305230402}
+  deathDrops: {fileID: 8110762694264403655, guid: 28620502e440cfc478b41110643345de, type: 3}
 --- !u!95 &530985136842706475
 Animator:
   serializedVersion: 5
