@@ -48,7 +48,7 @@ public class PlayerInputController : MonoBehaviour
 
 
     public void Interact(InputAction.CallbackContext context)
-    {
+    {   Debug.Log("Interact triggered");
         if (context.started)
         { 
             OnInteract.Raise(this, true);
@@ -88,10 +88,13 @@ public class PlayerInputController : MonoBehaviour
     }
 
     public void Pause(InputAction.CallbackContext context)
-    {
+    {   Debug.Log("Pause out");
         if (context.started)
         {
+            Debug.Log($"Pause in");
             OnPause.Raise(this, true);
+
         }
+        
     }   
 }

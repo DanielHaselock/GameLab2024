@@ -12,24 +12,18 @@ public class GameManager : NetworkBehaviour
     public static GameManager instance;
     public GameState CurrentGameState { get; private set; }
 
-    //stores the variable so the event does not get called when no actual value change exists
-    private bool isPaused;
-    [Networked] public bool IsPaused
-    {
-        get { return isPaused; }
-        set
-        {
-            if (isPaused != value)
-            {
-                isPaused = value;
-                OnPauseStatusChanged?.Invoke(isPaused);
-            }
-        }
-    }
-    [Networked] public bool IsPausable { get; set; } //checks if the player is allowed to pause (For example, cannot pause from main menu)
+    [Networked] public bool IsPaused { get; private set; }
+    [Networked] public bool IsPausable { get; private set; } //checks if the player is allowed to pause (For example, cannot pause from main menu)
     public static event Action<GameState> OnGameStateChanged;
     public event Action<bool> OnPauseStatusChanged;
 
+    private ChangeDetector _change;
+
+    public override void Spawned()
+    {
+        _change = GetChangeDetector(ChangeDetector.Source.SimulationState);
+    }
+        
     void Awake()
     {
         if (instance == null)
@@ -38,11 +32,13 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    // Start is called before the first frame update
+    // Creates the Pause UI in scene
     void Start()
     {
-        Debug.Log("Game Manager started");
         IsPausable = true;//for testing
+        Instantiate(Resources.Load("GameUI"));
+        Instantiate(Resources.Load("EventSystem"));
+
     }
 
     // Update is called once per frame
@@ -64,6 +60,7 @@ public class GameManager : NetworkBehaviour
                 
                 break;
             case GameState.ActiveLevel:
+                RunLevel();
                 break;
             case GameState.BetweenLevels:
                 break;
@@ -77,6 +74,7 @@ public class GameManager : NetworkBehaviour
         OnGameStateChanged?.Invoke(newState);
     }
 
+    //best practice = keeping these in seperate script
     public enum GameState
     {
         MainMenu,
@@ -84,5 +82,47 @@ public class GameManager : NetworkBehaviour
         BetweenLevels,
         GameOver,
         Win
+    }
+    public override void Render()
+    {
+        base.Render();
+        foreach (var change in _change.DetectChanges(this))
+        {
+            switch (change)
+            {
+                case nameof(IsPaused):
+                    OnPauseStatusChanged?.Invoke(IsPaused);
+                    break;
+            }
+        }
+    }
+
+    private void DoPause(bool pause)
+    {   if(!IsPausable)
+        {
+            return;
+        }
+
+        IsPaused = pause;
+    }
+    public void Pause(bool pause)
+    {
+        Debug.Log($"Pause {pause}");
+       if(Runner.IsServer)
+        DoPause(pause);
+       else
+        RPC_Pause(pause);
+    }
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_Pause(bool pause)
+    {
+        DoPause(pause);
+    }
+
+    private void RunLevel()
+    {   //load level
+        //spawn enemies
+        IsPausable = true;
+        //place holder for now
     }
 }

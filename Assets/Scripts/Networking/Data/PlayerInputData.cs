@@ -9,7 +9,6 @@ namespace Networking.Data
         public bool Jump;
         public bool Attack;
         public bool Throw;
-        public bool Pause;
        [Networked] public bool Interact { get => default; set { } }
         public bool Drop;
 
@@ -22,7 +21,6 @@ namespace Networking.Data
             Interact = false;
             Drop = false;
             Throw = false;
-            Pause = false;
         }
     }
 }

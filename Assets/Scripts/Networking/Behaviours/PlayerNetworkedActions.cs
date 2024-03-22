@@ -65,7 +65,7 @@ public class PlayerNetworkedActions : MonoBehaviour
 
     public void BroadcastPause(Component Sender, object data)
     {
-        InputData.Pause = (bool)data;
+        GameManager.instance.Pause(!GameManager.instance.IsPaused);
     }
 
     public void RefreshInputData()

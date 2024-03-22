@@ -5,7 +5,6 @@ using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
 using static GameManager;
 
-//interactable depends on who set pause,
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField]
@@ -19,7 +18,7 @@ public class PauseMenu : MonoBehaviour
     }
     public void Resume()
     {
-        GameManager.instance.IsPaused = false;
+        GameManager.instance.Pause(false);
         PauseMenuUI.SetActive(false);
     }
     public void Settings()
@@ -34,21 +33,12 @@ public class PauseMenu : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        GameManager.instance.OnPauseStatusChanged += HandlePauseStatusChanged;
         PauseMenuUI.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
-    void OnEnable()
-    {
-        GameManager.instance.OnPauseStatusChanged += HandlePauseStatusChanged;
-    }
-
-    void OnDisable()
+    void OnDestroy()
     {
         GameManager.instance.OnPauseStatusChanged -= HandlePauseStatusChanged;
     }
