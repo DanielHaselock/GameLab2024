@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Fusion;
 using Fusion.Addons.Physics;
+using Fusion.Addons.SimpleKCC;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -11,6 +12,7 @@ namespace Interactables
         [Networked] public bool IsPickedUp { get; private set; }
         [Networked] public bool Thrown { get; private set; }
         
+        [SerializeField] private Vector3 localPosDelta;
         [SerializeField] private int slotsNeeded;
         [FormerlySerializedAs("_throwMaxHeight")] [SerializeField] private float throwMaxHeight = 1f;
         [FormerlySerializedAs("_throwInterpolation")] [SerializeField] private AnimationCurve throwInterpolation;
@@ -18,8 +20,8 @@ namespace Interactables
         
         private NetworkRigidbody3D _nrb;
         private Rigidbody _rb;
-        private CharacterController _controller;
-        private NetworkCharacterController _networkController;
+        
+        private SimpleKCC _controller;
         private NetworkObject _no;
         private HealthComponent _healthComponent;
         
@@ -42,14 +44,8 @@ namespace Interactables
             _healthComponent = GetComponentInChildren<HealthComponent>();
             _rb = GetComponent<Rigidbody>();
             _nrb = GetComponent<NetworkRigidbody3D>();
-            _controller = GetComponent<CharacterController>();
-            _networkController = GetComponent<NetworkCharacterController>();
+            _controller = GetComponent<SimpleKCC>();
             _no = GetComponent<NetworkObject>();
-
-            if (!_networkController) return;
-            
-            _maxAccelOg = _networkController.acceleration;
-            _maxSpeedOg = _networkController.maxSpeed;
         }
         
         public void PrepareForParenting(bool pickup)
@@ -59,12 +55,12 @@ namespace Interactables
                 _healthComponent.SetHealthDepleteStatus(!pickup);
             }
             
-            if (_networkController)
+            if (_controller)
             {
                 // special sceanrio, when a pickupable has a network controller attached....
-                _networkController.enabled = !pickup;
-                _controller.excludeLayers = pickup ? LayerMask.NameToLayer("Default") : 0;
-                _controller.radius = pickup ? 0 : 0.5f;
+                _controller.enabled = !pickup;
+                // _controller.excludeLayers = pickup ? LayerMask.NameToLayer("Default") : 0;
+                // _controller.radius = pickup ? 0 : 0.5f;
                 _controller.enabled = !pickup;
                 RPC_ReplicateControllerParenting(pickup);
             }
@@ -101,7 +97,7 @@ namespace Interactables
         public void OnParented(Vector3 localPosition, Quaternion localRotation)
         {
             var t = transform;
-            t.localPosition = localPosition;
+            t.localPosition = localPosition + localPosDelta;
             t.localRotation = localRotation;
             RPC_ReplicateLocalPositionElsewhere(localPosition, localRotation);
             
@@ -133,13 +129,13 @@ namespace Interactables
         {
             if(Runner.IsServer)
                 return;
-            if (_networkController)
-                _networkController.enabled = !pickup;
+            if (_controller)
+                _controller.enabled = !pickup;
             
             if (!pickup)
             {
-                if (_networkController)
-                    _networkController.enabled = true;
+                if (_controller)
+                    _controller.enabled = true;
                 transform.SetParent(null);
                 IsPickedUp = false;
                 return;
@@ -154,8 +150,8 @@ namespace Interactables
             
             if (_controller)
             {
-                _controller.excludeLayers = pickup ? LayerMask.NameToLayer("Default") : 0;
-                _controller.radius = pickup ? 0 : 0.5f;
+                // _controller.col  = pickup ? LayerMask.NameToLayer("Default") : 0;
+                // _controller.radius = pickup ? 0 : 0.5f;
                 _controller.enabled = !pickup;
             }
             Debug.Log("Parent Replication complete");
@@ -164,8 +160,12 @@ namespace Interactables
         
         public void Teleport(Vector3 pos, Vector3 velocity)
         {
-            if (!_rb || !_nrb)
+            if(_controller != null)
                 return;
+            
+            if (_rb == null || _nrb == null)
+                return;
+            
             _nrb.Teleport(pos);
             _nrb.ResetRigidbody();
             _rb.velocity = velocity;
@@ -208,7 +208,7 @@ namespace Interactables
                 if(_nrb)
                     _rb.MovePosition(estimated);
                 else if(_controller)
-                    _controller.transform.position = estimated;
+                    _controller.SetPosition(estimated);
                 
                 var eval = throwInterpolation.Evaluate(_evaluationStep);
                 _evaluationStep += Runner.DeltaTime / interpolationDur;

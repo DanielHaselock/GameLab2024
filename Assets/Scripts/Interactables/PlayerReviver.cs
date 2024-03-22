@@ -107,7 +107,7 @@ namespace Interactables
                 if(!col.tag.Equals("Player"))
                     continue;
                 var no = col.GetComponent<NetworkObject>();
-                if(!no)
+                if(no == null)
                     continue;
                 if(no.Equals(myNo))
                     continue;

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Fusion;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -31,6 +32,7 @@ public class EnemyOnion : Enemy
         lastPosition = transform.position;
         animator.CrossFade("Idle", .25f);
         healthComponent.OnDamaged += OnAttack;
+        healthComponent.OnHealthDepleted += KillMyself;
     }
 
     private void OnDestroy()
@@ -70,7 +72,7 @@ public class EnemyOnion : Enemy
             }
             if (_seenPlayers.Count > 1)
                 ChangeTargeting();
-            if (canAttack && !stunned && Vector3.Distance(transform.position, _targetPlayer.transform.position) <= attackRange)
+            if (_targetPlayer && canAttack && !stunned && Vector3.Distance(transform.position, _targetPlayer.transform.position) <= attackRange)
             {
                 StartCoroutine(WaitAndAttack());
             }
@@ -195,6 +197,14 @@ public class EnemyOnion : Enemy
         if (other.tag.Equals("Enemy") && other.name.Contains("Onion"))
         {
             _seenOnions.Remove(other.gameObject);
+        }
+    }
+
+    private void KillMyself()
+    {
+        if (Runner.IsServer)
+        {
+            Runner.Despawn(GetComponent<NetworkObject>());
         }
     }
 }

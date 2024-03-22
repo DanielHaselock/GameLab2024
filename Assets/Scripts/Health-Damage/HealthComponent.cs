@@ -1,8 +1,5 @@
 using System;
 using Fusion;
-using Networking.Behaviours;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -45,11 +42,13 @@ public class HealthComponent : NetworkBehaviour
         if(!IsInitialised)
             return;
         var curr = Health;
+        if (Value < 0)
+        {
+            Debug.Log("Ow!!"); 
+            OnDamaged?.Invoke();
+        }
+
         Health += Value;
-        
-        if(curr < Health)
-            OnDamaged.Invoke();
-        
         if (Health <= 0)
         {
             CanDeplete = false;
@@ -65,7 +64,6 @@ public class HealthComponent : NetworkBehaviour
         if(!IsInitialised)
             return;
         Health = Value;
-        
         CanDeplete = Health > 0;
         HealthDepleted = Health <= 0;
     }

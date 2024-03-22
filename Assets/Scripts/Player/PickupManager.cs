@@ -1,6 +1,7 @@
 using Fusion;
 using Fusion.Addons.Physics;
 using System.Collections.Generic;
+using Fusion.Addons.SimpleKCC;
 using Interactables;
 using UnityEngine;
 
@@ -14,14 +15,14 @@ public class PickupManager : MonoBehaviour
     public bool IsFull => PickedupObjects.Count == MaxPickupSpace;
     public float SpaceBetween2Items = 0.5f;
 
-    private NetworkCharacterController _parentCC;
+    private SimpleKCC _parentCC;
     private NetworkObject _no;
     
     // Start is called before the first frame update
     void Start()
     {
         PickedupObjects = new List<GameObject>();
-        _parentCC = GetComponentInParent<NetworkCharacterController>();
+        _parentCC = GetComponentInParent<SimpleKCC>();
         _no = GetComponentInParent<NetworkObject>();
     }
 
@@ -53,7 +54,7 @@ public class PickupManager : MonoBehaviour
         
         item.transform.SetParent(null);
         pickupable.PrepareForParenting(false);
-        pickupable.Teleport(throwPoint.position, _parentCC.Velocity);
+        pickupable.Teleport(throwPoint.position, _parentCC.RealVelocity);
 
         if(Throw)
             pickupable.Throw(transform.parent.forward, throwForce);
