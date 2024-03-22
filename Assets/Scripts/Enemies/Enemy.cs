@@ -2,16 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using Fusion.Addons.Physics;
 using Networking.Data;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(NetworkRigidbody3D))]
 public class Enemy : NetworkBehaviour
 {
     protected List<GameObject> _seenPlayers = new List<GameObject>();
     protected GameObject _targetPlayer = null;
-
     protected NavMeshAgent navMeshAgent;
-
+    protected Rigidbody rb;
+    
     protected float Health
     {
         get
@@ -25,20 +27,22 @@ public class Enemy : NetworkBehaviour
         }
     }
 
+    [SerializeField] protected float speed=3;
+    [SerializeField] protected float angularSpeed=120;
+    [SerializeField] protected float attackRange=3;
     [SerializeField] protected Material corpseMaterial;
     [SerializeField] protected GameObject eyes;
     [SerializeField] protected GameObject body;
-    [SerializeField] protected Animator animator;
-
+    
     protected bool dead = false;
     protected bool stunned = false;
     protected bool canAttack = false;
     protected bool attacking = false;
 
-    [SerializeField] protected HealthComponent healthComponent;
-    [SerializeField] protected DamageComponent damageComponent;
-
-    protected float speed;
+    protected Animator animator;
+    protected HealthComponent healthComponent;
+    protected DamageComponent damageComponent;
+    
     // Start is called before the first frame update
     private void Awake()
     {
@@ -46,8 +50,33 @@ public class Enemy : NetworkBehaviour
     }
     protected virtual void Start()
     {
+        animator = GetComponentInChildren<Animator>();
+        healthComponent = GetComponentInChildren<HealthComponent>();
+        damageComponent = GetComponentInChildren<DamageComponent>();
         //Go crazy        
         speed = GetComponent<NavMeshAgent>().speed;
+        rb = GetComponent<Rigidbody>();
+        
+        //set the navmesh properties
+        navMeshAgent.stoppingDistance = attackRange - 0.5f;
+        navMeshAgent.speed = speed;
+        navMeshAgent.angularSpeed = angularSpeed;
+        
+        //we want to manually update our agent position
+        navMeshAgent.updatePosition = false;
+        navMeshAgent.updateRotation = false;
+    }
+
+    protected void UpdateMoveAndRotation(float deltaTime)
+    {
+        var nextPosition = navMeshAgent.nextPosition;
+        nextPosition.y = transform.position.y; //eliminate y position diff
+        var dir = (nextPosition - transform.position).normalized;
+        rb.MovePosition(navMeshAgent.nextPosition);
+        if (Mathf.Approximately(dir.magnitude, 0))
+            return;
+        Quaternion lookRotation = Quaternion.LookRotation(dir);
+        rb.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, navMeshAgent.angularSpeed);
     }
     
     protected virtual void OnTriggerEnter(Collider other)
@@ -70,7 +99,7 @@ public class Enemy : NetworkBehaviour
 
     public virtual void OnAttack() {
         if (Health > 0)
-            StartCoroutine(stun());
+            StartCoroutine(Stun());
         else
         {
             animator.StopPlayback();
@@ -78,11 +107,12 @@ public class Enemy : NetworkBehaviour
             eyes.SetActive(false);
             dead = true;
             navMeshAgent.speed = 0;
-            GetComponent<Rigidbody>().AddForce((_targetPlayer.transform.position - transform.position).normalized * 1f, ForceMode.Impulse);
+            rb.AddForce((transform.position - _targetPlayer.transform.position).normalized * 1f, ForceMode.Impulse);
         }
     }
-    IEnumerator stun()
+    IEnumerator Stun()
     {
+        Debug.Log("STUN!!");
         canAttack = false;
         navMeshAgent.speed = 0;
         animator.CrossFade("Hit", .01f);

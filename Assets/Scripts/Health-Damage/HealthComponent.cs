@@ -19,6 +19,7 @@ public class HealthComponent : NetworkBehaviour
     private ChangeDetector _change;
 
     public Action OnHealthDepleted;
+    public Action OnDamaged;
 
     public float MaxHealth => maxHealth;
     
@@ -43,7 +44,12 @@ public class HealthComponent : NetworkBehaviour
             return;
         if(!IsInitialised)
             return;
+        var curr = Health;
         Health += Value;
+        
+        if(curr < Health)
+            OnDamaged.Invoke();
+        
         if (Health <= 0)
         {
             CanDeplete = false;
@@ -75,7 +81,7 @@ public class HealthComponent : NetworkBehaviour
             switch (change)
             {
                 case nameof(Health):
-                    Debug.Log( $"{NetworkManager.Instance.GetPlayerNickNameById(Runner.LocalPlayer.PlayerId)} HEALTH: {Health.ToString()}");
+                    Debug.Log( $"{transform.parent.name} : HEALTH: {Health.ToString()}");
                     break;
             }
         }
