@@ -1,7 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using ExitGames.Client.Photon.StructWrapping;
 
 public class settingsMovement : MonoBehaviour
 {
@@ -19,7 +16,6 @@ public class settingsMovement : MonoBehaviour
 
     void Update()
 {
-    Transform startingPoint = cam.GetComponent<CameraMovement>().startingPoint;
     float rotationSpeedCamera = 5f;
     if (settingsClicked)
     {
@@ -27,8 +23,6 @@ public class settingsMovement : MonoBehaviour
         //CAMERA MOVEMENT
         if(targetPoint == settingsPosition)
         {
-            
-            //float targetCameraRotationY = 0f;
             cam.transform.position = Vector3.MoveTowards(cam.transform.position, targetPoint.position, moveSpeed * Time.deltaTime);
             Quaternion targetCameraRotation = Quaternion.Euler(29f, -111f, 0.6f);
             cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, targetCameraRotation, rotationSpeedCamera * Time.deltaTime);

@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 public class startClicked : MonoBehaviour
 {
-    public Camera cam; 
-    CameraMovement camScript;
+    public GameObject startPosition; 
+    startMovement startScript;
     public GameObject goToSettingsButton;
     public GameObject creditsButton;
 
@@ -15,7 +13,7 @@ public class startClicked : MonoBehaviour
 
     void Start()
     {
-        camScript = cam.GetComponent<CameraMovement>();
+        startScript = startPosition.GetComponent<startMovement>();
         closeDoor=false;
     }
 
@@ -24,7 +22,7 @@ public class startClicked : MonoBehaviour
     public void OnButtonClick()
     {
         if(closeDoor==false){
-            camScript.started = true;
+            startScript.started = true;
             goToSettingsButton.gameObject.SetActive(false);
             creditsButton.gameObject.SetActive(false);
             gameName.gameObject.SetActive(false);;

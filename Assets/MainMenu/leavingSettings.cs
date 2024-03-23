@@ -14,6 +14,7 @@ public class leavingSettings : MonoBehaviour
     public GameObject startButton;
     private Transform targetPoint;
     private Transform startingPoint;
+    public GameObject startingPosition;
 
     void Start()
     {
@@ -23,7 +24,7 @@ public class leavingSettings : MonoBehaviour
 
     void Update()
 {
-    startingPoint = cam.GetComponent<CameraMovement>().startingPoint;
+    startingPoint = startingPosition.GetComponent<startMovement>().startingPoint;
     if (leavingSettingsBool)
     {
         //CAMERA MOVEMENT

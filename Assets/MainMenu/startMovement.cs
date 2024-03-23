@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-public class CameraMovement : MonoBehaviour
+public class startMovement : MonoBehaviour
 {
     public Transform pointB;
     public Transform pointC;
@@ -14,13 +13,14 @@ public class CameraMovement : MonoBehaviour
     public GameObject returnObj; 
     returnMovement returnMove;
     public GameObject returnButton;
+    public GameObject cam;
 
     void Start()
     {
         started = false;
         targetPoint = pointB;
         doorOpened = false;
-        startingPoint = transform;
+        startingPoint = cam.transform;
         returnMove = returnObj.GetComponent<returnMovement>();
     }
 
@@ -46,23 +46,23 @@ public class CameraMovement : MonoBehaviour
         if(doorOpened && targetPoint == pointB)
         {
             float targetCameraRotationY = -180f;
-            transform.position = Vector3.MoveTowards(transform.position, targetPoint.position, moveSpeed * Time.deltaTime);
+            cam.transform.position = Vector3.MoveTowards(cam.transform.position, targetPoint.position, moveSpeed * Time.deltaTime);
             Quaternion targetCameraRotation = Quaternion.Euler(0f, targetCameraRotationY, 0f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetCameraRotation, rotationSpeedCamera * Time.deltaTime);
+            cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, targetCameraRotation, rotationSpeedCamera * Time.deltaTime);
             
         }
         // Check if camera is within 1 unit of pointB
-            if (Vector3.Distance(transform.position, pointB.position) < 1f || targetPoint == pointC && !returnMove.returning == true)
+            if (Vector3.Distance(cam.transform.position, pointB.position) < 1f || targetPoint == pointC && !returnMove.returning == true)
             {
 
                 targetPoint = pointC;
                 float targetCameraRotationY = -170f;
                 float targetCameraRotationX = -5f;
-                transform.position = Vector3.MoveTowards(transform.position, targetPoint.position, moveSpeed * Time.deltaTime);
+                cam.transform.position = Vector3.MoveTowards(cam.transform.position, targetPoint.position, moveSpeed * Time.deltaTime);
                 Quaternion targetCameraRotation = Quaternion.Euler(targetCameraRotationX, targetCameraRotationY, 0f);
-                transform.rotation = Quaternion.Lerp(transform.rotation, targetCameraRotation, rotationSpeedCamera * Time.deltaTime);
+                cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, targetCameraRotation, rotationSpeedCamera * Time.deltaTime);
 
-                if (Vector3.Distance(transform.position, pointC.position) < 0.1f )
+                if (Vector3.Distance(cam.transform.position, pointC.position) < 0.1f )
             {
 
                 started=false;

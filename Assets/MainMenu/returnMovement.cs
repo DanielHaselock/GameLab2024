@@ -1,12 +1,9 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
-using ExitGames.Client.Photon.StructWrapping;
 
 public class returnMovement : MonoBehaviour
 {
     public Transform pointB;
-    //public Transform pointC;
     public bool returning;
     public float moveSpeed = 5f;
     public GameObject cam;
@@ -17,9 +14,9 @@ public class returnMovement : MonoBehaviour
     private Transform targetPoint;
     private Transform startingPoint;
     public GameObject goToSettingsButton;
-
     public  Quaternion targetCameraRotation;
     public bool closeDoor;
+    public GameObject startingPosition;
 
     void Start()
     {
@@ -37,14 +34,14 @@ public class returnMovement : MonoBehaviour
             Quaternion targetRotation = Quaternion.Euler(0f, 0f, 0f);
             if (Quaternion.Angle(door.transform.rotation, targetRotation) < 0.1f)
             {
-                cam.GetComponent<CameraMovement>().doorOpened = false;
+                startingPosition.GetComponent<startMovement>().doorOpened = false;
                 targetPoint = pointB;
                 closeDoor=false;
             }
             door.transform.rotation = Quaternion.Lerp(door.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
-        startingPoint = cam.GetComponent<CameraMovement>().startingPoint;
+        startingPoint = startingPosition.GetComponent<startMovement>().startingPoint;
         float rotationSpeedCamera = 5f;
 
         if (returning)
@@ -90,7 +87,7 @@ public class returnMovement : MonoBehaviour
                     closeDoor=true;
                     startButton.gameObject.SetActive(true);
                     goToSettingsButton.gameObject.SetActive(true);
-                    creditsButton.gameObject.SetActive(true);
+                    
                 }
             }
         }
