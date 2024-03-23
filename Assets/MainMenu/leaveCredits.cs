@@ -1,30 +1,29 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using ExitGames.Client.Photon.StructWrapping;
 
-public class leavingSettings : MonoBehaviour
+public class leaveCredits : MonoBehaviour
 {
-    public bool leavingSettingsBool;
+    public bool leavingCreditsBool;
     public float moveSpeed = 5f;
     public GameObject cam;
     public TMP_Text gameName;
-    public GameObject settings;
-    public GameObject creditsButton;
+    public GameObject settingsButton;
+    public GameObject visitCreditsButton;
     public GameObject startButton;
     private Transform targetPoint;
     private Transform startingPoint;
 
     void Start()
     {
-        leavingSettingsBool = false;
+        leavingCreditsBool = false;
         
     }
 
     void Update()
 {
     startingPoint = cam.GetComponent<CameraMovement>().startingPoint;
-    if (leavingSettingsBool)
+    if (leavingCreditsBool)
     {
         //CAMERA MOVEMENT
         float rotationSpeedCamera = 5f;
@@ -45,9 +44,9 @@ public class leavingSettings : MonoBehaviour
                 if(Vector3.Distance(cam.transform.position, targetCameraPosition)<0.01f)
                 {
                     startButton.gameObject.SetActive(true);
-                    settings.gameObject.SetActive(true);
-                    creditsButton.gameObject.SetActive(true);
-                    leavingSettingsBool=false;
+                    settingsButton.gameObject.SetActive(true);
+                    visitCreditsButton.gameObject.SetActive(true);
+                    leavingCreditsBool=false;
 
                 }
             }

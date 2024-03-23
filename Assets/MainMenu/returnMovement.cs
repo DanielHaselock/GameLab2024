@@ -11,6 +11,7 @@ public class returnMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public GameObject cam;
     public TMP_Text gameName;
+    public GameObject creditsButton;
     public GameObject door;
     public GameObject startButton;
     private Transform targetPoint;
@@ -89,6 +90,7 @@ public class returnMovement : MonoBehaviour
                     closeDoor=true;
                     startButton.gameObject.SetActive(true);
                     goToSettingsButton.gameObject.SetActive(true);
+                    creditsButton.gameObject.SetActive(true);
                 }
             }
         }

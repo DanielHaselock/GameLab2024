@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -10,20 +8,24 @@ public class visitCreditsClicked : MonoBehaviour
     visitCredits visitCredits;
     public TMP_Text gameName;
     public GameObject startButton;
+    public bool closeDoor;
 
     void Start()
     {
         visitCredits = visitCreditObj.GetComponent<visitCredits>();
+        closeDoor = startButton.GetComponent<startClicked>().closeDoor;
     }
 
-    void Update(){}
+    void Update(){closeDoor = startButton.GetComponent<startClicked>().closeDoor;}
 
     public void OnButtonClick()
     {
-        gameName.gameObject.SetActive(false);
-        startButton.gameObject.SetActive(false);
-        settingsButton.gameObject.SetActive(false);
-        visitCredits.creditsClicked = true;
-        gameObject.SetActive(false);
+        if(closeDoor==false){
+            gameName.gameObject.SetActive(false);
+            startButton.gameObject.SetActive(false);
+            settingsButton.gameObject.SetActive(false);
+            visitCredits.creditsClicked = true;
+            gameObject.SetActive(false);
+        }
     }
 }

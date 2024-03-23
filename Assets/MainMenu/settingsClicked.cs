@@ -9,20 +9,25 @@ public class settingsClicked : MonoBehaviour
     settingsMovement settingsMove;
     public TMP_Text gameName;
     public GameObject startButton;
+    public GameObject creditsButton;
+    public bool closeDoor;
 
     void Start()
     {
         settingsMove = settingsObj.GetComponent<settingsMovement>();
+        closeDoor = startButton.GetComponent<startClicked>().closeDoor;
     }
 
-    void Update(){}
+    void Update(){closeDoor = startButton.GetComponent<startClicked>().closeDoor;}
 
     public void OnButtonClick()
     {
-        gameName.gameObject.SetActive(false);
-        startButton.gameObject.SetActive(false);
-        settingsMove.settingsClicked = true;
-        gameObject.SetActive(false);
-        
+        if(closeDoor==false){
+            gameName.gameObject.SetActive(false);
+            startButton.gameObject.SetActive(false);
+            creditsButton.gameObject.SetActive(false);
+            settingsMove.settingsClicked = true;
+            gameObject.SetActive(false);
+        }
     }
 }

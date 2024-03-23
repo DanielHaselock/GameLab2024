@@ -1,7 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using ExitGames.Client.Photon.StructWrapping;
 
 public class visitCredits : MonoBehaviour
 {
@@ -10,7 +7,7 @@ public class visitCredits : MonoBehaviour
     public float moveSpeed = 5f;
     public GameObject cam;
     private Transform targetPoint;
-    //public GameObject settingsLeaveButton;
+    public GameObject creditsLeaveButton;
     void Start()
     {
         creditsClicked = false;
@@ -34,7 +31,7 @@ public class visitCredits : MonoBehaviour
             if (Vector3.Distance(cam.transform.position, creditPosition.position) < 0.1f )
             {
                 creditsClicked = false;
-                //settingsLeaveButton.gameObject.SetActive(true);
+                creditsLeaveButton.gameObject.SetActive(true);
             }
         
         

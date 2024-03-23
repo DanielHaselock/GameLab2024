@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -8,9 +7,7 @@ public class CameraMovement : MonoBehaviour
     public Transform pointC;
     public bool started;
     public float moveSpeed = 0.5f;
-    public TMP_Text gameName;
     public GameObject door;
-
     private Transform targetPoint;
     public bool doorOpened;
     public Transform startingPoint;
@@ -44,8 +41,6 @@ public class CameraMovement : MonoBehaviour
             doorOpened = true;
         }
         //END DOOR
-
-        gameName.gameObject.SetActive(false);
 
         //CAMERA MOVEMENT
         if(doorOpened && targetPoint == pointB)
