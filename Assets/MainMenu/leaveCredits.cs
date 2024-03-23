@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-
 public class leaveCredits : MonoBehaviour
 {
     public bool leavingCreditsBool;
@@ -13,24 +12,22 @@ public class leaveCredits : MonoBehaviour
     private Transform targetPoint;
     private Transform startingPoint;
     public GameObject startingPosition;
-
     void Start()
     {
-        leavingCreditsBool = false;
-        
+        leavingCreditsBool = false; 
     }
 
     void Update()
-{
-    startingPoint = startingPosition.GetComponent<startMovement>().startingPoint;
-    if (leavingCreditsBool)
-    {
-        //CAMERA MOVEMENT
-        float rotationSpeedCamera = 5f;
-        Vector3 targetCameraPosition = new Vector3(6.5f, 3.5f, 3.5f);
-        cam.transform.position = Vector3.MoveTowards(cam.transform.position, targetCameraPosition, moveSpeed * Time.deltaTime);
-            
-        // Check if camera is within 1 unit of pointB
+        {
+        startingPoint = startingPosition.GetComponent<startMovement>().startingPoint;
+        if (leavingCreditsBool)
+        {
+            //CAMERA MOVEMENT
+            float rotationSpeedCamera = 5f;
+            Vector3 targetCameraPosition = new Vector3(6.5f, 3.5f, 3.5f);
+            cam.transform.position = Vector3.MoveTowards(cam.transform.position, targetCameraPosition, moveSpeed * Time.deltaTime);
+                
+            // Check if camera is within 1 unit of pointB
             if (Vector3.Distance(cam.transform.position, startingPoint.position) < 1f || targetPoint == startingPoint)
             {
                 targetPoint = startingPoint;
@@ -46,16 +43,8 @@ public class leaveCredits : MonoBehaviour
                     settingsButton.gameObject.SetActive(true);
                     visitCreditsButton.gameObject.SetActive(true);
                     leavingCreditsBool=false;
-
                 }
             }
-        
-        
-        
+        }
     }
-
-    
-}
-
-
 }

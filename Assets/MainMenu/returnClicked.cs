@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class returnClicked : MonoBehaviour
 {
     public GameObject returnObj; 
@@ -17,6 +16,6 @@ public class returnClicked : MonoBehaviour
     public void OnButtonClick()
     {
         returnMove.returning = true;
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 }

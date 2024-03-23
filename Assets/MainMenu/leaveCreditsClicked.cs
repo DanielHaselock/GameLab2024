@@ -11,9 +11,7 @@ public class leaveCreditsClicked : MonoBehaviour
 
     public void OnButtonClick()
     {
-        
         leaveCreditsObj.GetComponent<leaveCredits>().leavingCreditsBool = true;
         gameObject.SetActive(false);
-        
     }
 }

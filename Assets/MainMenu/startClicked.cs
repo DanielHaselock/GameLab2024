@@ -7,7 +7,6 @@ public class startClicked : MonoBehaviour
     startMovement startScript;
     public GameObject goToSettingsButton;
     public GameObject creditsButton;
-
     public TMP_Text gameName;
     public bool closeDoor;
 
@@ -26,8 +25,7 @@ public class startClicked : MonoBehaviour
             goToSettingsButton.gameObject.SetActive(false);
             creditsButton.gameObject.SetActive(false);
             gameName.gameObject.SetActive(false);;
-            this.gameObject.SetActive(false);
-
+            gameObject.SetActive(false);
         }
     }
 }

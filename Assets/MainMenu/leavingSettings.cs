@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
-using ExitGames.Client.Photon.StructWrapping;
 
 public class leavingSettings : MonoBehaviour
 {
@@ -18,22 +16,19 @@ public class leavingSettings : MonoBehaviour
 
     void Start()
     {
-        leavingSettingsBool = false;
-        
+        leavingSettingsBool = false; 
     }
-
     void Update()
-{
-    startingPoint = startingPosition.GetComponent<startMovement>().startingPoint;
-    if (leavingSettingsBool)
     {
-        //CAMERA MOVEMENT
-        float rotationSpeedCamera = 5f;
-        Vector3 targetCameraPosition = new Vector3(6.5f, 3.5f, 3.5f);
-        cam.transform.position = Vector3.MoveTowards(cam.transform.position, targetCameraPosition, moveSpeed * Time.deltaTime);
-        //cam.transform.position = Vector3.MoveTowards(cam.transform.position, targetPoint.position, moveSpeed * Time.deltaTime);
-            
-        // Check if camera is within 1 unit of pointB
+        startingPoint = startingPosition.GetComponent<startMovement>().startingPoint;
+        if (leavingSettingsBool)
+        {
+            //CAMERA MOVEMENT
+            float rotationSpeedCamera = 5f;
+            Vector3 targetCameraPosition = new Vector3(6.5f, 3.5f, 3.5f);
+            cam.transform.position = Vector3.MoveTowards(cam.transform.position, targetCameraPosition, moveSpeed * Time.deltaTime);
+                
+            // Check if camera is within 1 unit of pointB
             if (Vector3.Distance(cam.transform.position, startingPoint.position) < 1f || targetPoint == startingPoint)
             {
                 targetPoint = startingPoint;
@@ -49,16 +44,8 @@ public class leavingSettings : MonoBehaviour
                     settings.gameObject.SetActive(true);
                     creditsButton.gameObject.SetActive(true);
                     leavingSettingsBool=false;
-
                 }
             }
-        
-        
-        
+        }   
     }
-
-    
-}
-
-
 }

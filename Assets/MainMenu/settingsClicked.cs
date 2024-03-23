@@ -20,7 +20,8 @@ public class settingsClicked : MonoBehaviour
 
     public void OnButtonClick()
     {
-        if(closeDoor==false){
+        if(closeDoor==false)
+        {
             gameName.gameObject.SetActive(false);
             startButton.gameObject.SetActive(false);
             creditsButton.gameObject.SetActive(false);

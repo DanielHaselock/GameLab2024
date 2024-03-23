@@ -32,13 +32,13 @@ public class returnMovement : MonoBehaviour
         {
             float rotationSpeed = 5f;
             Quaternion targetRotation = Quaternion.Euler(0f, 0f, 0f);
+            door.transform.rotation = Quaternion.Lerp(door.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             if (Quaternion.Angle(door.transform.rotation, targetRotation) < 0.1f)
             {
                 startingPosition.GetComponent<startMovement>().doorOpened = false;
                 targetPoint = pointB;
                 closeDoor=false;
             }
-            door.transform.rotation = Quaternion.Lerp(door.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
         startingPoint = startingPosition.GetComponent<startMovement>().startingPoint;
@@ -86,11 +86,10 @@ public class returnMovement : MonoBehaviour
                     returning=false;
                     closeDoor=true;
                     startButton.gameObject.SetActive(true);
+                    creditsButton.gameObject.SetActive(true);
                     goToSettingsButton.gameObject.SetActive(true);
-                    
                 }
             }
         }
-
     }
 }
