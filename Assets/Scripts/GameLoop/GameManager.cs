@@ -18,6 +18,9 @@ public class GameManager : NetworkBehaviour
     public event Action<bool> OnPauseStatusChanged;
 
     private ChangeDetector _change;
+    [SerializeField]
+    private List<ObjectiveData> objectivesList = new List<ObjectiveData>();
+    [Networked] public bool bossDefeated { get; private set; }
 
     public override void Spawned()
     {
@@ -60,13 +63,16 @@ public class GameManager : NetworkBehaviour
                 
                 break;
             case GameState.ActiveLevel:
+                StartLevel();
                 RunLevel();
                 break;
             case GameState.BetweenLevels:
+                //replace with win state only? 
                 break;
             case GameState.GameOver:
                 break;
             case GameState.Win:
+
                 break;
             default:
                 break;
@@ -119,10 +125,32 @@ public class GameManager : NetworkBehaviour
         DoPause(pause);
     }
 
-    private void RunLevel()
+    private void StartLevel()
     {   //load level
         //spawn enemies
         IsPausable = true;
-        //place holder for now
+        ObjectiveData testObjective = ScriptableObject.CreateInstance<ObjectiveData>();
+        testObjective.Initialize("Kill 1 enemy", "onion", 1, 0, ObjectiveData.OperationType.Sub);
+        objectivesList.Add(testObjective);
+        bossDefeated = false;
     }
+    private void RunLevel()
+    {   //while loop? Like while objectives not met and boss not defeated?
+        if(objectivesList.Count > 0 && !bossDefeated)
+        {
+           
+        }
+        else if (objectivesList.Count == 0 && !bossDefeated)
+        {
+            SpawnBoss();
+        }
+      
+        else
+        {
+            UpdateGameState(GameState.Win);
+        }
+    }
+    public void SpawnBoss() { }
+
+    //so main logic is as such, when an enemy dies, it will update the objective. if it matches, then the objective is updated. once objective is met, it is removed from list. Once list is empty, all objectives have been met and we can spawn the boss. Once boss is defeated, triggers gamestate change and level ends.
 }
