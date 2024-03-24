@@ -1,10 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using Fusion;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyOnion : Enemy
 {
-    protected bool passive = true;
+    [System.Serializable]
+    private enum OnionState
+    {
+        Passive,
+        Aggressive,
+    }
+
+    [SerializeField] private OnionState myState;
+    
     protected List<GameObject> _seenOnions = new List<GameObject>();
     float delta = 0;
     int targetTime = 7;
@@ -17,74 +27,88 @@ public class EnemyOnion : Enemy
     protected override void Start()
     {
         base.Start();
+        canAttack = true;
         //Go crazy        
         lastPosition = transform.position;
         animator.CrossFade("Idle", .25f);
+        healthComponent.OnDamaged += OnAttack;
+        healthComponent.OnHealthDepleted += KillMyself;
     }
 
+    private void OnDestroy()
+    {
+        healthComponent.OnDamaged -= OnAttack;
+    }
+    
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
-        if (!dead)
+        if (!Runner.IsServer)
+            return;
+        
+        if(dead)
+            return;
+        
+        UpdateMoveAndRotation(Runner.DeltaTime);
+        velocity = Vector3.Distance(transform.position, lastPosition) / Runner.DeltaTime;
+        lastPosition = transform.position;
+        
+        if (myState == OnionState.Passive)
         {
-            if (healthComponent.Health < health)
-                OnAttack();
-            
-            
-            velocity = Vector3.Distance(transform.position, lastPosition) / Time.deltaTime;
-            lastPosition = transform.position;
-            if (passive)
+            delta += Runner.DeltaTime;
+            if (delta > targetTime)
             {
-                delta += Runner.DeltaTime;
-                if (delta > targetTime)
-                {
-                    delta = 0;
-                    targetTime = Random.Range(1, 10);
-                    navMeshAgent.destination = new Vector3(transform.position.x + Random.Range(-20f, 20f), transform.position.y, transform.position.z + Random.Range(-10f, 10f));
-                }
+                delta = 0;
+                targetTime = Random.Range(1, 10);
+                navMeshAgent.destination = new Vector3(transform.position.x + Random.Range(-20f, 20f), transform.position.y, transform.position.z + Random.Range(-10f, 10f));
             }
-            else //aggressive
+        }
+        
+        if (myState== OnionState.Aggressive) //aggressive
+        {
+            if (_targetPlayer != null)
             {
-                if (_targetPlayer != null)
-                {
-                    navMeshAgent.destination = _targetPlayer.transform.position;
-                }
-                if (_seenPlayers.Count > 1)
-                    ChangeTargeting();
-                if (canAttack && !stunned && Vector3.Distance(transform.position, _targetPlayer.transform.position) < 3)
-                {
-                    StartCoroutine(waitAttack());
-                }
+                navMeshAgent.destination = _targetPlayer.transform.position;
             }
-            if (!stunned)
+            if (_seenPlayers.Count > 1)
+                ChangeTargeting();
+            if (_targetPlayer && canAttack && !stunned && Vector3.Distance(transform.position, _targetPlayer.transform.position) <= attackRange)
             {
-                if (velocity > 0.2f)
-                    idle = false;
+                StartCoroutine(WaitAndAttack());
+            }
+        }
+        
+        if (!stunned)
+        {
+            if (velocity > 0.2f)
+                idle = false;
+            else
+                idle = true;
+            if (idle != prevIdle && !attacking)
+            {
+                if (idle)
+                {
+                    animator.CrossFade("Idle", .25f);
+                }
                 else
-                    idle = true;
-                if (idle != prevIdle && !attacking)
                 {
-                    if (idle)
-                    {
-                        animator.CrossFade("Idle", .25f);
-                    }
-                    else
-                    {
-                        animator.CrossFade("Run", .25f);
-                    }
+                    animator.CrossFade("Run", .25f);
                 }
-                prevIdle = idle;
             }
+            prevIdle = idle;
         }
     }
     public override void ChangeTargeting()
     {
+        if(attacking)
+            return;
+        
         base.ChangeTargeting();
         switch (_seenPlayers.Count)
         {
             case 0:
                 _targetPlayer = null;
-                StartCoroutine(waitPassive());
+                StartCoroutine(WaitPassive());
                 break;
             case 1:
                 _targetPlayer = _seenPlayers[0];
@@ -97,7 +121,7 @@ public class EnemyOnion : Enemy
                 break;
         }
     }
-    IEnumerator waitPassive()
+    IEnumerator WaitPassive()
     {
         bool happy = true;
         for (int i = 0; i < 10; i++)
@@ -106,53 +130,55 @@ public class EnemyOnion : Enemy
             if (_seenPlayers.Count > 0)
                 happy = false;
         }
-        passive = happy;
+        myState = happy? OnionState.Passive : OnionState.Aggressive;
         GetComponent<SphereCollider>().radius = 35;
     }
 
-    IEnumerator waitAttack()
+    IEnumerator WaitAndAttack()
     {
         canAttack = false;
         attacking = true;
         navMeshAgent.speed = 0;
         animator.CrossFade("Attack", .1f);
         //attack windup
-        yield return new WaitForSecondsRealtime(.35f);
+        yield return new WaitForSeconds(.35f);
         if (stunned)
         {
             attacking = false;
+            canAttack = true;
             yield break;
         }
         damageComponent.InitiateAttack("Player");
         //attack recovery
-        yield return new WaitForSecondsRealtime(.17f);
+        yield return new WaitForSeconds(.17f);
+        animator.CrossFade("Idle", .5f);
         attacking = false;
         navMeshAgent.speed = speed;
         //attack delay
-        yield return new WaitForSecondsRealtime(3f);
+        yield return new WaitForSeconds(3f);
         canAttack = true;
     }
     public override void OnAttack()
     {
         base.OnAttack();
-        if (!dead)
+        if (healthComponent.HealthDepleted)
         {
-            if (passive)
+            if (myState == OnionState.Passive)
             {
-                passive = false;
+                myState = OnionState.Aggressive;
                 navMeshAgent.destination = _targetPlayer.transform.position;
                 GetComponent<SphereCollider>().radius = 15;
             }
             foreach (GameObject onion in _seenOnions)
             {
-                if (onion.GetComponent<EnemyOnion>().passive)
-                    onion.GetComponent<EnemyOnion>().alert(_targetPlayer);
+                if (onion.GetComponent<EnemyOnion>().myState == OnionState.Passive)
+                    onion.GetComponent<EnemyOnion>().Alert(_targetPlayer);
             }
         }
     }
-    public void alert(GameObject player)
+    public void Alert(GameObject player)
     {
-        passive = false;
+        myState = OnionState.Aggressive;
         //Can't add player to seen players, as that needs to happen on its own time.
         navMeshAgent.destination = player.transform.position;
         GetComponent<SphereCollider>().radius = 15;
@@ -171,6 +197,14 @@ public class EnemyOnion : Enemy
         if (other.tag.Equals("Enemy") && other.name.Contains("Onion"))
         {
             _seenOnions.Remove(other.gameObject);
+        }
+    }
+
+    private void KillMyself()
+    {
+        if (Runner.IsServer)
+        {
+            Runner.Despawn(GetComponent<NetworkObject>());
         }
     }
 }

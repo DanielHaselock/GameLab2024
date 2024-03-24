@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Bottom
+  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: nurbsCircle1
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/Belt_Buckle
+    m_Weight: 0
+  - m_Path: nurbsCircle1/pasted__Hips/Buttons
+    m_Weight: 0
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__LeftLeg
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__LeftLeg/Left_Collar_Leg
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__LeftLeg/pasted__LeftKnee
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__LeftLeg/pasted__LeftKnee/Left_Collar_Knee
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__LeftLeg/pasted__LeftKnee/Left_Knee_Hair
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__LeftLeg/pasted__LeftKnee/pasted__LeftFoot
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__LeftLeg/pasted__LeftKnee/pasted__LeftFoot/pasted__LeftToe
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__RightLeg
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__RightLeg/pasted__RightKnee
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__RightLeg/pasted__RightKnee/pasted__RightFoot
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__RightLeg/pasted__RightKnee/pasted__RightFoot/pasted__RightToe
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__RightLeg/pasted__RightKnee/Right_Collar_Knee
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__RightLeg/pasted__RightKnee/Right_Knee_Hair
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__RightLeg/Right_Collar_Leg
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1
+    m_Weight: 0
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__LeftShoulder
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__LeftShoulder/Left_Collar
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__LeftShoulder/pasted__LeftElbow
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__LeftShoulder/pasted__LeftElbow/Left_Arm_Hair
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__LeftShoulder/pasted__LeftElbow/pasted__LeftWrist
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__LeftShoulder/pasted__LeftElbow/pasted__LeftWrist/pasted__LeftHand
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__Neck
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__Neck/pasted__Head
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__Neck/pasted__Head/Face
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__Neck/pasted__Head/pasted__Hair1
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__Neck/pasted__Head/pasted__Hair1/pasted__Hair2
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__Neck/pasted__Head/pasted__Hair1/pasted__Hair2/pasted__Hair3
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__RightShoulder
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__RightShoulder/pasted__RightElbow
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__RightShoulder/pasted__RightElbow/pasted__RightWrist
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__RightShoulder/pasted__RightElbow/pasted__RightWrist/pasted__RightHand
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__RightShoulder/pasted__RightElbow/Right_Arm_Hair
+    m_Weight: 1
+  - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__RightShoulder/Right_Collar
+    m_Weight: 1
+  - m_Path: nurbsCircle1/Son_Mesh
+    m_Weight: 0
+  - m_Path: nurbsCircle2
+    m_Weight: 0
+  - m_Path: nurbsCircle2/ikHandle2
+    m_Weight: 1
+  - m_Path: nurbsCircle3
+    m_Weight: 0
+  - m_Path: nurbsCircle3/ikHandle1
+    m_Weight: 1

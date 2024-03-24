@@ -26,5 +26,14 @@ MonoBehaviour:
     - Key: type
       Value:
       - {fileID: 8300000, guid: 6bb0d86f26e165c4f8426cb4ace0296b, type: 3}
+    - Key: attack
+      Value:
+      - {fileID: 8300000, guid: a72ee8e1f09986c439fbe68da40ae48f, type: 3}
+    - Key: jump
+      Value:
+      - {fileID: 8300000, guid: 5d219b455bbbcd44a887b4cf95fdc9e7, type: 3}
+    - Key: help
+      Value:
+      - {fileID: 8300000, guid: 71119fcc6654247b585303b1ad23a1ce, type: 3}
   InitialBackgroundMusic: mainmenu
   InitialAmbiance: 
