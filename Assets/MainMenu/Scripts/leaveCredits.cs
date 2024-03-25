@@ -35,13 +35,13 @@ public class leaveCredits : MonoBehaviour
                 float targetCameraRotationX = 16f;
                 Quaternion targetCameraRotation = Quaternion.Euler(targetCameraRotationX, targetCameraRotationY, 0f);
                 cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, targetCameraRotation, rotationSpeedCamera * Time.deltaTime);
-                gameName.gameObject.SetActive(true);
 
                 if(Vector3.Distance(cam.transform.position, targetCameraPosition)<0.01f)
                 {
                     startButton.gameObject.SetActive(true);
                     settingsButton.gameObject.SetActive(true);
                     visitCreditsButton.gameObject.SetActive(true);
+                    gameName.gameObject.SetActive(true);
                     leavingCreditsBool=false;
                 }
             }
