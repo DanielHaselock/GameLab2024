@@ -47,6 +47,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _IsPaused: 0
   _IsPausable: 0
+  objectivesList: []
+  _bossDefeated: 0
+  levelSceneIndex: 2
+  enemyMap:
+    _items:
+    - Key: test
+      Value:
+        RawGuidValue: 1b75d1f7c37228345819026d740cc884
 --- !u!114 &926341796415607891
 MonoBehaviour:
   m_ObjectHideFlags: 0

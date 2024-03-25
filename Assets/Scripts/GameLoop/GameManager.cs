@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 using Fusion;
 using Networking.Data;
 using UnityEngine.Events;
+using Networking.Behaviours;
+using System.Threading.Tasks;
 
 public class GameManager : NetworkBehaviour
 {
@@ -19,12 +21,16 @@ public class GameManager : NetworkBehaviour
 
     private ChangeDetector _change;
     [SerializeField]
-    private List<ObjectiveData> objectivesList = new List<ObjectiveData>();
+    private Dictionary<string,ObjectiveData> objectivesMap = new Dictionary<string, ObjectiveData>();
     [Networked] public bool bossDefeated { get; private set; }
+    [SerializeField] private int levelSceneIndex;
+    [SerializeField] private SerializableDictionary<string, NetworkPrefabRef> enemyMap;
 
-    public override void Spawned()
+    public override async void Spawned()
     {
         _change = GetChangeDetector(ChangeDetector.Source.SimulationState);
+        await Task.Delay(2000);
+        UpdateGameState(GameState.ActiveLevel);
     }
         
     void Awake()
@@ -53,6 +59,8 @@ public class GameManager : NetworkBehaviour
     public void UpdateGameState(GameState newState)
     {
         CurrentGameState = newState;
+
+        
 
         switch (newState)
         {
@@ -125,22 +133,36 @@ public class GameManager : NetworkBehaviour
         DoPause(pause);
     }
 
-    private void StartLevel()
-    {   //load level
-        //spawn enemies
+    private async void StartLevel()
+    {
+        if (!Runner.IsServer)
+        {
+            Debug.Log("Cannot call StartLevel on client");
+            return;
+        }
         IsPausable = true;
+        bool result= await NetworkManager.Instance.LoadSceneNetworked(levelSceneIndex, true);
+        if (!result)
+        {
+            Debug.LogError("Failed to load level");
+            return;
+        }
+        NetworkManager.Instance.SpawnPlayers(new List<Vector3> { new Vector3(0,2,0), new Vector3(0,4,0)}, new List<Quaternion> { Quaternion.identity,Quaternion.identity});
+        Runner.Spawn(enemyMap["test"], Vector3.zero,Quaternion.identity);
+        
+        //change objectives
         ObjectiveData testObjective = ScriptableObject.CreateInstance<ObjectiveData>();
-        testObjective.Initialize("Kill 1 enemy", "onion", 1, 0, ObjectiveData.OperationType.Sub);
-        objectivesList.Add(testObjective);
+        testObjective.Initialize("OBLITERATE 1 enemy", "onion", 1, 0, ObjectiveData.OperationType.Sub);
+        objectivesMap.Add("onion", testObjective);
         bossDefeated = false;
     }
     private void RunLevel()
     {   //while loop? Like while objectives not met and boss not defeated?
-        if(objectivesList.Count > 0 && !bossDefeated)
+        if(objectivesMap.Count > 0 && !bossDefeated)
         {
            
         }
-        else if (objectivesList.Count == 0 && !bossDefeated)
+        else if (objectivesMap.Count == 0 && !bossDefeated)
         {
             SpawnBoss();
         }
@@ -151,6 +173,29 @@ public class GameManager : NetworkBehaviour
         }
     }
     public void SpawnBoss() { }
+    public void RaiseObjective(string key)
+    {
+        if (!Runner.IsServer) { return; }
+        if (!objectivesMap.ContainsKey(key))
+        {
+            return;
+        }
+        Debug.Log("Objective Raised " + key);
+        var objective = objectivesMap[key];
+        if (objective.operationType == ObjectiveData.OperationType.Add)
+        {
+            objective.value += 1;
+        }
+        else
+        {
+            objective.value -= 1;
+        }
+        if (objective.value == objective.targetValue)
+        {
+            objectivesMap.Remove(key);
+        }
+      
+    }
 
     //so main logic is as such, when an enemy dies, it will update the objective. if it matches, then the objective is updated. once objective is met, it is removed from list. Once list is empty, all objectives have been met and we can spawn the boss. Once boss is defeated, triggers gamestate change and level ends.
 }

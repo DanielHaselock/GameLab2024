@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "ObjectiveData", menuName = "GameLabs/ObjectiveData")]
 public class ObjectiveData : ScriptableObject
 {
     public string objectiveText;

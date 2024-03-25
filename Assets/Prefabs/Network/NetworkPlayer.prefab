@@ -178,6 +178,7 @@ GameObject:
   - component: {fileID: 7732335574680059868}
   - component: {fileID: 1040876101395656258}
   - component: {fileID: 6136737884000333897}
+  - component: {fileID: 4112587101976223627}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -286,6 +287,7 @@ MonoBehaviour:
   OnJump: {fileID: 11400000, guid: d3521b317a198a146b170baa9793ad84, type: 2}
   OnAttack: {fileID: 11400000, guid: 94e074cdcce97e04ab4ec736fcbd181a, type: 2}
   OnRevive: {fileID: 11400000, guid: 8fb90aa0bbf044a589e8a3b6f5522b08, type: 2}
+  OnPause: {fileID: 11400000, guid: 2eccf168f9e22b443b44fcb9e27eeba6, type: 2}
 --- !u!114 &3865790411665046194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -423,6 +425,22 @@ MonoBehaviour:
         m_CallState: 1
     m_ActionId: 76fa9e3d-e551-4068-8344-8d9e237d66c2
     m_ActionName: Player/Revive[/Keyboard/r]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2997162649293212676}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: Pause
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+    m_ActionId: 7a86210d-406a-49b5-b4b5-2c478ccfeb4a
+    m_ActionName: Player/Pause[/Keyboard/escape]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -788,6 +806,34 @@ MonoBehaviour:
     StepRequireGroundTarget: 0
     SnapDistance: 0.25
     SnapSpeed: 4
+--- !u!114 &4112587101976223627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096714271386515055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e8fcea3e3113d84b8ed6719c9d621b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 2eccf168f9e22b443b44fcb9e27eeba6, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6848934553511822739}
+        m_TargetAssemblyTypeName: PlayerNetworkedActions, Assembly-CSharp
+        m_MethodName: BroadcastPause
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
 --- !u!1 &2821495970172956384
 GameObject:
   m_ObjectHideFlags: 0

@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: 829520058137553155}
   - component: {fileID: 2960818826373571837}
   - component: {fileID: 801126053971309692}
+  - component: {fileID: -3914191627687170931}
   m_Layer: 0
   m_Name: EnemyOignon
   m_TagString: Enemy
@@ -345,6 +346,20 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1.19
   m_Center: {x: 0, y: 1.2, z: 0}
+--- !u!114 &-3914191627687170931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2685400961200451971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f3fbc8c5c501b649b3807d4f52553dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invokeType: 1
+  key: onion
 --- !u!1 &3301958258171632831
 GameObject:
   m_ObjectHideFlags: 0
