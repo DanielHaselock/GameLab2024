@@ -28,6 +28,9 @@ public class GameManager : NetworkBehaviour
 
     public override async void Spawned()
     {
+        if(!Runner.IsServer)
+            return;
+        
         _change = GetChangeDetector(ChangeDetector.Source.SimulationState);
         await Task.Delay(2000);
         UpdateGameState(GameState.ActiveLevel);
@@ -38,6 +41,7 @@ public class GameManager : NetworkBehaviour
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(this.gameObject);
         }
     }
 
@@ -135,13 +139,15 @@ public class GameManager : NetworkBehaviour
 
     private async void StartLevel()
     {
+        if(Runner==null)
+            return;
         if (!Runner.IsServer)
         {
             Debug.Log("Cannot call StartLevel on client");
             return;
         }
         IsPausable = true;
-        bool result= await NetworkManager.Instance.LoadSceneNetworked(levelSceneIndex, true);
+        bool result= await NetworkManager.Instance.LoadSceneNetworked(levelSceneIndex, false);
         if (!result)
         {
             Debug.LogError("Failed to load level");
@@ -175,6 +181,8 @@ public class GameManager : NetworkBehaviour
     public void SpawnBoss() { }
     public void RaiseObjective(string key)
     {
+        if(Runner==null)
+            return;
         if (!Runner.IsServer) { return; }
         if (!objectivesMap.ContainsKey(key))
         {
