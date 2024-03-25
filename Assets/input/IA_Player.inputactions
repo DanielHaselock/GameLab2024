@@ -60,13 +60,13 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Pause",
-                    "type": "Button",
-                    "id": "d3495bb8-a290-4294-9a17-e5f375a31d0c",
+                    "name": "Revive",
+                    "type": "Value",
+                    "id": "76fa9e3d-e551-4068-8344-8d9e237d66c2",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -182,12 +182,12 @@
                 },
                 {
                     "name": "",
-                    "id": "8833bf23-0d89-4801-bbea-cda5752eb58a",
-                    "path": "<Keyboard>/tab",
+                    "id": "1fe57c2e-12a4-489a-919f-f9aa9042d97d",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Pause",
+                    "action": "Revive",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

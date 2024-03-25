@@ -21,8 +21,8 @@ public class PlayerInputController : MonoBehaviour
     public GameEvent OnJump;
 
     public GameEvent OnAttack;
-
-    public GameEvent OnPause;
+    
+    public GameEvent OnRevive;
 
     private void Start()
     {
@@ -48,7 +48,7 @@ public class PlayerInputController : MonoBehaviour
 
 
     public void Interact(InputAction.CallbackContext context)
-    {   Debug.Log("Interact triggered");
+    {
         if (context.started)
         { 
             OnInteract.Raise(this, true);
@@ -86,15 +86,16 @@ public class PlayerInputController : MonoBehaviour
             OnAttack.Raise(this, true);
         }
     }
-
-    public void Pause(InputAction.CallbackContext context)
-    {   Debug.Log("Pause out");
+    
+    public void Revive(InputAction.CallbackContext context)
+    {
         if (context.started)
         {
-            Debug.Log($"Pause in");
-            OnPause.Raise(this, true);
-
+            OnRevive.Raise(this, true);
         }
-        
-    }   
+        else if (context.canceled)
+        {
+            OnRevive.Raise(this, false);
+        }
+    }
 }

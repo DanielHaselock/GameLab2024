@@ -6,6 +6,7 @@ namespace Networking.Data
     public struct PlayerInputData : INetworkInput
     {
         public Vector3 MoveDirection;
+        public bool Revive;
         public bool Jump;
         public bool Attack;
         public bool Throw;

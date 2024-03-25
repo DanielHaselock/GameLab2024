@@ -35,8 +35,6 @@ public class PlayerNetworkedActions : MonoBehaviour
 
     public void BroadcastMove(Component Sender, object data)
     {
-       
-
         moveInput = (Vector3)data;
     }
     public void BroadcastInteract(Component Sender, object data)
@@ -61,6 +59,11 @@ public class PlayerNetworkedActions : MonoBehaviour
     public void BroadcastAttack(Component Sender, object data)
     {
         InputData.Attack = (bool)data;
+    }
+    
+    public void BroadcastRevive(Component Sender, object data)
+    {
+        InputData.Revive = (bool)data;
     }
 
     public void BroadcastPause(Component Sender, object data)

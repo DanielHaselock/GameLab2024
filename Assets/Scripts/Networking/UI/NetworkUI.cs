@@ -1,4 +1,5 @@
 using System;
+using Audio;
 using Fusion;
 using Networking.Behaviours;
 using Networking.Data;
@@ -19,6 +20,7 @@ namespace Networking.UI
         
         [FormerlySerializedAs("hostButton")]
         [Header("Main menu")]
+        [SerializeField] private Button _smartConnectButton;
         [SerializeField] private Button _hostButton;
         [FormerlySerializedAs("joinButton")] [SerializeField] private Button _joinButton;
 
@@ -42,12 +44,13 @@ namespace Networking.UI
         public void Initialise(NetworkManager manager)
         {
             _networkManager = manager;
+            _smartConnectButton.onClick.AddListener(OnClickMainSmartConnect);
             _hostButton.onClick.AddListener(OnClickMainMenuHost);
             _joinButton.onClick.AddListener(OnClickMainMenuJoin);
             _hostMenuCloseButton.onClick.AddListener(OnClickHostMenuClose);
             _hostMenuStartButton.onClick.AddListener(OnClickHostMenuStart);
             _joinMenuCloseButton.onClick.AddListener(OnClickJoinMenuClose);
-            var randName = $"Random{Random.Range(1, 300)}";
+            var randName = $"Random{Random.Range(1, 300).ToString()}";
             _nickNameField.text = PlayerPrefs.GetString(Constants.MYUSERNAME_KEY,randName);
             NetworkManager.Instance.SetSessionUserNickName(_nickNameField.text);
             if (_nickNameField.text.Equals(randName))
@@ -73,6 +76,11 @@ namespace Networking.UI
             };
         }
 
+        private async void OnClickMainSmartConnect()
+        {
+            NetworkManager.Instance.SmartConnect();
+        }
+        
         private void OnClickMainMenuHost()
         {
             AudioManager.Instance?.PlaySFX("click");
