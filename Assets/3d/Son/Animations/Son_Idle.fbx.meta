@@ -36,7 +36,7 @@ ModelImporter:
       name: Take 001
       takeName: Take 001
       internalID: 1827226128182048838
-      firstFrame: 2
+      firstFrame: 3
       lastFrame: 48
       wrapMode: 0
       orientationOffsetY: 0
@@ -119,7 +119,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.5
+    globalScale: 50
     rootMotionBoneName: nurbsCircle1
     hasTranslationDoF: 0
     hasExtraRoot: 1
