@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Audio;
 using Fusion;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ public class DamageComponent : NetworkBehaviour
     [SerializeField] private LayerMask _layerMask;
     [SerializeField] private float attackRadius;
     [SerializeField] private List<HealthComponent> hittableObjects = new List<HealthComponent>();
-
+    
     HealthComponent selfheal;
 
 
@@ -21,6 +22,10 @@ public class DamageComponent : NetworkBehaviour
 
     public void Attack(HealthComponent other)
     {
+        //block depletion
+        if(!other.CanDeplete)
+            return;
+        
         other.UpdateHealth(-AttackDamage);
     }
     public void InitiateAttack()
@@ -61,9 +66,10 @@ public class DamageComponent : NetworkBehaviour
 
     private void DoAttack(string tag)
     {
+        AudioManager.Instance.PlaySFX(SFXConstants.Attack);
         foreach (var hc in GetAllHealthAroundMe())
         {
-            if (hc.transform.parent.tag.Contains(tag))
+            if (hc.transform.tag.Contains(tag))
                 Attack(hc);
         }
     }

@@ -10,6 +10,7 @@ using Networking.UI;
 using Networking.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 namespace Networking.Behaviours {
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
@@ -22,7 +23,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     private List<PlayerRef> _connectedPlayers;
     private NetworkUI _connectionUI;
     
-    
+    private Dictionary<string, List<Action<NetworkEvent>>> _generalNetworkMessages;
+
+    private bool _connectedToLobby = false;
     private bool _gameStarted = false;
     private string _sessionUserNickName;
     
@@ -110,14 +113,65 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         ConnectToLobby();
     }
 
-    private async void ConnectToLobby()
+    public async Task SmartConnect(float decisionDelayTime=1f)
     {
+        if (!_connectedToLobby)
+        {
+            var wait = true;
+            var func = new Action(() =>
+            {
+                wait = false;
+            });
+            OnAvailableSessionsListUpdated += func;
+            AvailableSessions.Clear();
+            await ConnectToLobby();
+            while (wait)
+                await Task.Yield();
+            OnAvailableSessionsListUpdated -= func;
+        }
+        
+        // start a game if not found, else join one.
+        if (AvailableSessions.Count <= 0)
+        {
+            await Task.Delay(Mathf.RoundToInt(decisionDelayTime * 1000));
+            if (AvailableSessions.Count <= 0)
+            {
+                NetworkLogger.Log("Decision: Host");
+                CreateNewSession();
+            }
+            else 
+                JoinRandomSession();
+        }
+        else
+        {
+            NetworkLogger.Log("Decision: Join Session");
+            JoinRandomSession();
+        }
+    }
+
+    private void JoinRandomSession()
+    { 
+        var selectedSession = AvailableSessions[Random.Range(0, AvailableSessions.Count)];
+        if (selectedSession == default)
+            return;
+        JoinSession(selectedSession.Name);
+    }
+
+    private void CreateNewSession()
+    {
+        HostSession($"Game_{Guid.NewGuid().ToString()}");
+    }
+    
+    private async Task ConnectToLobby()
+    {
+        _connectedToLobby = false;
         TryInitNetworkRunner();
         var res = await _runner.JoinSessionLobby(SessionLobby.ClientServer, Constants.GAME_LOBBY);
         if (!res.Ok)
             Destroy(_runner);
         else
         {
+            _connectedToLobby = true;
             NetworkLogger.Log("Connected to Lobby!");
             OnConnectedToLobby?.Invoke();
         }
@@ -235,7 +289,44 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         
         OnGameOver?.Invoke();
     }
- 
+
+    public void RegisterToGeneralNetworkEvents(string eventName, Action<NetworkEvent> action)
+    {
+        if (_generalNetworkMessages == null)
+            _generalNetworkMessages = new Dictionary<string, List<Action<NetworkEvent>>>();
+        
+        if(_generalNetworkMessages.ContainsKey(eventName))
+            _generalNetworkMessages[eventName].Add(action);
+        else
+            _generalNetworkMessages.Add(eventName, new List<Action<NetworkEvent>>(){action});
+    }
+    
+    public void DeRegisterToGeneralNetworkEvents(string eventName, Action<NetworkEvent> action)
+    {
+        if (_generalNetworkMessages == null)
+           return;
+        
+        if(_generalNetworkMessages.ContainsKey(eventName))
+            _generalNetworkMessages[eventName].Remove(action);
+    }
+    
+    public void SendGlobalSimpleNetworkMessage(NetworkEvent data)
+    {
+        _netSynchedHelper.SendGlobalSimpleNetworkMessage(data);
+    }
+
+    private void OnSimpleNetworkEventReceived(NetworkEvent data)
+    {
+        if(_generalNetworkMessages==null)
+            return;
+        if(!_generalNetworkMessages.ContainsKey(data.EventName))
+            return;
+        foreach (var evnt in _generalNetworkMessages[data.EventName])
+        {
+            evnt?.Invoke(data);
+        }
+    }
+    
     #region Callbacks
     
     public void OnObjectExitAOI(Fusion.NetworkRunner runner, NetworkObject obj, PlayerRef player)
@@ -298,15 +389,17 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         _netSynchedHelper.OnTimerStarted -= OnTimerStarted;
         _netSynchedHelper.OnTimerTick -= OnTimerTick;
         _netSynchedHelper.OnTimerEnded -= OnTimerEnded;
-        
+        _netSynchedHelper.OnSimpleNetworkMessageRecieved -= OnSimpleNetworkEventReceived;
         _netSynchedHelper.OnTimerStarted += OnTimerStarted;
         _netSynchedHelper.OnTimerTick += OnTimerTick;
         _netSynchedHelper.OnTimerEnded += OnTimerEnded;
+
+        _netSynchedHelper.OnSimpleNetworkMessageRecieved += OnSimpleNetworkEventReceived;
     }
     
     private async Task OnPlayerJoinedOnServer(NetworkRunner runner, PlayerRef player)
     {
-        NetworkLogger.Log($"People in Session: {runner.SessionInfo.PlayerCount} / {runner.SessionInfo.MaxPlayers}");
+        NetworkLogger.Log($"People in Session: {runner.SessionInfo.PlayerCount.ToString()} / {runner.SessionInfo.MaxPlayers.ToString()}");
         if (runner.SessionInfo.PlayerCount < runner.SessionInfo.MaxPlayers)
             return;
 
@@ -416,7 +509,11 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSessionListUpdated(Fusion.NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        AvailableSessions = sessionList;
+        var copy = new List<SessionInfo>(sessionList);
+        // remove all sessions that's full.
+        copy.RemoveAll(a => a.PlayerCount >= a.MaxPlayers);
+        
+        AvailableSessions = copy;
         OnAvailableSessionsListUpdated?.Invoke();
     }
 
@@ -446,11 +543,11 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     #endregion
-
-
+    
     public NetworkObject GetLocalPlayer()
     {
         return _runner.GetPlayerObject(_runner.LocalPlayer);
     }
-}
+    
+    }
 }

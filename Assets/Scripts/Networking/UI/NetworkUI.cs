@@ -1,4 +1,5 @@
 using System;
+using Audio;
 using Fusion;
 using Networking.Behaviours;
 using Networking.Data;
@@ -19,6 +20,7 @@ namespace Networking.UI
         
         [FormerlySerializedAs("hostButton")]
         [Header("Main menu")]
+        [SerializeField] private Button _smartConnectButton;
         [SerializeField] private Button _hostButton;
         [FormerlySerializedAs("joinButton")] [SerializeField] private Button _joinButton;
 
@@ -42,12 +44,13 @@ namespace Networking.UI
         public void Initialise(NetworkManager manager)
         {
             _networkManager = manager;
+            _smartConnectButton.onClick.AddListener(OnClickMainSmartConnect);
             _hostButton.onClick.AddListener(OnClickMainMenuHost);
             _joinButton.onClick.AddListener(OnClickMainMenuJoin);
             _hostMenuCloseButton.onClick.AddListener(OnClickHostMenuClose);
             _hostMenuStartButton.onClick.AddListener(OnClickHostMenuStart);
             _joinMenuCloseButton.onClick.AddListener(OnClickJoinMenuClose);
-            var randName = $"Random{Random.Range(1, 300)}";
+            var randName = $"Random{Random.Range(1, 300).ToString()}";
             _nickNameField.text = PlayerPrefs.GetString(Constants.MYUSERNAME_KEY,randName);
             NetworkManager.Instance.SetSessionUserNickName(_nickNameField.text);
             if (_nickNameField.text.Equals(randName))
@@ -58,12 +61,14 @@ namespace Networking.UI
             }
             _nickNameField.onValueChanged.AddListener((text) =>
             {
+                AudioManager.Instance?.PlaySFX("type");
                 NetworkManager.Instance.SetSessionUserNickName(text);
                 Debug.Log("Username saved!!");
             });
             _hostSessionNameField.onValueChanged.AddListener((string str) =>
-            {
-                    _hostMenuStartButton.interactable = !String.IsNullOrEmpty(str);
+            { 
+                AudioManager.Instance?.PlaySFX("type");
+                _hostMenuStartButton.interactable = !String.IsNullOrEmpty(str);
             });
             _networkManager.OnConnectedToLobby += () =>
             {
@@ -71,8 +76,14 @@ namespace Networking.UI
             };
         }
 
+        private async void OnClickMainSmartConnect()
+        {
+            NetworkManager.Instance.SmartConnect();
+        }
+        
         private void OnClickMainMenuHost()
         {
+            AudioManager.Instance?.PlaySFX("click");
             _hostMenuStartButton.interactable = false;
             _hostSessionNameField.text = string.Empty;
             _hostMenu.gameObject.SetActive(true);
@@ -80,11 +91,13 @@ namespace Networking.UI
 
         private void OnClickHostMenuClose()
         {
+            AudioManager.Instance?.PlaySFX("click");
             _hostMenu.gameObject.SetActive(false);
         }
         
         private void OnClickHostMenuStart()
         {
+            AudioManager.Instance?.PlaySFX("click");
             if (String.IsNullOrEmpty(_hostSessionNameField.text))
                 return;
             
@@ -93,6 +106,7 @@ namespace Networking.UI
         
         private void OnClickMainMenuJoin()
         {
+            AudioManager.Instance?.PlaySFX("click");
             _networkManager.OnAvailableSessionsListUpdated += PopulateSessions;
             _joinMenu.gameObject.SetActive(true);
             PopulateSessions();
@@ -100,6 +114,7 @@ namespace Networking.UI
         
         private void OnClickJoinMenuClose()
         {
+            AudioManager.Instance?.PlaySFX("click");
             _networkManager.OnAvailableSessionsListUpdated -= PopulateSessions;
             _joinMenu.gameObject.SetActive(false);
         }

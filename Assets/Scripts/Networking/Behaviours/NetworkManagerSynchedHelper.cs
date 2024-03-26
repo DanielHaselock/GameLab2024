@@ -25,6 +25,8 @@ namespace Networking.Behaviours
 
         private ChangeDetector _changeDetector;
 
+        public Action<NetworkEvent> OnSimpleNetworkMessageRecieved;
+        
         public bool AllUsersReady(int expectedPlayerCount)
         {
             return expectedPlayerCount.Equals(_readyUserCount);
@@ -129,6 +131,22 @@ namespace Networking.Behaviours
                 nextTickCheck = Runner.LocalRenderTime + tickInterval;
                 OnTimerTick?.Invoke(TimeSpan.FromSeconds(remainingTime));
             }
+        }
+
+        
+        public void SendGlobalSimpleNetworkMessage(NetworkEvent eventData)
+        {
+            RPC_SendGlobalSimpleNetworkMessage(eventData.EventName, eventData.EventData);
+        }
+
+        [Rpc(RpcSources.All, RpcTargets.All)]
+        private void RPC_SendGlobalSimpleNetworkMessage(string eventName, string eventData)
+        {
+            OnSimpleNetworkMessageRecieved?.Invoke(new NetworkEvent()
+            {
+                EventName = eventName,
+                EventData = eventData
+            });
         }
         
         public override void Render()

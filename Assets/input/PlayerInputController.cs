@@ -21,6 +21,8 @@ public class PlayerInputController : MonoBehaviour
     public GameEvent OnJump;
 
     public GameEvent OnAttack;
+    
+    public GameEvent OnRevive;
 
     private void Start()
     {
@@ -82,6 +84,18 @@ public class PlayerInputController : MonoBehaviour
         if (context.started)
         {
             OnAttack.Raise(this, true);
+        }
+    }
+    
+    public void Revive(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnRevive.Raise(this, true);
+        }
+        else if (context.canceled)
+        {
+            OnRevive.Raise(this, false);
         }
     }
 }
