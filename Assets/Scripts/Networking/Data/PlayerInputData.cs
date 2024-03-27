@@ -6,15 +6,22 @@ namespace Networking.Data
     public struct PlayerInputData : INetworkInput
     {
         public Vector3 MoveDirection;
+        public bool Revive;
         public bool Jump;
         public bool Attack;
-        public bool Interact;
-        public void Poll()
+        public bool Throw;
+       [Networked] public bool Interact { get => default; set { } }
+        public bool Drop;
+
+
+        public void RefreshInputs()
         {
-            //Todo: Update with Input logic later
-            MoveDirection = Vector3.zero;
-            MoveDirection += Vector3.forward * Input.GetAxis("Vertical");
-            MoveDirection += Vector3.right * Input.GetAxis("Horizontal");
+           // MoveDirection = Vector3.zero; Movement is handled on it's own
+            Jump = false;
+            Attack = false;
+            Interact = false;
+            Drop = false;
+            Throw = false;
         }
     }
 }

@@ -15,5 +15,9 @@ MonoBehaviour:
   GameSceneIndex: 2
   PlayerPrefab:
     RawGuidValue: 84bb177b727c34779a356fe8958bbf63
-  Ball:
-    RawGuidValue: 00000000000000000000000000000000
+  MaxPlayers: 1
+  NetworkObjectsToSpawnOnGameStart:
+  - ObjectToSpawn:
+      RawGuidValue: e20f15a179b7f0c41b89002525edeb00
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0}

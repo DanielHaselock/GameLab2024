@@ -6,7 +6,7 @@ public class EnemyChaser : Enemy
         base.FixedUpdateNetwork();
         if (_targetPlayer != null)
         {
-            transform.position += (_targetPlayer.transform.position - transform.position).normalized * moveSpeed * Runner.DeltaTime;
+            navMeshAgent.destination = _targetPlayer.transform.position;
         }
     }
     public override void ChangeTargeting()

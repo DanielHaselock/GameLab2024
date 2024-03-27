@@ -6,7 +6,8 @@ public class EnemyHider : Enemy
         base.FixedUpdateNetwork();
         if (_targetPlayer != null && Vector3.Distance(transform.position, _targetPlayer.transform.position) < 10)
         {
-            transform.position -= (_targetPlayer.transform.position - transform.position).normalized * moveSpeed * Runner.DeltaTime;
+            Vector3 direction = (_targetPlayer.transform.position - transform.position).normalized;
+            navMeshAgent.destination = _targetPlayer.transform.position - direction * 25f;
         }
         if (_seenPlayers.Count > 1)
             ChangeTargeting();
