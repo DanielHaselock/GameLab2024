@@ -41,6 +41,9 @@ public class HandlePickup : NetworkBehaviour
 
     public void InputPick()
     {
+        if(_mine.IsPickedUp)
+            return;
+        
         ItemsAvailable = GetPickableInProximity();
         if (ItemsAvailable.Count == 0)
             return;
