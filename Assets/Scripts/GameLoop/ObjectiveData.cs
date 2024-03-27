@@ -11,13 +11,4 @@ public class ObjectiveData : ScriptableObject
     public int targetValue;
     public enum OperationType {Add, Sub};
     public OperationType operationType;
-
-    public void Initialize(string name, string key,int currentValue, int target, OperationType operation)
-    {
-        this.objectiveText = name;
-        this.key = key;
-        this.value = currentValue; 
-        this.targetValue = target;
-        this.operationType = operation;
-    }
 }
