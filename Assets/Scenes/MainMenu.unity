@@ -141,7 +141,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1141213
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7809,7 +7809,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game Name
+  m_text: Recipe Reverie
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7996,6 +7996,71 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1518196282}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1238276852
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 2f9b7881d62644fac83510440e6aeb6e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.68
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2f9b7881d62644fac83510440e6aeb6e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.40348244
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2f9b7881d62644fac83510440e6aeb6e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4.77
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2f9b7881d62644fac83510440e6aeb6e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2f9b7881d62644fac83510440e6aeb6e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2f9b7881d62644fac83510440e6aeb6e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2f9b7881d62644fac83510440e6aeb6e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2f9b7881d62644fac83510440e6aeb6e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2f9b7881d62644fac83510440e6aeb6e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2f9b7881d62644fac83510440e6aeb6e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2f9b7881d62644fac83510440e6aeb6e, type: 3}
+      propertyPath: m_Name
+      value: Son_Rig
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 2f9b7881d62644fac83510440e6aeb6e, type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 2f9b7881d62644fac83510440e6aeb6e, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 716f5a5aa74eca649a8fba9957a46e0e, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2f9b7881d62644fac83510440e6aeb6e, type: 3}
 --- !u!1 &1255354749
 GameObject:
   m_ObjectHideFlags: 0
@@ -12274,3 +12339,4 @@ SceneRoots:
   - {fileID: 870136198}
   - {fileID: 1502319037}
   - {fileID: 1627388584}
+  - {fileID: 1238276852}
