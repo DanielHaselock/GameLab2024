@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 public class returnClicked : MonoBehaviour
 {
-    public GameObject returnObj; 
+    public GameObject returnObj;
+    public GameObject startGameButton;
     returnMovement returnMove;
 
     void Start()
@@ -17,5 +18,6 @@ public class returnClicked : MonoBehaviour
     {
         returnMove.returning = true;
         gameObject.SetActive(false);
+        startGameButton.gameObject.SetActive(true);
     }
 }

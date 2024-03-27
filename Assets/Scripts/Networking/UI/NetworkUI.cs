@@ -53,6 +53,8 @@ namespace Networking.UI
             var randName = $"Random{Random.Range(1, 300).ToString()}";
             _nickNameField.text = PlayerPrefs.GetString(Constants.MYUSERNAME_KEY,randName);
             NetworkManager.Instance.SetSessionUserNickName(_nickNameField.text);
+
+            NetworkManager.Instance.OnPlayerConnected += OnPlayerConnected;
             if (_nickNameField.text.Equals(randName))
             {
                 PlayerPrefs.SetString(Constants.MYUSERNAME_KEY, randName);
@@ -76,6 +78,25 @@ namespace Networking.UI
             };
         }
 
+        public void ShowWait(bool show)
+        {
+            waitPanel.SetActive(show);
+        }
+        
+        private void OnPlayerConnected(int playerId)
+        {
+            if (NetworkManager.Instance.ConnectedPlayers.Count >= 2)
+            {
+                waitPanel.SetActive(false);
+                return;
+            }
+
+            if (NetworkManager.Instance.ConnectedPlayers.Count > 0)
+            {
+                waitPanel.SetActive(true);
+            }
+        }
+        
         private async void OnClickMainSmartConnect()
         {
             await NetworkManager.Instance.SmartConnect();

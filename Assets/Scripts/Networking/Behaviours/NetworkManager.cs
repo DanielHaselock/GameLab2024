@@ -112,6 +112,7 @@ namespace Networking.Behaviours
 
         public async Task SmartConnect(float decisionDelayTime = 1f)
         {
+            _connectionUI.ShowWait(true);
             if (!_connectedToLobby)
             {
                 var wait = true;
@@ -260,7 +261,6 @@ namespace Networking.Behaviours
         /// <param name="sessionName"></param>
         public void HostSession(String sessionName)
         {
-            _connectionUI.gameObject.SetActive(false);
             LaunchSession(sessionName, GameMode.Host);
         }
 
@@ -270,7 +270,6 @@ namespace Networking.Behaviours
         /// <param name="sessionName"></param>
         public void JoinSession(String sessionName)
         {
-            _connectionUI.gameObject.SetActive(false);
             LaunchSession(sessionName, GameMode.Client);
         }
 
@@ -298,6 +297,7 @@ namespace Networking.Behaviours
             }
             _gameStarted = true;
             OnGameStarted?.Invoke();
+            _connectionUI.gameObject.SetActive(false);
         }
 
         public void RegisterToGeneralNetworkEvents(string eventName, Action<NetworkEvent> action)

@@ -47,9 +47,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _IsPaused: 0
   _IsPausable: 0
-  objectivesList: []
   _bossDefeated: 0
-  levelSceneIndex: 2
+  levelSceneIndex: 1
   enemyMap:
     _items:
     - Key: test

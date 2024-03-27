@@ -13,6 +13,7 @@ public class startMovement : MonoBehaviour
     public GameObject returnObj; 
     returnMovement returnMove;
     public GameObject returnButton;
+    public GameObject startGameButton;
     public GameObject cam;
 
     void Start()
@@ -66,6 +67,7 @@ public class startMovement : MonoBehaviour
                     started=false;
                     targetPoint = pointB;
                     returnButton.gameObject.SetActive(true);
+                    startGameButton.gameObject.SetActive(true);
                     rotationSpeedCamera =1f;
                 }
             }  
