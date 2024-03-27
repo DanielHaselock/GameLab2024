@@ -104,6 +104,9 @@ public class GameManager : NetworkBehaviour
     public override void Render()
     {
         base.Render();
+        if(_change == null)
+            return;
+        
         foreach (var change in _change.DetectChanges(this))
         {
             switch (change)

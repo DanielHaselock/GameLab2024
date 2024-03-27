@@ -31,7 +31,8 @@ public class PickupManager : MonoBehaviour
         var pickupable = item.GetComponent<PlayerPickupable>();
         if (pickupable == null)
             return;
-        
+        if(pickupable.IsPickedUp)
+            return;
         if (MaxPickupSpace - PickedupObjects.Count < pickupable.SlotNeeded)
             return;
 

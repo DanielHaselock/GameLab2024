@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Networking.Behaviours;
 using Networking.Utils;
 using UnityEngine;
@@ -12,6 +13,8 @@ namespace Audio
         private AudioSource _bgSource;
         private AudioSource _ambianceSource;
         private AudioMixerGroup _sfxMixerGroup;
+
+        private HashSet<string> _sfxMemory;
 
         [SerializeField] private AudioMixer _mixer;
         [SerializeField] private AudioMap _map;
@@ -34,6 +37,8 @@ namespace Audio
 
         private void Start()
         {
+            _sfxMemory = new HashSet<string>();
+            
             if(NetworkManager.Instance != null)
                 NetworkManager.Instance.RegisterToGeneralNetworkEvents("PlaySFX", OnNetworkSFXPlayRequested);
             
@@ -138,6 +143,8 @@ namespace Audio
         
         private void PlaySFXLocal(string sfxName, bool random)
         {
+            if(_sfxMemory.Contains(sfxName))
+                return;
             var clip = _map.GetSFX(sfxName, random);
             if (clip == null)
                 return;
@@ -145,7 +152,14 @@ namespace Audio
             sfx.transform.parent = transform;
             sfx.outputAudioMixerGroup = _sfxMixerGroup;
             sfx.PlayOneShot(clip);
+            StartCoroutine(RemoveKeyDelayed(sfxName, 0.25f));
             Destroy(sfx.gameObject, clip.length);
+        }
+
+        IEnumerator RemoveKeyDelayed(string key, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            _sfxMemory.Remove(key);
         }
     }
 }
