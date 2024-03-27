@@ -121,11 +121,11 @@ namespace Audio
                     return;
                 }
                 
-               NetworkManager.Instance.SendGlobalSimpleNetworkMessage(new NetworkEvent()
-               {
+                NetworkManager.Instance.SendGlobalSimpleNetworkMessage(new NetworkEvent() 
+                { 
                    EventName = "PlaySFX",
-                   EventData = $"{sfxName};{(random?"1":"0")}"
-               });
+                   EventData = $"{sfxName};{(random?"1":"0")}" 
+                });
             }
             else
             {
@@ -147,6 +147,8 @@ namespace Audio
                 return;
             var clip = _map.GetSFX(sfxName, random);
             if (clip == null)
+                return;
+            if(transform.Find($"SFX_{clip.name}") != null)
                 return;
             var sfx = new GameObject($"SFX_{clip.name}").AddComponent<AudioSource>();
             sfx.transform.parent = transform;

@@ -18,6 +18,7 @@ public class Player : NetworkBehaviour
     [SerializeField] private float gravity=-9.81f;
     [SerializeField] private float jumpForce = 15;
     [SerializeField] private float stunDur = 0.5f;
+    [SerializeField] private float attackDelay=0.25f;
     
     private NetworkObject _no;
     private CharacterController _stdController;
@@ -33,7 +34,7 @@ public class Player : NetworkBehaviour
 
     private Coroutine _stunRoutine;
     private Tick _initial;
-    
+    private float _nextAttackTime = 0;
     [Networked] private bool Stunned { get; set; } = false;
     
     private void Awake()
@@ -54,10 +55,11 @@ public class Player : NetworkBehaviour
         if(_stunRoutine != null)
             return;
         
-        _anim.SetTrigger("Hit");
+        _anim.SetTrigger("Hit", true);
         _stunRoutine = StartCoroutine(Stun());
+        AudioManager.Instance.PlaySFX(SFXConstants.Hit, true,true);
     }
-
+    
     IEnumerator Stun()
     {
         Stunned = true;
@@ -83,21 +85,24 @@ public class Player : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
-        if(_health.HealthDepleted)
-            return;
-        
-        if(!_myPickupable.AllowInputs)
-            return;
-        
-        if(Stunned)
-            return;
-        
         if (GetInput(out PlayerInputData data))
         {
+            if(_myPickupable.IsPickedUp)
+                return;
+            
+            Move(_health.HealthDepleted?Vector3.zero:data.MoveDirection, data.Jump);
+            if(_health.HealthDepleted)
+                return;
+        
+            if(!_myPickupable.AllowInputs)
+                return;
+        
+            if(Stunned)
+                return;
+            
             HandleInteract(data);
             HandleAttack(data);
             HandleRevive(data, Runner.DeltaTime);
-            Move(data.MoveDirection, data.Jump);
         }
         
     }
@@ -198,6 +203,10 @@ public class Player : NetworkBehaviour
     {
         if(!data.Attack)
             return;
+        
+        if(Time.time < _nextAttackTime)
+            return;
+        _nextAttackTime = Time.time + attackDelay;
         
         _anim.SetTrigger("Attack", true);
         AudioManager.Instance.PlaySFX(SFXConstants.Attack);
