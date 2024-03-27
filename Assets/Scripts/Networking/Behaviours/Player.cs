@@ -196,13 +196,17 @@ public class Player : NetworkBehaviour
 
     private void HandleAttack(PlayerInputData data)
     {
-        if (data.Attack && HasInputAuthority)
+        if(!data.Attack)
+            return;
+        
+        _anim.SetTrigger("Attack", true);
+        AudioManager.Instance.PlaySFX(SFXConstants.Attack);
+        
+        if (Runner.IsServer)
         {
             if (_damager == null)
                 _damager = GetComponentInChildren<DamageComponent>();
             _damager.InitiateAttack();
-            _anim.SetTrigger("Attack", true);
-            AudioManager.Instance.PlaySFX(SFXConstants.Attack);
         }
     }
 
