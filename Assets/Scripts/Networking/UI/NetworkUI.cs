@@ -78,7 +78,7 @@ namespace Networking.UI
 
         private async void OnClickMainSmartConnect()
         {
-            NetworkManager.Instance.SmartConnect();
+            await NetworkManager.Instance.SmartConnect();
         }
         
         private void OnClickMainMenuHost()

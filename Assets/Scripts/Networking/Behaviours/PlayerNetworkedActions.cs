@@ -66,6 +66,11 @@ public class PlayerNetworkedActions : MonoBehaviour
         InputData.Revive = (bool)data;
     }
 
+    public void BroadcastPause(Component Sender, object data)
+    {
+        GameManager.instance.Pause(!GameManager.instance.IsPaused);
+    }
+
     public void RefreshInputData()
     {
         InputData.RefreshInputs();

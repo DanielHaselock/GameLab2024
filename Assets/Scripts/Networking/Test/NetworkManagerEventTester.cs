@@ -36,10 +36,6 @@ namespace Networking.Tests
                 NetworkLogger.Log($"NMT:::Game Over");
             };
             
-            NetworkManager.Instance.OnPlayersSpawned += () =>
-            {
-                NetworkLogger.Log($"NMT:::Player Spawned");
-            };
 
             NetworkManager.Instance.OnTimerStarted += (t) =>
             {
