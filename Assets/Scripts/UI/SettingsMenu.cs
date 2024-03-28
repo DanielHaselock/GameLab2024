@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using GameLoop;
 using UnityEngine;
 
 public class SettingsMenu : MonoBehaviour

@@ -16,6 +16,9 @@ public static class LevelManager
     
     private static int currentLevel = 0;
     private static LevelDifficulty difficulty;
+    
+    public static string ObjectiveDataPath => $"LevelData/Level_{currentLevel.ToString()}/{difficulty.ToString()}/LevelObjectives";
+    
     public static void LoadLevel(int level)
     {
         currentLevel = level;
@@ -24,14 +27,22 @@ public static class LevelManager
 
     private static void LoadLevelObjectives()
     {
-        var objectivePath = $"LevelData/Level_{currentLevel.ToString()}/{difficulty.ToString()}";
+        var objectivePath = ObjectiveDataPath;
         var lvlObjectives = Resources.Load<LevelObjectives>(objectivePath);
         if (lvlObjectives == null)
             Objectives = new List<ObjectiveData>();
-
         Objectives = new List<ObjectiveData>(lvlObjectives.objectives);
     }
 
+    public static void LoadLevelObjectivesFrom(string path)
+    {
+        var objectivePath = path;
+        var lvlObjectives = Resources.Load<LevelObjectives>(objectivePath);
+        if (lvlObjectives == null)
+            Objectives = new List<ObjectiveData>();
+        Objectives = new List<ObjectiveData>(lvlObjectives.objectives);
+    }
+    
     public static void LevelComplete(bool win, TimeSpan timeLeft)
     {
         // if lost or remaining time is about 10 sec

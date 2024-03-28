@@ -14,6 +14,7 @@ namespace Networking.UI
     {
         
         [SerializeField] private GameObject waitPanel;
+        [SerializeField] private GameObject loadingScreen;
 
         [Header("NickName")]
         [SerializeField] private TMPro.TMP_InputField _nickNameField;
@@ -81,6 +82,11 @@ namespace Networking.UI
         public void ShowWait(bool show)
         {
             waitPanel.SetActive(show);
+        }
+        
+        public void ShowLoadingScreen(bool show)
+        {
+            loadingScreen.SetActive(show);
         }
         
         private void OnPlayerConnected(int playerId)

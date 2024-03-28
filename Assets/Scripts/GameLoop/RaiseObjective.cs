@@ -1,6 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using GameLoop;
 using UnityEngine;
 
 public class RaiseObjective : MonoBehaviour
@@ -24,11 +23,8 @@ public class RaiseObjective : MonoBehaviour
             GameManager.instance.RaiseObjective(key);
         }
     }
-    private void Raise()
+    public void Raise()
     {
             GameManager.instance.RaiseObjective(key);
-     
     }
-
-
 }

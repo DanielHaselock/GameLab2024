@@ -3,6 +3,7 @@ using Fusion;
 using Networking.Data;
 using System.Collections;
 using System.Collections.Generic;
+using GameLoop;
 using Interactables;
 using UnityEngine;
 using UnityEngine.EventSystems;

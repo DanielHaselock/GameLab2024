@@ -8,6 +8,7 @@ using Fusion.Sockets;
 using Networking.Data;
 using Networking.UI;
 using Networking.Utils;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -40,7 +41,7 @@ namespace Networking.Behaviours
 
         /// <summary>
         /// Invoked when session list is updated,
-        /// use AvailableSessions property to get updated list
+        /// use AvailableSessions property to get updated list__
         /// </summary>
         public Action OnAvailableSessionsListUpdated;
         /// <summary>
@@ -105,11 +106,29 @@ namespace Networking.Behaviours
             _connectedPlayers = new List<PlayerRef>();
             _networkPropertiesRef = Resources.Load<NetworkProperties>(Constants.NETWORK_OBJ_SO_NAME);
             _connectionUI = Instantiate(Resources.Load<GameObject>(Constants.NETWORK_UI)).GetComponent<NetworkUI>();
+            _connectionUI.transform.parent = transform;
             _connectionUI.Initialise(this);
             AvailableSessions = new List<SessionInfo>();
             ConnectToLobby();
+            RegisterToGeneralNetworkEvents("loading_screen", LoadingScreenUpdate);
         }
 
+        private void LoadingScreenUpdate(NetworkEvent data)
+        {
+            if(_runner.IsServer)
+                return;
+            
+            if(!data.EventName.Equals("loading_screen"))
+                return;
+            
+            if(data.EventData.Equals("1"))
+                _connectionUI.ShowLoadingScreen(true);
+            else
+            {
+                _connectionUI.ShowLoadingScreen(false);
+            }
+        }
+        
         public async Task SmartConnect(float decisionDelayTime = 1f)
         {
             _connectionUI.ShowWait(true);
@@ -296,8 +315,8 @@ namespace Networking.Behaviours
                 _runner.Spawn(spawnInfo.ObjectToSpawn, spawnInfo.Position, Quaternion.Euler(spawnInfo.Rotation));
             }
             _gameStarted = true;
+            _connectionUI.ShowWait(false);
             OnGameStarted?.Invoke();
-            _connectionUI.gameObject.SetActive(false);
         }
 
         public void RegisterToGeneralNetworkEvents(string eventName, Action<NetworkEvent> action)
@@ -557,16 +576,39 @@ public void OnPlayerLeft(Fusion.NetworkRunner runner, PlayerRef player)
         #endregion
         public async Task<bool> LoadSceneNetworked(int sceneIndex, bool isAdditive)
         {
+            _connectionUI.ShowLoadingScreen(true);
+            SendGlobalSimpleNetworkMessage(new NetworkEvent()
+            {
+                EventName = "loading_screen",
+                EventData = "1"
+            });
             var loadSceneParameters = new LoadSceneParameters();
             loadSceneParameters.loadSceneMode = isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single;
             if (!_runner)
+            {
+                _connectionUI.ShowLoadingScreen(false);
                 return false;
+            }
+            
             var scene = SceneRef.FromIndex(sceneIndex);
             if (!scene.IsValid)
+            {
+                _connectionUI.ShowLoadingScreen(false);
                 return false;
+            }
+
+            await Task.Delay(1000);
             var task = _runner.LoadScene(scene, loadSceneParameters);
             while (!task.IsDone)
                 await Task.Yield();
+
+            await Task.Delay(1000);
+            _connectionUI.ShowLoadingScreen(false);
+            SendGlobalSimpleNetworkMessage(new NetworkEvent()
+            {
+                EventName = "loading_screen",
+                EventData = "0"
+            });
             return true;
         }
 

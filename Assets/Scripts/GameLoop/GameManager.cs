@@ -1,16 +1,15 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Fusion;
-using Networking.Data;
-using UnityEngine.Events;
 using Networking.Behaviours;
-using System.Threading.Tasks;
-using GameLoop;
+using UnityEngine.EventSystems;
 
-public class GameManager : NetworkBehaviour
+namespace GameLoop
+{
+    public class GameManager : NetworkBehaviour
 {
     public static GameManager instance;
     public GameState CurrentGameState { get; private set; }
@@ -23,8 +22,9 @@ public class GameManager : NetworkBehaviour
     public event Action<bool> OnPauseStatusChanged;
 
     private ChangeDetector _change;
-    [SerializeField]
-    private Dictionary<string,Objective> objectivesMap = new Dictionary<string, Objective>();
+    private Dictionary<string, Objective> objectivesMap;
+    private Dictionary<string, Objective> objectivesGUIData;
+    
     [Networked] public bool bossDefeated { get; private set; }
     [SerializeField] private int levelSceneIndex;
     [SerializeField] private SerializableDictionary<string, NetworkPrefabRef> enemyMap;
@@ -32,16 +32,14 @@ public class GameManager : NetworkBehaviour
     private int currentLevel = 1;
     private TimeSpan timeLeft;
 
-    private GameUI _gameUI;
+    private GameUI gameUI;
     
     public override async void Spawned()
     {
         if(!Runner.IsServer)
             return;
-        
         _change = GetChangeDetector(ChangeDetector.Source.SimulationState);
         NetworkManager.Instance.OnTimerTick += TimerTick;
-        await Task.Delay(2000);
         UpdateGameState(GameState.ActiveLevel);
     }
 
@@ -63,8 +61,10 @@ public class GameManager : NetworkBehaviour
     void Start()
     {
         IsPausable = true;//for testing
-        Instantiate(Resources.Load("GameUI"));
-        Instantiate(Resources.Load("EventSystem"));
+        var gameUIObj = Instantiate(Resources.Load<GameObject>("GameUI"), transform);
+        gameUI = gameUIObj.GetComponentInChildren<GameUI>();
+        if(EventSystem.current == null)
+            Instantiate(Resources.Load("EventSystem"));
     }
     
     public void UpdateGameState(GameState newState)
@@ -111,6 +111,7 @@ public class GameManager : NetworkBehaviour
         
         foreach (var change in _change.DetectChanges(this))
         {
+            Debug.Log($"Changes::: {change}");
             switch (change)
             {
                 case nameof(IsPaused):
@@ -182,39 +183,78 @@ public class GameManager : NetworkBehaviour
         
         //change objectives
         LevelManager.LoadLevel(currentLevel);
+        string levelPath = LevelManager.ObjectiveDataPath;
         objectivesMap = new Dictionary<string, Objective>();
         foreach (var objectiveData in LevelManager.Objectives)
         {
             objectivesMap.Add(objectiveData.key, new Objective(objectiveData));
         }
         bossDefeated = false;
+        InitialiseObjectiveTexts();
+        RPC_LoadLevelObjectivesOnClient(levelPath);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_LoadLevelObjectivesOnClient(string levelPath)
+    {
+        if(Runner.IsServer)
+            return;
+        
+        LevelManager.LoadLevelObjectivesFrom(levelPath);
+        objectivesMap = new Dictionary<string, Objective>();
+        foreach (var objectiveData in LevelManager.Objectives)
+        {
+            objectivesMap.Add(objectiveData.key, new Objective(objectiveData));
+        }
+        InitialiseObjectiveTexts();
     }
     
-    public void SpawnBoss() { }
+    private void InitialiseObjectiveTexts()
+    {
+        if (objectivesGUIData == null)
+            objectivesGUIData = new Dictionary<string, Objective>();
+        
+        foreach (var kv in objectivesMap)
+        {
+            objectivesGUIData.Add(kv.Key,new Objective(kv.Value.Data));
+        }
+        UpdateGameUI();
+    }
+
+    public void SpawnBoss()
+    {
+        
+    }
     
     public void RaiseObjective(string key)
     {
         if(Runner==null)
             return;
-        if (!Runner.IsServer) { return; }
+        
+        if (!Runner.IsServer)
+        {
+            return;
+        }
         if (!objectivesMap.ContainsKey(key))
         {
             return;
         }
-        Debug.Log("Objective Raised " + key);
+        
+        Debug.Log("Objective Raised!!");
         var objective = objectivesMap[key];
         objective.UpdateObjective();
+        objectivesGUIData[key].SetValue(objective.Current);
+        RPC_UpdateObjectiveData(key, objective.Current);
         if (objective.IsCompleted)
         {
             objectivesMap.Remove(key);
         }
-
+        UpdateGameUI();
         TryUpdateGameState();
     }
-
+    
     private void TryUpdateGameState()
     {
-        
         if(objectivesMap.Count > 0 && !bossDefeated)
         {
            
@@ -230,6 +270,23 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_UpdateObjectiveData(string key, int value)
+    {
+        if(Runner.IsServer)
+            return;
+        Debug.Log("RPC!!!!!!");
+        objectivesGUIData[key].SetValue(value);
+        UpdateGameUI();
+    }
+    
+    private void UpdateGameUI()
+    {
+        if(gameUI == null)
+            return;
+        gameUI.UpdateLevelObjectives(objectivesGUIData);
+    }
+    
     //so main logic is as such, when an enemy dies,
     //it will update the objective. if it matches,
     //then the objective is updated. once objective is met,
@@ -237,3 +294,5 @@ public class GameManager : NetworkBehaviour
     //all objectives have been met and we can spawn the boss.
     //Once boss is defeated, triggers gamestate change and level ends.
 }
+}
+

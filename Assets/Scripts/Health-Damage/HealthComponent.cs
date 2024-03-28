@@ -89,7 +89,6 @@ public class HealthComponent : NetworkBehaviour
     {
         if (!Runner.IsServer)
             return;
-        
         HealthDepleted = true;
         OnHealthDepleted?.Invoke();
     }

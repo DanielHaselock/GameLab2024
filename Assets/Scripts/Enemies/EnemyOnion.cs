@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Fusion;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -200,10 +201,11 @@ public class EnemyOnion : Enemy
         }
     }
 
-    private void KillMyself()
+    private async void KillMyself()
     {
         if (Runner.IsServer)
         {
+            await Task.Delay(500);
             Runner.Despawn(GetComponent<NetworkObject>());
         }
     }

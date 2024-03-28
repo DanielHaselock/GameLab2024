@@ -8,7 +8,7 @@ using UnityEditor;
 #endif
 public class PlayerSpawnPoint : MonoBehaviour
 {
-    public Vector3 SpawnPosition => transform.position + new Vector3(0, 0.25f, 0);
+    public Vector3 SpawnPosition => transform.position + new Vector3(0, 0.5f, 0);
     public Quaternion SpawnRotation => transform.rotation;
     
     private void OnDrawGizmos()
