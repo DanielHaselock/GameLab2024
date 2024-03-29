@@ -63,8 +63,8 @@ public class Enemy : NetworkBehaviour
         navMeshAgent.angularSpeed = angularSpeed;
         
         //we want to manually update our agent position
-        navMeshAgent.updatePosition = false;
-        navMeshAgent.updateRotation = false;
+        //navMeshAgent.updatePosition = false;
+        //navMeshAgent.updateRotation = false;
     }
 
     protected void UpdateMoveAndRotation(float deltaTime)
@@ -72,7 +72,7 @@ public class Enemy : NetworkBehaviour
         var nextPosition = navMeshAgent.nextPosition;
         nextPosition.y = transform.position.y; //eliminate y position diff
         var dir = (nextPosition - transform.position).normalized;
-        rb.MovePosition(navMeshAgent.nextPosition);
+        rb.MovePosition(Vector3.Lerp(transform.position, navMeshAgent.nextPosition, 0.1f));
         if (Mathf.Approximately(dir.magnitude, 0))
             return;
         Quaternion lookRotation = Quaternion.LookRotation(dir);
