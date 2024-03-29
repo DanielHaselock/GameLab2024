@@ -15,7 +15,7 @@ MonoBehaviour:
   GameSceneIndex: 2
   PlayerPrefab:
     RawGuidValue: 84bb177b727c34779a356fe8958bbf63
-  MaxPlayers: 2
+  MaxPlayers: 1
   NetworkObjectsToSpawnOnGameStart:
   - ObjectToSpawn:
       RawGuidValue: e20f15a179b7f0c41b89002525edeb00

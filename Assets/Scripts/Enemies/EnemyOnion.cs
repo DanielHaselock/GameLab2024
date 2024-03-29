@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Fusion;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyOnion : Enemy
 {
@@ -18,7 +19,7 @@ public class EnemyOnion : Enemy
     
     protected List<GameObject> _seenOnions = new List<GameObject>();
     float delta = 0;
-    int targetTime = 7;
+    int targetTime = 2;
 
     private Vector3 lastPosition;
     private float velocity;
@@ -44,13 +45,14 @@ public class EnemyOnion : Enemy
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
+
         if (!Runner.IsServer)
             return;
         
         if(dead)
             return;
         
-        UpdateMoveAndRotation(Runner.DeltaTime);
+        //UpdateMoveAndRotation(Runner.DeltaTime);
         velocity = Vector3.Distance(transform.position, lastPosition) / Runner.DeltaTime;
         lastPosition = transform.position;
         
