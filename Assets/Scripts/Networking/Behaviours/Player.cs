@@ -10,8 +10,6 @@ using UnityEngine.Serialization;
 
 public class Player : NetworkBehaviour
 {
-    new ref NetworkCCData Data => ref ReinterpretState<NetworkCCData>();
-
     [SerializeField] private TMPro.TMP_Text nicknameText;
     [SerializeField] private float moveSpeed=6.83f;
     [SerializeField] private float lookSpeed=720;
@@ -35,7 +33,10 @@ public class Player : NetworkBehaviour
     private Coroutine _stunRoutine;
     private Tick _initial;
     private float _nextAttackTime = 0;
+    
     [Networked] private bool Stunned { get; set; } = false;
+    
+    public int PlayerId { get; private set; }
     
     private void Awake()
     {
@@ -50,7 +51,7 @@ public class Player : NetworkBehaviour
         _health.OnDamaged += AnimateHit;
     }
 
-    private void AnimateHit()
+    private void AnimateHit(int damager)
     {
         if(_stunRoutine != null)
             return;
@@ -71,13 +72,13 @@ public class Player : NetworkBehaviour
     public override void Spawned()
     {
         var no = GetComponent<NetworkObject>();
+        PlayerId = no.InputAuthority.PlayerId;
         this.name = "Player_" + no.InputAuthority.PlayerId;
         if (no.InputAuthority == Runner.LocalPlayer)
         {
             GetComponent<SetCamera>().SetCameraParams(gameObject.transform.GetChild(1).gameObject);
             GetComponent<PlayerInputController>().OnSpawned();
         }
-
         _controller.SetGravity(gravity);
         nicknameText.text = NetworkManager.Instance.GetPlayerNickNameById(no.InputAuthority.PlayerId);
     }
@@ -224,7 +225,7 @@ public class Player : NetworkBehaviour
         _reviver.TryReviveOther(data.Revive, deltaTime);   
     }
     
-    private void OnHealthDepleted()
+    private void OnHealthDepleted(int damager)
     {
         AudioManager.Instance.PlaySFX(SFXConstants.Help, syncNetwork:true);
     }

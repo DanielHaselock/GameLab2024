@@ -15,8 +15,8 @@ public class HealthComponent : NetworkBehaviour
     public bool IsInitialised  { get; private set; }
     private ChangeDetector _change;
 
-    public Action OnHealthDepleted;
-    public Action OnDamaged;
+    public Action<int> OnHealthDepleted;
+    public Action<int> OnDamaged;
 
     public float MaxHealth => maxHealth;
     
@@ -35,7 +35,7 @@ public class HealthComponent : NetworkBehaviour
         IsInitialised = true;
     }
     
-    public void UpdateHealth(float Value)
+    public void UpdateHealth(float Value, int damager)
     {
         if (!Runner.IsServer)
             return;
@@ -45,14 +45,14 @@ public class HealthComponent : NetworkBehaviour
         if (Value < 0)
         {
             Debug.Log("Ow!!"); 
-            OnDamaged?.Invoke();
+            OnDamaged?.Invoke(damager);
         }
 
         Health += Value;
         if (Health <= 0)
         {
             CanDeplete = false;
-            Death();
+            Death(damager);
         }
     }
     
@@ -79,17 +79,16 @@ public class HealthComponent : NetworkBehaviour
             switch (change)
             {
                 case nameof(Health):
-                    Debug.Log( $"{transform.parent.name} : HEALTH: {Health.ToString()}");
                     break;
             }
         }
     }
 
-    public void Death()
+    public void Death(int damager)
     {
         if (!Runner.IsServer)
             return;
         HealthDepleted = true;
-        OnHealthDepleted?.Invoke();
+        OnHealthDepleted?.Invoke(damager);
     }
 }

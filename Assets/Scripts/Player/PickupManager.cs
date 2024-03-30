@@ -49,6 +49,8 @@ public class PickupManager : MonoBehaviour
 
     public void removeItem(GameObject item, bool Throw)
     {
+        if(item == null)
+            return;
         PickedupObjects.Remove(item);
         var pickupable = item.GetComponent<PlayerPickupable>();
         slotsUsed -= pickupable.SlotNeeded;

@@ -35,23 +35,6 @@ namespace Networking.Tests
             {
                 NetworkLogger.Log($"NMT:::Game Over");
             };
-            
-
-            NetworkManager.Instance.OnTimerStarted += (t) =>
-            {
-                NetworkLogger.Log($"NMT:::OnTimerStarted {t.TotalSeconds}");
-            };
-            
-            NetworkManager.Instance.OnTimerTick += (t) =>
-            {
-                NetworkLogger.Log($"NMT:::Tick, Remaining {t.TotalSeconds}");
-            };
-            
-            NetworkManager.Instance.OnTimerEnded += () =>
-            {
-                NetworkLogger.Log($"NMT:::Timer Complete");
-            };
-            
         }
 
         private void Update()

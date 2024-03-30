@@ -67,23 +67,7 @@ namespace Networking.Behaviours
         /// Invoked On Server, when GameOver method is invoked
         /// </summary>
         public Action OnGameOver;
-
-        /// <summary>
-        /// Invoked when a Timer is started
-        /// <param name="Time"> TimeSpan with Timer Duration </param>
-        /// </summary>
-        public Action<TimeSpan> OnTimerStarted;
-        /// <summary>
-        /// Invoked During Timer Tick
-        ///<param name="Remaining time"> TimeSpan with time remaining on the timer </param>
-        /// </summary>
-        public Action<TimeSpan> OnTimerTick;
-        /// <summary>
-        /// Invoked when a Timer ends, NOTE: NOT INVOKED WHEN TIMER IS STOPPED
-        /// </summary>
-        public Action OnTimerEnded;
-
-
+        
         private static NetworkManager _instance;
         public static NetworkManager Instance
         {
@@ -256,24 +240,7 @@ namespace Networking.Behaviours
         {
             return _netSynchedHelper.GetPlayerNickNameById(playerId);
         }
-
-        /// <summary>
-        /// Starts The Global Timer, Can only be invoked by the server
-        /// </summary>
-        /// <param name="time"></param>
-        public void StartTimer(TimeSpan time)
-        {
-            _netSynchedHelper?.StartTimer(time);
-        }
-
-        /// <summary>
-        /// Stops The Global Timer, Can only be invoked by the server
-        /// </summary>
-        public void StopTimer()
-        {
-            _netSynchedHelper?.StopTimer();
-        }
-
+        
         /// <summary>
         /// Host a Game Session
         /// </summary>
@@ -318,7 +285,7 @@ namespace Networking.Behaviours
             _connectionUI.ShowWait(false);
             OnGameStarted?.Invoke();
         }
-
+        
         public void RegisterToGeneralNetworkEvents(string eventName, Action<NetworkEvent> action)
         {
             if (_generalNetworkMessages == null)
@@ -373,12 +340,11 @@ namespace Networking.Behaviours
             {
                 return;
             }
-            await SetupNetworkSynchedHelper(runner);
+            await SetupNetworkSynchedHelper(_runner);
             if (player == _runner.LocalPlayer)
             {
                 _netSynchedHelper.InitialiseUser(player.PlayerId, _sessionUserNickName);
             }
-
             _connectedPlayers.Add(player);
             //wait for other user to be ready
             while (!_netSynchedHelper.AllUsersReady(runner.SessionInfo.PlayerCount))
@@ -415,14 +381,7 @@ namespace Networking.Behaviours
         private void RegisterToNetSyncEvents()
         {
             //Todo: This is a Hack, clean it up later.
-            _netSynchedHelper.OnTimerStarted -= OnTimerStarted;
-            _netSynchedHelper.OnTimerTick -= OnTimerTick;
-            _netSynchedHelper.OnTimerEnded -= OnTimerEnded;
             _netSynchedHelper.OnSimpleNetworkMessageRecieved -= OnSimpleNetworkEventReceived;
-            _netSynchedHelper.OnTimerStarted += OnTimerStarted;
-            _netSynchedHelper.OnTimerTick += OnTimerTick;
-            _netSynchedHelper.OnTimerEnded += OnTimerEnded;
-
             _netSynchedHelper.OnSimpleNetworkMessageRecieved += OnSimpleNetworkEventReceived;
         }
 
@@ -462,7 +421,7 @@ namespace Networking.Behaviours
                 index++;
             }
         }
-public void OnPlayerLeft(Fusion.NetworkRunner runner, PlayerRef player)
+        public void OnPlayerLeft(Fusion.NetworkRunner runner, PlayerRef player)
         {
             if (runner.SessionInfo.Name.Equals(Constants.GAME_LOBBY))
                 return;
@@ -618,6 +577,14 @@ public void OnPlayerLeft(Fusion.NetworkRunner runner, PlayerRef player)
             return _runner.GetPlayerObject(_runner.LocalPlayer);
         }
 
+        public void ResetGame()
+        {
+            _instance = null;
+            Destroy(_connectionUI.gameObject);
+            Destroy(_netSynchedHelper.gameObject);
+            Destroy(this.gameObject);
+            SceneManager.LoadScene(0);
+        }
     }
 
 

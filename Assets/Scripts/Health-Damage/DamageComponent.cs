@@ -2,22 +2,33 @@ using System;
 using System.Collections.Generic;
 using Audio;
 using Fusion;
+using GameLoop;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class DamageComponent : NetworkBehaviour
 {
-    public float AttackDamage;
+    [FormerlySerializedAs("AttackDamage")] public float DefaultAttackDamage;
 
     [SerializeField] private LayerMask _layerMask;
     [SerializeField] private float attackRadius;
     [SerializeField] private List<HealthComponent> hittableObjects = new List<HealthComponent>();
     
     HealthComponent selfheal;
-
-
+    private int _damagerId = -1;
+    private float _damageToDeal;
+    
     private void Start()
     {
+        var weapon = transform.parent.GetComponentInChildren<Weapon>();
+        if (weapon != null)
+            _damageToDeal = weapon.Damage;
+        else
+            _damageToDeal = DefaultAttackDamage;
         selfheal = transform.parent.GetComponentInChildren<HealthComponent>();
+        var player = GetComponentInParent<Player>();
+        if (player != null)
+            _damagerId = player.PlayerId;
     }
 
     public void Attack(HealthComponent other)
@@ -26,7 +37,8 @@ public class DamageComponent : NetworkBehaviour
         if(!other.CanDeplete)
             return;
         
-        other.UpdateHealth(-AttackDamage);
+        Debug.Log($"Dealing Damage {_damageToDeal}");
+        other.UpdateHealth(-_damageToDeal, _damagerId);
     }
     public void InitiateAttack()
     {

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Fusion;
-using Unity.VisualScripting;
+using GameLoop;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,6 +16,7 @@ public class EnemyOnion : Enemy
     }
 
     [SerializeField] private OnionState myState;
+    [SerializeField] private NetworkPrefabRef enemyPickupDummy;
     
     protected List<GameObject> _seenOnions = new List<GameObject>();
     float delta = 0;
@@ -33,13 +34,18 @@ public class EnemyOnion : Enemy
         //Go crazy        
         lastPosition = transform.position;
         animator.CrossFade("Idle", .25f);
-        healthComponent.OnDamaged += OnAttack;
+        healthComponent.OnDamaged += OnAttacked;
         healthComponent.OnHealthDepleted += KillMyself;
     }
 
     private void OnDestroy()
     {
-        healthComponent.OnDamaged -= OnAttack;
+        healthComponent.OnDamaged -= OnAttacked;
+    }
+
+    private void OnAttacked(int damager)
+    {
+        OnAttack();
     }
     
     public override void FixedUpdateNetwork()
@@ -203,11 +209,14 @@ public class EnemyOnion : Enemy
         }
     }
 
-    private async void KillMyself()
+    private async void KillMyself(int damager)
     {
         if (Runner.IsServer)
         {
             await Task.Delay(500);
+            GameManager.instance.UpdateScore( damager,"onion");
+            if(!enemyPickupDummy.Equals(default))
+                Runner.Spawn(enemyPickupDummy, transform.position + new Vector3(0,3,0), transform.rotation);
             Runner.Despawn(GetComponent<NetworkObject>());
         }
     }
