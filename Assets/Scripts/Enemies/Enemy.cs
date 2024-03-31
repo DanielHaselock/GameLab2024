@@ -30,9 +30,6 @@ public class Enemy : NetworkBehaviour
     [SerializeField] protected float speed=3;
     [SerializeField] protected float angularSpeed=120;
     [SerializeField] protected float attackRange=3;
-    [SerializeField] protected Material corpseMaterial;
-    [SerializeField] protected GameObject eyes;
-    [SerializeField] protected GameObject body;
     
     protected bool dead = false;
     protected bool stunned = false;
@@ -103,8 +100,6 @@ public class Enemy : NetworkBehaviour
         else
         {
             animator.StopPlayback();
-            body.GetComponent<Renderer>().material = corpseMaterial;
-            eyes.SetActive(false);
             dead = true;
             navMeshAgent.speed = 0;
             rb.AddForce((transform.position - _targetPlayer.transform.position).normalized * 1f, ForceMode.Impulse);

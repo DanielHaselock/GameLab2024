@@ -7,7 +7,14 @@ using UnityEngine;
 public enum ItemClass
 {
     Tomato,
-    Cheeze,
+    Feta,
+    Bread,
+    Hotdog,
+    Herring,
+    Onion,
+    Pepper,
+    Lettuce,
+    Mustard,
     blabla
 }
 
