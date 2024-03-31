@@ -14,6 +14,7 @@ public class startMovement : MonoBehaviour
     returnMovement returnMove;
     public GameObject returnButton;
     public GameObject cam;
+    public GameObject fade;
 
     void Start()
     {
@@ -66,6 +67,7 @@ public class startMovement : MonoBehaviour
                     started=false;
                     targetPoint = pointB;
                     returnButton.gameObject.SetActive(true);
+                    fade.SetActive(false);
                     rotationSpeedCamera =1f;
                 }
             }  

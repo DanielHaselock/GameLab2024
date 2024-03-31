@@ -12,6 +12,7 @@ public class leaveCredits : MonoBehaviour
     private Transform targetPoint;
     private Transform startingPoint;
     public GameObject startingPosition;
+    public GameObject fade;
     void Start()
     {
         leavingCreditsBool = false; 
@@ -43,6 +44,7 @@ public class leaveCredits : MonoBehaviour
                     visitCreditsButton.gameObject.SetActive(true);
                     gameName.gameObject.SetActive(true);
                     leavingCreditsBool=false;
+                    fade.SetActive(false);
                 }
             }
         }

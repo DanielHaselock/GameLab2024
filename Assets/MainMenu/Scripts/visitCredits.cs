@@ -8,6 +8,7 @@ public class visitCredits : MonoBehaviour
     public GameObject cam;
     private Transform targetPoint;
     public GameObject creditsLeaveButton;
+    public GameObject fade;
     void Start()
     {
         creditsClicked = false;
@@ -31,6 +32,7 @@ public class visitCredits : MonoBehaviour
             {
                 creditsClicked = false;
                 creditsLeaveButton.gameObject.SetActive(true);
+                fade.SetActive(false);
             }  
         }  
     }

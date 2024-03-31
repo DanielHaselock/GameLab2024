@@ -13,6 +13,7 @@ public class leavingSettings : MonoBehaviour
     private Transform targetPoint;
     private Transform startingPoint;
     public GameObject startingPosition;
+    public GameObject fade;
 
     void Start()
     {
@@ -44,6 +45,7 @@ public class leavingSettings : MonoBehaviour
                     settings.gameObject.SetActive(true);
                     creditsButton.gameObject.SetActive(true);
                     leavingSettingsBool=false;
+                    fade.SetActive(false);
                 }
             }
         }   

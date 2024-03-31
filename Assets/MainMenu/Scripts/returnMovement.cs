@@ -17,6 +17,7 @@ public class returnMovement : MonoBehaviour
     public  Quaternion targetCameraRotation;
     public bool closeDoor;
     public GameObject startingPosition;
+    public GameObject fade;
 
     void Start()
     {
@@ -88,6 +89,7 @@ public class returnMovement : MonoBehaviour
                     startButton.gameObject.SetActive(true);
                     creditsButton.gameObject.SetActive(true);
                     goToSettingsButton.gameObject.SetActive(true);
+                    fade.SetActive(false);
                 }
             }
         }
