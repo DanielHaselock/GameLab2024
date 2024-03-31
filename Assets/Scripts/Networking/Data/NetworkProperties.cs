@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace Networking.Data
 {
@@ -9,6 +11,9 @@ namespace Networking.Data
     {
         public int GameSceneIndex;
         public NetworkPrefabRef PlayerPrefab;
-        public NetworkPrefabRef Ball;
+        public int MaxPlayers=2;
+
+        public List<SpawnData> NetworkObjectsToSpawnOnGameStart;
+
     }
 }
