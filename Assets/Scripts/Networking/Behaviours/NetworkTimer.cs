@@ -1,6 +1,6 @@
 ﻿using System;
 using Fusion;
-using Networking.Utils;
+using Utils;
 using UnityEngine;
 
 namespace Networking.Behaviours

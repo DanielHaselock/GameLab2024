@@ -9,7 +9,6 @@ using UnityEngine.Serialization;
 public class DamageComponent : NetworkBehaviour
 {
     [FormerlySerializedAs("AttackDamage")] public float DefaultAttackDamage;
-
     [SerializeField] private LayerMask _layerMask;
     [SerializeField] private float attackRadius;
     [SerializeField] private List<HealthComponent> hittableObjects = new List<HealthComponent>();
@@ -102,6 +101,15 @@ public class DamageComponent : NetworkBehaviour
         return list;
     }
 
+    public void UpdateWeapon()
+    {
+        var weapon = transform.parent.GetComponentInChildren<Weapon>();
+        if (weapon != null)
+            _damageToDeal = weapon.Damage;
+        else
+            _damageToDeal = DefaultAttackDamage;
+    }
+    
     private void OnDrawGizmos()
     {
         var color = Color.yellow;

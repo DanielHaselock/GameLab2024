@@ -2,10 +2,13 @@ using System;
 using Fusion;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 
 public class HealthComponent : NetworkBehaviour
 {
+    private const string EFFECT_PATH = "Effects/DamageIndicator";
+    
     [FormerlySerializedAs("MaxHealth")] [SerializeField]
     private float maxHealth;
     [Networked] public float Health { get; private set; }
@@ -54,8 +57,26 @@ public class HealthComponent : NetworkBehaviour
             CanDeplete = false;
             Death(damager);
         }
+
+        RPC_SpawnEffects(Value);
     }
-    
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_SpawnEffects(float value)
+    {
+        var go = Resources.Load<GameObject>(EFFECT_PATH);
+        var ranPos = Random.insideUnitCircle;
+        var position = transform.position + new Vector3(0, 1, 0) + new Vector3(ranPos.x, 0, ranPos.y);
+        var spawned = Instantiate(go, position, Quaternion.identity);
+        var txt = spawned.GetComponentInChildren<TMPro.TMP_Text>();
+        var shadow = txt.transform.GetChild(0).GetComponent<TMPro.TMP_Text>();
+        if (value>0)
+        {
+            txt.color = Color.green;
+        }
+        txt.text = shadow.text = $"{(value > 0 ? "+" : "")}{value}";
+    }
+
     public void SetHealth(float Value)
     {
         if (!Runner.IsServer)

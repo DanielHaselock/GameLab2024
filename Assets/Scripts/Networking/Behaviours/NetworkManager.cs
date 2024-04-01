@@ -7,7 +7,7 @@ using Fusion.Addons.Physics;
 using Fusion.Sockets;
 using Networking.Data;
 using Networking.UI;
-using Networking.Utils;
+using Utils;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;

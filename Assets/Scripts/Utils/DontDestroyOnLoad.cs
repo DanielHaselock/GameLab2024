@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Networking.Utils
+namespace Utils
 {
     public class DontDestroyOnLoad : MonoBehaviour
     {

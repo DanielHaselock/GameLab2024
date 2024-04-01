@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Networking.Utils
+namespace Utils
 {
     public static class TransformExtensions
     {

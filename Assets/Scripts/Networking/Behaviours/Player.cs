@@ -7,6 +7,7 @@ using Networking.Behaviours;
 using Networking.Data;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Utils;
 
 public class Player : NetworkBehaviour
 {
@@ -228,5 +229,39 @@ public class Player : NetworkBehaviour
     private void OnHealthDepleted(int damager)
     {
         AudioManager.Instance.PlaySFX(SFXConstants.Help, syncNetwork:true);
+    }
+
+    public void SetWeapon(int indx)
+    {
+        if(!Runner.IsServer)
+            return;
+        
+        var weaponLoc = transform.FindDeepChild("WeaponLoc");
+        for (int i = 0; i < weaponLoc.childCount; i++)
+        {
+            if (i == indx)
+                weaponLoc.GetChild(i).gameObject.SetActive(true);
+            else
+                weaponLoc.GetChild(i).gameObject.SetActive(false);
+        }
+
+        RPC_ReflectWeaponUpgradeOnClient(indx);
+        _damager.UpdateWeapon();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_ReflectWeaponUpgradeOnClient(int indx)
+    {
+        if(Runner.IsServer)
+            return;
+        
+        var weaponLoc = transform.FindDeepChild("WeaponLoc");
+        for (int i = 0; i < weaponLoc.childCount; i++)
+        {
+            if (i == indx)
+                weaponLoc.GetChild(i).gameObject.SetActive(true);
+            else
+                weaponLoc.GetChild(i).gameObject.SetActive(false);
+        }
     }
 }

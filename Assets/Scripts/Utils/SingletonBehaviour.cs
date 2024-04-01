@@ -2,7 +2,7 @@
 using System.Dynamic;
 using UnityEngine;
 
-namespace Networking.Utils
+namespace Utils
 {
     public abstract class SingletonBehaviour<T> : MonoBehaviour where T : MonoBehaviour
     {

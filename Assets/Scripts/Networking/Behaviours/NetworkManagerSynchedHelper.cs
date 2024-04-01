@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Fusion;
-using Networking.Utils;
+using Utils;
 using Unity.VisualScripting;
 using UnityEngine;
 

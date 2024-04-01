@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Networking.Behaviours;
-using Networking.Utils;
+using Utils;
 using UnityEngine;
 using UnityEngine.Audio;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using Fusion;
 using Networking.Behaviours;
-using Networking.Utils;
+using Utils;
 using UnityEngine;
 
 namespace Networking.Tests

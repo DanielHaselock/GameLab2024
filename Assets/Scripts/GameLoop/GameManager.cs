@@ -7,7 +7,7 @@ using Fusion;
 using NaughtyAttributes;
 using Networking.Behaviours;
 using Networking.Data;
-using Networking.Utils;
+using Utils;
 using UnityEngine.EventSystems;
 
 namespace GameLoop
@@ -127,39 +127,18 @@ namespace GameLoop
         {
             this._timeLeft = timeLeft;
             _gameUI.UpdateTimerText(timeLeft);
+            if (gameStarted && timeLeft.Seconds <=0)
+            {
+                UpdateGameState(GameState.Lost);
+            }
         }
         
         public override void Render()
         {
             base.Render();
             UpdateChanges();
-            TryUpdateGameState();
         }
         
-        private void TryUpdateGameState()
-        {
-            if(!Runner.IsServer)
-                return;
-            
-            if(!gameStarted)
-                return;
-            
-            if(!CurrentGameState.Equals(GameState.ActiveLevel))
-                return;
-            
-            if (objectivesMap.Count > 0 && !bossDefeated)
-            {
-            }
-            else if (objectivesMap.Count == 0 && !bossDefeated)
-            {
-                SpawnBoss();
-            }
-            else
-            {
-                UpdateGameState(GameState.Win);
-            }
-        }
-
         private void UpdateChanges()
         {
             if (_change == null)
@@ -291,14 +270,7 @@ namespace GameLoop
             foreach (var player in _players)
             {
                 int indx = _rewardManager.GetRewardIndex(player.PlayerId);
-                var weaponLoc = player.transform.FindDeepChild("WeaponLoc");
-                for (int i = 0; i < weaponLoc.childCount; i++)
-                {
-                    if (i == indx)
-                        weaponLoc.GetChild(i).gameObject.SetActive(true);
-                    else
-                        weaponLoc.GetChild(i).gameObject.SetActive(false);
-                }
+                player.SetWeapon(indx);
             }
             InitialiseScores();
             RPC_InitialiseScoreOnClients();
@@ -323,6 +295,7 @@ namespace GameLoop
         {
             if(Runner.IsServer)
                 return;
+            _players = FindObjectsOfType<Player>().ToList();
             InitialiseScores();
         }
         
@@ -358,7 +331,15 @@ namespace GameLoop
                 UpdateGameState(GameState.Win);
                 return;
             }
-            Runner.Spawn(LevelManager.BossToSpawn, Vector3.zero, Quaternion.identity);
+            var pos = Vector3.zero;
+            var rot = Quaternion.identity;
+            var spawner = FindObjectOfType<BossSpawner>();
+            if (spawner == null)
+            {
+                pos = spawner.SpawnPos;
+                rot = spawner.SpawnRotation;
+            }
+            Runner.Spawn(LevelManager.BossToSpawn, pos, rot);
         }
 
         public void UpdateScore(int player, string enemyKey)
@@ -370,7 +351,6 @@ namespace GameLoop
                 UpdateGameState(GameState.Win);
                 return;
             }
-
             if (Runner.IsServer)
             {
                 RPC_UpdateScoreOnClient(player, enemyKey);
@@ -399,7 +379,22 @@ namespace GameLoop
             RPC_UpdateObjectiveData(key, objective.Current);
             if (objective.IsCompleted)
                 objectivesMap.Remove(key);
+            TryUpdateGameState();
             UpdateGameUI();
+        }
+        
+        private void TryUpdateGameState()
+        {
+            if(!gameStarted)
+                return;
+            if(!CurrentGameState.Equals(GameState.ActiveLevel))
+                return;
+            if (bossDefeated)
+                return;
+            if (objectivesMap.Count <= 0)
+            {
+                SpawnBoss();
+            }
         }
         
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -420,6 +415,7 @@ namespace GameLoop
         
         private void OnGameWon()
         {
+            _timer.StopTimer();
             gameStarted = false;
             _gameUI.ShowGameTimer(false);
             LevelManager.LevelComplete(true, _timeLeft);
@@ -468,6 +464,7 @@ namespace GameLoop
         
         private void OnGameLost()
         {
+            _timer.StopTimer();
             gameStarted = false;
             _gameUI.ShowGameTimer(false);
             LevelManager.LevelComplete(false, _timeLeft);
