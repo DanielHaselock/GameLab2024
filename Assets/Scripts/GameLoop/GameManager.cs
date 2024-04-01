@@ -1,12 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Fusion;
-using NaughtyAttributes;
 using Networking.Behaviours;
-using Networking.Data;
 using Utils;
 using UnityEngine.EventSystems;
 
@@ -127,20 +125,22 @@ namespace GameLoop
         {
             this._timeLeft = timeLeft;
             _gameUI.UpdateTimerText(timeLeft);
-            if (gameStarted && timeLeft.Seconds <=0)
+            if (gameStarted && timeLeft.TotalSeconds <=0)
             {
-                UpdateGameState(GameState.Lost);
+                gameStarted = false;
+                StartCoroutine(DelayedGameLost());
             }
         }
-        
+
+        private IEnumerator DelayedGameLost()
+        {
+            yield return new WaitForSeconds(1);
+            UpdateGameState(GameState.Lost);
+        }
+
         public override void Render()
         {
             base.Render();
-            UpdateChanges();
-        }
-        
-        private void UpdateChanges()
-        {
             if (_change == null)
                 return;
             foreach (var change in _change.DetectChanges(this))
@@ -158,7 +158,6 @@ namespace GameLoop
         {
             if(!Runner.IsServer)
                 return;
-            
             CurrentGameState = newState;
             switch (newState)
             {
@@ -348,13 +347,19 @@ namespace GameLoop
             _gameUI.UpdateScore(player, ScoreManager.Score[player]);
             if (enemyKey.Equals(BOSS_KEY))
             {
-                UpdateGameState(GameState.Win);
+                StartCoroutine(DelayedGameWin());
                 return;
             }
             if (Runner.IsServer)
             {
                 RPC_UpdateScoreOnClient(player, enemyKey);
             }
+        }
+        
+        private IEnumerator DelayedGameWin()
+        {
+            yield return new WaitForSeconds(1);
+            UpdateGameState(GameState.Win);
         }
         
         public void RPC_UpdateScoreOnClient(int player, string enemyKey)
@@ -438,7 +443,6 @@ namespace GameLoop
         {
             if(!Runner.IsServer)
                 return;
-
             if (_currentLevel < maxLevels)
             {
                 ResetManager();
@@ -464,6 +468,7 @@ namespace GameLoop
         
         private void OnGameLost()
         {
+            Debug.Log("Game Lost");
             _timer.StopTimer();
             gameStarted = false;
             _gameUI.ShowGameTimer(false);

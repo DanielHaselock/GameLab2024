@@ -43,6 +43,7 @@ public class Player : NetworkBehaviour
     {
         _controller = GetComponent<SimpleKCC>();
         _reviver = GetComponentInChildren<PlayerReviver>();
+        _damager = GetComponentInChildren<DamageComponent>();
         _health = GetComponentInChildren<HealthComponent>();
         _no = GetComponent<NetworkObject>();
         _anim = GetComponent<NetworkMecanimAnimator>();
@@ -215,8 +216,6 @@ public class Player : NetworkBehaviour
         
         if (Runner.IsServer)
         {
-            if (_damager == null)
-                _damager = GetComponentInChildren<DamageComponent>();
             _damager.InitiateAttack();
         }
     }

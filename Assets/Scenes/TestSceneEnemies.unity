@@ -1246,6 +1246,50 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8134481389599487673, guid: d64704593a8444545aa66261e3e1b204, type: 3}
+--- !u!1 &248992130
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 248992132}
+  - component: {fileID: 248992131}
+  m_Layer: 0
+  m_Name: BossSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &248992131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 248992130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69786c3712974cdcac713bbdca314019, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &248992132
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 248992130}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.7785668, z: -0, w: 0.62756175}
+  m_LocalPosition: {x: -25.08, y: 0, z: 20.9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 102.259, z: 0}
 --- !u!64 &253046523
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11749,3 +11793,4 @@ SceneRoots:
   - {fileID: 751285062}
   - {fileID: 1908964976}
   - {fileID: 649290537}
+  - {fileID: 248992132}

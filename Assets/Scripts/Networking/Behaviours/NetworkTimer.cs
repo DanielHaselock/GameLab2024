@@ -42,22 +42,16 @@ namespace Networking.Behaviours
         
         private void HandleTimerTick()
         {
-            if (_timer.Expired(Runner) && wasTimerRunning)
+            if (!_timer.IsRunning)
             {
+                if(!wasTimerRunning)
+                    return;
                 ResetTimer();
                 OnTimerEnded?.Invoke();
-                return;
             }
-            
-            if(!_timer.IsRunning)
-                return;
-            
+
             var remainingTime = Mathf.RoundToInt(_timer.RemainingTime(Runner).Value);
-            
-            //if remaining time is 0, ignore
-            if (remainingTime <= 0)
-                return;
-            
+            Debug.Log($"TIMER!! {remainingTime}");
             if (!wasTimerRunning)
             {
                 wasTimerRunning = true;

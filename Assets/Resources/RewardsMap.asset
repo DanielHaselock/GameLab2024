@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d20bc07a93b547dd80dae4cdd1baa3eb, type: 3}
   m_Name: RewardsMap
   m_EditorClassIdentifier: 
-  Rewards: []
+  Rewards:
+  - Name: Pan
+    WeaponIndex: 0
+  - Name: Silver Pan
+    WeaponIndex: 0
+  - Name: Gold Pan
+    WeaponIndex: 0
