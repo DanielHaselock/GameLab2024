@@ -51,7 +51,6 @@ namespace Networking.Behaviours
             }
 
             var remainingTime = Mathf.RoundToInt(_timer.RemainingTime(Runner).Value);
-            Debug.Log($"TIMER!! {remainingTime}");
             if (!wasTimerRunning)
             {
                 wasTimerRunning = true;

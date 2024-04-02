@@ -132,6 +132,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   attackRadius: 3
+  attackCone: 100
   hittableObjects: []
 --- !u!1 &2063190770458707998
 GameObject:
@@ -283,6 +284,7 @@ GameObject:
   - component: {fileID: 1383303533559286419}
   - component: {fileID: 2754286360909623487}
   - component: {fileID: 4322236703251912642}
+  - component: {fileID: 1568016521756854214}
   m_Layer: 0
   m_Name: EnemyBellPepper
   m_TagString: Enemy
@@ -463,6 +465,23 @@ MonoBehaviour:
   myState: 0
   enemyPickupDummy:
     RawGuidValue: ee44716e4d2ab694886cf16ff4d93ee9
+--- !u!114 &1568016521756854214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4810934846667748979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba960b75cc1cd4c7f837cf4a7c5ef4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitMaterialEffect: {fileID: 2100000, guid: db685ef0738db48439d45b794869cc06, type: 2}
+  itemsToDisableDuringHit:
+  - {fileID: 1600007779325261638}
+  materialHitEfectDelay: 0.15
+  hitGameObjectFx: {fileID: 0}
 --- !u!1 &5697162202745845752
 GameObject:
   m_ObjectHideFlags: 0

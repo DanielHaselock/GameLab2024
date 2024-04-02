@@ -1,4 +1,5 @@
 using System;
+using Effects;
 using Fusion;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -21,8 +22,30 @@ public class HealthComponent : NetworkBehaviour
     public Action<int> OnHealthDepleted;
     public Action<int> OnDamaged;
 
-    public float MaxHealth => maxHealth;
+    private HitEffects _hitEffects;
+    private float _myLocalHealth;
     
+    public float MaxHealth => maxHealth;
+
+    private void Start()
+    {
+        _hitEffects = GetComponentInParent<HitEffects>();
+    }
+
+    private void FixedUpdate()
+    {
+        if(!IsInitialised)
+            return;
+        
+        if (_myLocalHealth > Health)
+        {
+            if(_hitEffects != null)
+                _hitEffects.OnHit();
+            
+            _myLocalHealth = Health;
+        }
+    }
+
     public void SetHealthDepleteStatus(bool canDeplete)
     {
         CanDeplete = canDeplete;
@@ -34,6 +57,7 @@ public class HealthComponent : NetworkBehaviour
         if (Runner.IsServer)
             Health = maxHealth;
 
+        _myLocalHealth = Health;
         CanDeplete = true;
         IsInitialised = true;
     }

@@ -7,11 +7,17 @@ using GameLoop;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class DamageComponent : NetworkBehaviour
 {
     [FormerlySerializedAs("AttackDamage")] public float DefaultAttackDamage;
     [SerializeField] private LayerMask _layerMask;
     [SerializeField] private float attackRadius;
+    [SerializeField] private float attackCone = 60;
+    
     [SerializeField] private List<HealthComponent> hittableObjects = new List<HealthComponent>();
     
     HealthComponent selfheal;
@@ -45,13 +51,23 @@ public class DamageComponent : NetworkBehaviour
         if(!other.CanDeplete)
             return;
         
+        if(!WithinAttackCone(other.transform))
+            return;
+        
         Debug.Log($"Dealing Damage {_damageToDeal}");
-
         if(charge)
             other.UpdateHealth(-_chargedamageToDeal, _damagerId);
         else
             other.UpdateHealth(-_damageToDeal, _damagerId);
     }
+    
+    private bool WithinAttackCone(Transform target)
+    {
+        var dir = target.position - transform.position;
+        var angle = Vector3.SignedAngle(dir, transform.forward, transform.forward);
+        return (angle >= -attackCone / 2) && (angle <= attackCone / 2);
+    }
+    
     public void InitiateAttack(bool charged)
     {
         if(Runner.IsServer)
@@ -129,5 +145,15 @@ public class DamageComponent : NetworkBehaviour
         color.a = 0.25f;
         Gizmos.color = color;
         Gizmos.DrawSphere(transform.position, attackRadius);
+        
+        #if UNITY_EDITOR
+        Color vision = new Color(1, 0, 0, 0.25f);
+        vision.a = 0.5f;
+        Handles.color = vision;
+        var pos = transform.position;
+        var forward = transform.forward;
+        Handles.DrawSolidArc(pos, Vector3.up, forward, attackCone / 2, attackRadius);
+        Handles.DrawSolidArc(pos, Vector3.up, forward, -attackCone / 2, attackRadius);
+        #endif
     }
 }

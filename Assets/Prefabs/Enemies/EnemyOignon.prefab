@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: 829520058137553155}
   - component: {fileID: 2960818826373571837}
   - component: {fileID: 801126053971309692}
+  - component: {fileID: 5931747157997634221}
   m_Layer: 0
   m_Name: EnemyOignon
   m_TagString: Enemy
@@ -271,9 +272,6 @@ MonoBehaviour:
   speed: 3
   angularSpeed: 120
   attackRange: 3
-  corpseMaterial: {fileID: 2100000, guid: 51ffb230e363f36459c65ff2d09cf1e3, type: 2}
-  eyes: {fileID: 5248564372801618642}
-  body: {fileID: 1078722312964010627}
   myState: 0
   enemyPickupDummy:
     RawGuidValue: f67e4d1b9ae9b8546a0204d81cb9e54b
@@ -347,6 +345,23 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1.19
   m_Center: {x: 0, y: 1.2, z: 0}
+--- !u!114 &5931747157997634221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2685400961200451971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba960b75cc1cd4c7f837cf4a7c5ef4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitMaterialEffect: {fileID: 2100000, guid: db685ef0738db48439d45b794869cc06, type: 2}
+  itemsToDisableDuringHit:
+  - {fileID: 5248564372801618642}
+  materialHitEfectDelay: 0.15
+  hitGameObjectFx: {fileID: 0}
 --- !u!1 &3301958258171632831
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,11 +471,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1197a7ab60e46c4bb7262a04fffbc4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackDamage: 1
+  DefaultAttackDamage: 1
   _layerMask:
     serializedVersion: 2
     m_Bits: 128
   attackRadius: 3
+  attackCone: 75
   hittableObjects: []
 --- !u!1 &5162002924583334785
 GameObject:

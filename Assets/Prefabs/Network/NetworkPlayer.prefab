@@ -181,6 +181,7 @@ GameObject:
   - component: {fileID: 4112587101976223627}
   - component: {fileID: 8794941822906134412}
   - component: {fileID: 6721595034118828764}
+  - component: {fileID: 8553585628223677134}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -479,7 +480,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d38ecd3e08d0604cbcce362c83be5ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimeToAttack: 3
 --- !u!114 &6133897040438714171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -496,8 +496,8 @@ MonoBehaviour:
   TotalWords: 3
   ApplyTiming: 2
   SyncSettings: 79
-  StateHashes: 000000002b1a167cbbf7f4d346980c4fd675eee028a98107b84463a81e0cf2a55e98d7206bb8bd76a1609f624889d350
-  TriggerHashes: 0000000028a981070d286c40a1609f62
+  StateHashes: 000000002b1a167cbbf7f4d346980c4fd675eee028a98107b84463a81e0cf2a55e98d7206bb8bd76a1609f624889d350cc4f91dc1e3d3dc0
+  TriggerHashes: 0000000028a981070d286c40a1609f62411341c4
 --- !u!114 &5945907386306691586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -912,6 +912,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8553585628223677134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096714271386515055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba960b75cc1cd4c7f837cf4a7c5ef4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitMaterialEffect: {fileID: 2100000, guid: db685ef0738db48439d45b794869cc06, type: 2}
+  itemsToDisableDuringHit: []
+  materialHitEfectDelay: 0.15
+  hitGameObjectFx: {fileID: 0}
 --- !u!1 &2821495970172956384
 GameObject:
   m_ObjectHideFlags: 0
@@ -6931,8 +6947,12 @@ PrefabInstance:
       value: AttackComponent
       objectReference: {fileID: 0}
     - target: {fileID: 4400514041295403409, guid: ec9bb1ff1bcbee64e8a0a982e20d7f8b, type: 3}
+      propertyPath: attackCone
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4400514041295403409, guid: ec9bb1ff1bcbee64e8a0a982e20d7f8b, type: 3}
       propertyPath: attackRadius
-      value: 3
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4400514041295403409, guid: ec9bb1ff1bcbee64e8a0a982e20d7f8b, type: 3}
       propertyPath: _layerMask.m_Bits
