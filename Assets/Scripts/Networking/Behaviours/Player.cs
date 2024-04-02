@@ -204,9 +204,9 @@ public class Player : NetworkBehaviour
 
     private void HandleAttack(PlayerInputData data)
     {
-        if (data.ActionChargeAttack)
+        if (data.ActionChargeAttack && data.StartChargeAttack)
         {
-            _damager.ToggleStartAttack(data.StartChargeAttack);
+            _anim.SetTrigger("ChargeAttack", true);
         }
 
         if (!data.Attack && !data.ChargeAttack)
