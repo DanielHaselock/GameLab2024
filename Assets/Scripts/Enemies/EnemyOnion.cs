@@ -193,7 +193,8 @@ public class EnemyOnion : Enemy
     {
         myState = OnionState.Aggressive;
         //Can't add player to seen players, as that needs to happen on its own time.
-        navMeshAgent.destination = player.transform.position;
+        if (player != null)
+           navMeshAgent.destination = player.transform.position;
         GetComponent<SphereCollider>().radius = 15;
     }
     protected override void OnTriggerEnter(Collider other)
