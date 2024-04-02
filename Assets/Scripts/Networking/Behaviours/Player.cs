@@ -36,6 +36,8 @@ public class Player : NetworkBehaviour
     private float _nextAttackTime = 0;
     
     [Networked] private bool Stunned { get; set; } = false;
+
+    public bool PlayerDowned => _health.HealthDepleted;
     
     public int PlayerId { get; private set; }
     

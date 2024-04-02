@@ -107,6 +107,27 @@ namespace GameLoop
             if (EventSystem.current == null)
                 Instantiate(Resources.Load("EventSystem"));
         }
+
+        private void Update()
+        {
+            if(!Runner.IsServer)
+                return;
+            if(!gameStarted)
+                return;
+
+            int downedPlayers = 0;
+            foreach(var player in _players)
+            {
+                if (player.PlayerDowned)
+                    downedPlayers+=1;
+            }
+
+            if (downedPlayers >= _players.Count)
+            {
+                gameStarted = false;
+                StartCoroutine(DelayedGameLost());
+            }
+        }
         
         public override void Spawned()
         {

@@ -476,7 +476,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   attackRadius: 3
-  attackCone: 75
+  attackCone: 120
   hittableObjects: []
 --- !u!1 &5162002924583334785
 GameObject:

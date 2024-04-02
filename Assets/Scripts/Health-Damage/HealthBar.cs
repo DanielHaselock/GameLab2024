@@ -14,6 +14,7 @@ public class HealthBar : MonoBehaviour
 
     private void Update()
     {
-        _healthBar.fillAmount = (float)healthComponent.Health / healthComponent.MaxHealth;
+        if(healthComponent != null)
+            _healthBar.fillAmount = (float)healthComponent.Health / healthComponent.MaxHealth;
     }
 }
