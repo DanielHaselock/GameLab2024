@@ -218,7 +218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   invokeType: 1
-  key: onion
+  key: lettuce
 --- !u!1 &9212515056495570676
 GameObject:
   m_ObjectHideFlags: 0

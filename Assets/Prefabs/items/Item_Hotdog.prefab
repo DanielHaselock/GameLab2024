@@ -197,7 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   invokeType: 1
-  key: onion
+  key: hotdog
 --- !u!136 &4983348699228422457
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -15,5 +15,5 @@ MonoBehaviour:
   objectiveText: Defeat and Collect 2 Onions
   key: onion
   value: 0
-  targetValue: 2
+  targetValue: 3
   operationType: 0

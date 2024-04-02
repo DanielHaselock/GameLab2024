@@ -6,19 +6,18 @@ using GameLoop;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyOnion : Enemy
+public class EnemyPepper : Enemy
 {
     [System.Serializable]
-    private enum OnionState
+    private enum PepperState
     {
         Passive,
         Aggressive,
     }
 
-    [SerializeField] private OnionState myState;
+    [SerializeField] private PepperState myState;
     [SerializeField] private NetworkPrefabRef enemyPickupDummy;
-    
-    protected List<GameObject> _seenOnions = new List<GameObject>();
+
     float delta = 0;
     int targetTime = 2;
 
@@ -47,22 +46,22 @@ public class EnemyOnion : Enemy
     {
         OnAttack();
     }
-    
+
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
 
         if (!Runner.IsServer)
             return;
-        
-        if(dead)
+
+        if (dead)
             return;
-        
+
         //UpdateMoveAndRotation(Runner.DeltaTime);
         velocity = Vector3.Distance(transform.position, lastPosition) / Runner.DeltaTime;
         lastPosition = transform.position;
-        
-        if (myState == OnionState.Passive)
+
+        if (myState == PepperState.Passive)
         {
             delta += Runner.DeltaTime;
             if (delta > targetTime)
@@ -72,8 +71,8 @@ public class EnemyOnion : Enemy
                 navMeshAgent.destination = new Vector3(transform.position.x + Random.Range(-20f, 20f), transform.position.y, transform.position.z + Random.Range(-10f, 10f));
             }
         }
-        
-        if (myState== OnionState.Aggressive) //aggressive
+
+        if (myState == PepperState.Aggressive) //aggressive
         {
             if (_targetPlayer != null)
             {
@@ -86,7 +85,7 @@ public class EnemyOnion : Enemy
                 StartCoroutine(WaitAndAttack());
             }
         }
-        
+
         if (!stunned)
         {
             if (velocity > 0.2f)
@@ -109,9 +108,9 @@ public class EnemyOnion : Enemy
     }
     public override void ChangeTargeting()
     {
-        if(attacking)
+        if (attacking)
             return;
-        
+
         base.ChangeTargeting();
         switch (_seenPlayers.Count)
         {
@@ -139,7 +138,7 @@ public class EnemyOnion : Enemy
             if (_seenPlayers.Count > 0)
                 happy = false;
         }
-        myState = happy? OnionState.Passive : OnionState.Aggressive;
+        myState = happy ? PepperState.Passive : PepperState.Aggressive;
         GetComponent<SphereCollider>().radius = 35;
     }
 
@@ -172,45 +171,22 @@ public class EnemyOnion : Enemy
         base.OnAttack();
         if (!healthComponent.HealthDepleted)
         {
-            if (myState == OnionState.Passive)
+            if (myState == PepperState.Passive)
             {
-                myState = OnionState.Aggressive;
+                myState = PepperState.Aggressive;
                 if (_targetPlayer != null)
-                navMeshAgent.destination = _targetPlayer.transform.position;
+                    navMeshAgent.destination = _targetPlayer.transform.position;
                 GetComponent<SphereCollider>().radius = 15;
             }
-            foreach (GameObject onion in _seenOnions)
-            {
-                if (onion != null)
-                {
-                    if (onion.GetComponent<EnemyOnion>().myState == OnionState.Passive)
-                        onion.GetComponent<EnemyOnion>().Alert(_targetPlayer);
-                }
-            }
         }
-    }
-    public void Alert(GameObject player)
-    {
-        myState = OnionState.Aggressive;
-        //Can't add player to seen players, as that needs to happen on its own time.
-        navMeshAgent.destination = player.transform.position;
-        GetComponent<SphereCollider>().radius = 15;
     }
     protected override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
-        if (other.tag.Equals("Enemy") && !_seenOnions.Contains(other.gameObject) && other.name.Contains("Oignon"))
-        {
-            _seenOnions.Add(other.gameObject);
-        }
     }
     protected override void OnTriggerExit(Collider other)
     {
         base.OnTriggerExit(other);
-        if (other.tag.Equals("Enemy") && other.name.Contains("Oignon"))
-        {
-            _seenOnions.Remove(other.gameObject);
-        }
     }
 
     private async void KillMyself(int damager)
@@ -218,9 +194,9 @@ public class EnemyOnion : Enemy
         if (Runner.IsServer)
         {
             await Task.Delay(500);
-            GameManager.instance.UpdateScore( damager,"onion");
-            if(!enemyPickupDummy.Equals(default))
-                Runner.Spawn(enemyPickupDummy, transform.position + new Vector3(0,3,0), transform.rotation);
+            GameManager.instance.UpdateScore(damager, "bellpepper");
+            if (!enemyPickupDummy.Equals(default))
+                Runner.Spawn(enemyPickupDummy, transform.position + new Vector3(0, 3, 0), transform.rotation);
             Runner.Despawn(GetComponent<NetworkObject>());
         }
     }
