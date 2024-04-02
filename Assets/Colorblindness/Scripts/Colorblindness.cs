@@ -38,11 +38,7 @@ namespace SOHNE.Accessibility.Colorblindness
         }
 
         void SearchVolumes() => volumes = GameObject.FindObjectsOfType<Volume>();
-
-        #region Enable/Disable
-        private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
-        #endregion
-
+        
         public static Colorblindness Instance { get; private set; }
 
         [UnityEditor.Callbacks.DidReloadScripts]
@@ -68,16 +64,7 @@ namespace SOHNE.Accessibility.Colorblindness
 
             maxType = (int) System.Enum.GetValues(typeof(ColorblindTypes)).Cast<ColorblindTypes>().Last();
         }
-
-        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            SearchVolumes();
-            
-            if (volumes == null || volumes.Length <= 0) return;
-
-            Change(-1);
-        }
-
+        
         void Start()
         {
             if (PlayerPrefs.HasKey("Accessibility.ColorblindType"))
@@ -93,11 +80,17 @@ namespace SOHNE.Accessibility.Colorblindness
         {
             filterIndex = filterIndex <= -1 ? PlayerPrefs.GetInt("Accessibility.ColorblindType") : filterIndex;
             CurrentType = Mathf.Clamp(filterIndex, 0, maxType);
+            if (filterIndex >= 0)
+            {
+                PlayerPrefs.SetInt("Accessibility.ColorblindType", filterIndex);
+            }
             StartCoroutine(ApplyFilter());
         }
         
         IEnumerator ApplyFilter()
         {
+            yield return new WaitForEndOfFrame();
+            SearchVolumes();
             ResourceRequest loadRequest = Resources.LoadAsync<VolumeProfile>($"Colorblind/{(ColorblindTypes)CurrentType}");
 
             do yield return null; while (!loadRequest.isDone);

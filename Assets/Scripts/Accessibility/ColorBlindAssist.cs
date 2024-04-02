@@ -24,8 +24,8 @@ namespace Accessibility
         
         private void Awake()
         {
-            _colorblindness = GetComponent<Colorblindness>();
             SceneManager.sceneLoaded += OnSceneLoaded;
+            _colorblindness = GetComponent<Colorblindness>();
         }
 
         private void OnSceneLoaded(Scene sc, LoadSceneMode mode)
@@ -34,6 +34,7 @@ namespace Accessibility
             {
                 camera.GetComponent<UniversalAdditionalCameraData>().renderPostProcessing = true;
             }
+            _colorblindness.Change();
         }
 
         [Button("DEBUG:: TEST")]

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Accessibility;
 using Fusion;
 using Fusion.Addons.Physics;
 using Fusion.Sockets;
@@ -560,7 +561,7 @@ namespace Networking.Behaviours
             var task = _runner.LoadScene(scene, loadSceneParameters);
             while (!task.IsDone)
                 await Task.Yield();
-
+            
             await Task.Delay(1000);
             _connectionUI.ShowLoadingScreen(false);
             SendGlobalSimpleNetworkMessage(new NetworkEvent()
@@ -570,8 +571,7 @@ namespace Networking.Behaviours
             });
             return true;
         }
-
-
+        
         public NetworkObject GetLocalPlayer()
         {
             return _runner.GetPlayerObject(_runner.LocalPlayer);
@@ -586,6 +586,4 @@ namespace Networking.Behaviours
             SceneManager.LoadScene(0);
         }
     }
-
-
 }
