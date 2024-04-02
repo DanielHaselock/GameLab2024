@@ -7,12 +7,14 @@ using GameLoop;
 using Interactables;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 
 public class PlayerNetworkedActions : MonoBehaviour
 {
     private Camera _camera;
     private PlayerInputData InputData = new PlayerInputData();
     private Vector3 moveInput;
+
     private void Start()
     {
         _camera = Camera.main;
@@ -61,7 +63,27 @@ public class PlayerNetworkedActions : MonoBehaviour
     {
         InputData.Attack = (bool)data;
     }
-    
+
+    public void BroadcastStartChargeAttack(Component Sender, object data) //TODO If Anims/Vfx needed for charge attack
+    {
+        if((bool)data)
+        { 
+            
+        }
+        else
+        {
+           
+        }
+    }
+
+    public void BroadcastChargeAttack(Component Sender, object data)
+    {
+        if((bool)data)
+        {
+            InputData.ChargeAttack = true;
+        }
+    }
+
     public void BroadcastRevive(Component Sender, object data)
     {
         InputData.Revive = (bool)data;

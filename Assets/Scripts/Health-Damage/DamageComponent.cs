@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Audio;
 using Fusion;
 using GameLoop;
@@ -16,72 +17,84 @@ public class DamageComponent : NetworkBehaviour
     HealthComponent selfheal;
     private int _damagerId = -1;
     private float _damageToDeal;
+    private float _chargedamageToDeal;
     
     private void Start()
     {
         var weapon = transform.parent.GetComponentInChildren<Weapon>();
         if (weapon != null)
+        {
             _damageToDeal = weapon.Damage;
+            _chargedamageToDeal = weapon.ChargeDamage;
+        }
         else
+        {
+            _chargedamageToDeal = DefaultAttackDamage;
             _damageToDeal = DefaultAttackDamage;
+        }
+            
         selfheal = transform.parent.GetComponentInChildren<HealthComponent>();
         var player = GetComponentInParent<Player>();
         if (player != null)
             _damagerId = player.PlayerId;
     }
 
-    public void Attack(HealthComponent other)
+    public void Attack(HealthComponent other, bool charge)
     {
         //block depletion
         if(!other.CanDeplete)
             return;
         
         Debug.Log($"Dealing Damage {_damageToDeal}");
-        other.UpdateHealth(-_damageToDeal, _damagerId);
+
+        if(charge)
+            other.UpdateHealth(-_chargedamageToDeal, _damagerId);
+        else
+            other.UpdateHealth(-_damageToDeal, _damagerId);
     }
-    public void InitiateAttack()
+    public void InitiateAttack(bool charged)
     {
         if(Runner.IsServer)
-            DoAttack();
+            DoAttack(charged);
         else
-            RPC_InitiateAttackOnServer();
+            RPC_InitiateAttackOnServer(charged);
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    private void RPC_InitiateAttackOnServer()
+    private void RPC_InitiateAttackOnServer(bool charged)
     {
-        DoAttack();
+        DoAttack(charged);
     }
     
-    private void DoAttack()
+    private void DoAttack(bool charged)
     {
         foreach (var hc in GetAllHealthAroundMe())
         {
-            Attack(hc);
+            Attack(hc, charged);
         }
     }
 
-    public void InitiateAttack(string tag)
+    public void InitiateAttack(string tag, bool charged = false)
     {
         if (Runner.IsServer)
-            DoAttack(tag);
+            DoAttack(tag, charged);
         else
-            RPC_InitiateAttackOnServer(tag);
+            RPC_InitiateAttackOnServer(tag, charged);
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    private void RPC_InitiateAttackOnServer(string tag)
+    private void RPC_InitiateAttackOnServer(string tag, bool charged)
     {
-        DoAttack(tag);
+        DoAttack(tag, charged);
     }
 
-    private void DoAttack(string tag)
+    private void DoAttack(string tag, bool charged)
     {
         AudioManager.Instance.PlaySFX(SFXConstants.Attack);
         foreach (var hc in GetAllHealthAroundMe())
         {
             if (hc.transform.tag.Contains(tag))
-                Attack(hc);
+                Attack(hc, charged);
         }
     }
 

@@ -204,7 +204,7 @@ public class Player : NetworkBehaviour
 
     private void HandleAttack(PlayerInputData data)
     {
-        if(!data.Attack)
+        if(!data.Attack && !data.ChargeAttack)
             return;
         
         if(Time.time < _nextAttackTime)
@@ -216,7 +216,10 @@ public class Player : NetworkBehaviour
         
         if (Runner.IsServer)
         {
-            _damager.InitiateAttack();
+            if(data.ChargeAttack)
+                _damager.InitiateAttack(true);
+            else
+                _damager.InitiateAttack(false);
         }
     }
 

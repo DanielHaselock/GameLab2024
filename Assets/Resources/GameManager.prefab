@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelSceneIndex: 1
-  totalRoundTimeInSeconds: 10
+  totalRoundTimeInSeconds: 1000
   maxLevels: 2
   rewardsMap: {fileID: 11400000, guid: 26eb20f16101e6a4da450bfbbe877c91, type: 2}
   _gameStarted: 0
