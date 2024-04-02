@@ -10,6 +10,8 @@ namespace Networking.Data
         public bool Jump;
         public bool Attack;
         public bool ChargeAttack;
+        public bool StartChargeAttack;
+        public bool ActionChargeAttack;
         public bool Throw;
        [Networked] public bool Interact { get => default; set { } }
         public bool Drop;
@@ -21,6 +23,7 @@ namespace Networking.Data
             Jump = false;
             Attack = false;
             ChargeAttack = false;
+            ActionChargeAttack = false;
             Interact = false;
             Drop = false;
             Throw = false;

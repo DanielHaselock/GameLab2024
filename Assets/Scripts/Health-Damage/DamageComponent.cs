@@ -52,6 +52,28 @@ public class DamageComponent : NetworkBehaviour
         else
             other.UpdateHealth(-_damageToDeal, _damagerId);
     }
+
+    public void ToggleStartAttack(bool Show)
+    {
+        if (Runner.IsServer)
+            ToggleAttack(Show);
+        else
+            RPC_InitiateStartAttackOnServer(Show);
+    }
+
+    public void ToggleAttack(bool Show)
+    {
+        //Play Attack Charge VFX here 
+
+        Debug.Log("Toggling vfx/Anim attack" + Show);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_InitiateStartAttackOnServer(bool Show)
+    {
+        ToggleAttack(Show);
+    }
+
     public void InitiateAttack(bool charged)
     {
         if(Runner.IsServer)

@@ -204,7 +204,12 @@ public class Player : NetworkBehaviour
 
     private void HandleAttack(PlayerInputData data)
     {
-        if(!data.Attack && !data.ChargeAttack)
+        if (data.ActionChargeAttack)
+        {
+            _damager.ToggleStartAttack(data.StartChargeAttack);
+        }
+
+        if (!data.Attack && !data.ChargeAttack)
             return;
         
         if(Time.time < _nextAttackTime)

@@ -64,16 +64,10 @@ public class PlayerNetworkedActions : MonoBehaviour
         InputData.Attack = (bool)data;
     }
 
-    public void BroadcastStartChargeAttack(Component Sender, object data) //TODO If Anims/Vfx needed for charge attack
+    public void BroadcastStartChargeAttack(Component Sender, object data)
     {
-        if((bool)data)
-        { 
-            
-        }
-        else
-        {
-           
-        }
+        InputData.StartChargeAttack = (bool)data;
+        InputData.ActionChargeAttack = true;
     }
 
     public void BroadcastChargeAttack(Component Sender, object data)

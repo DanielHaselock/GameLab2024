@@ -97,25 +97,20 @@ public class PlayerInputController : MonoBehaviour
 
     public void ChargeAttack(InputAction.CallbackContext context) //Charged --> requires Hold interaction in IA
     {
-        if(context.started)
-        {
-            OnStartChargeAttack.Raise(this, true);
-        }
-
         if (context.performed)
         {
+            OnStartChargeAttack.Raise(this, true);
             CanChargeAttack = true;
         }
 
         if(context.canceled)
         {
             OnStartChargeAttack.Raise(this, false);
-            if(CanChargeAttack)
+            if (CanChargeAttack)
             {
                 CanChargeAttack = false;
                 OnChargeAttack.Raise(this, true);
             }
-
         }
     }
 
