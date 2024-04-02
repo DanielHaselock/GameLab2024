@@ -73,7 +73,7 @@ public class DamageComponent : NetworkBehaviour
             Attack(hc, charged);
         }
     }
-
+    
     public void InitiateAttack(string tag, bool charged = false)
     {
         if (Runner.IsServer)
