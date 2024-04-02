@@ -1,6 +1,7 @@
 ﻿using Fusion;
 using Networking.Data;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GameLoop
 {
@@ -10,5 +11,7 @@ namespace GameLoop
         public LevelObjectives Objectives;
         public ScoringMap ScoringMap;
         public NetworkPrefabRef BossToSpawn;
+        [FormerlySerializedAs("sceneIndx")] public int SceneIndx=2;
+        [FormerlySerializedAs("levelTimeInSeconds")] public int LevelTimeInSeconds=180;
     }
 }

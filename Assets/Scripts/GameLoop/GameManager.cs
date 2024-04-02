@@ -24,9 +24,7 @@ namespace GameLoop
         }
         
         public static GameManager instance;
-
-        [SerializeField] private int levelSceneIndex;
-        [SerializeField] private int totalRoundTimeInSeconds;
+        
         [SerializeField] private int maxLevels;
         [SerializeField] private RewardsMap rewardsMap;
         
@@ -223,7 +221,8 @@ namespace GameLoop
                 return;
             }
             IsPausable = true;
-            bool result = await NetworkManager.Instance.LoadSceneNetworked(levelSceneIndex, false);
+            LevelManager.LoadLevel(_currentLevel);
+            bool result = await NetworkManager.Instance.LoadSceneNetworked(LevelManager.LevelSceneIndx, false);
             if (!result)
             {
                 Debug.LogError("Failed to load level");
@@ -251,7 +250,7 @@ namespace GameLoop
                 _enemies.Add(no);
             }
             //change objectives
-            LevelManager.LoadLevel(_currentLevel);
+            
             string levelPath = LevelManager.LevelDataPath;
             objectivesMap = new Dictionary<string, Objective>();
             foreach (var objectiveData in LevelManager.Objectives)
@@ -263,7 +262,7 @@ namespace GameLoop
             RPC_LoadLevelObjectivesOnClient(levelPath);
             //start game timer
             NetworkLogger.Log("Starting timer");
-            _timer.StartTimer(TimeSpan.FromSeconds(totalRoundTimeInSeconds));
+            _timer.StartTimer(TimeSpan.FromSeconds(LevelManager.LevelTime));
             _gameUI.ShowGameTimer(true);
             _players = FindObjectsOfType<Player>().ToList();
             foreach (var player in _players)
