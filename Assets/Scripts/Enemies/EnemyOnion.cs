@@ -123,6 +123,11 @@ public class EnemyOnion : Enemy
                 _targetPlayer = _seenPlayers[0];
                 break;
             default:
+                if (_seenPlayers[1] == null && _seenPlayers[0] == null)
+                {
+                    _targetPlayer = null;
+                    break;
+                }
                 if (Vector3.Distance(transform.position, _seenPlayers[0].transform.position) < Vector3.Distance(transform.position, _seenPlayers[1].transform.position))
                     _targetPlayer = _seenPlayers[1];
                 else
