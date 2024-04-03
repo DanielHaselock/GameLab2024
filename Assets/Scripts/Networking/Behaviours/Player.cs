@@ -62,7 +62,6 @@ public class Player : NetworkBehaviour
         
         _anim.SetTrigger("Hit", true);
         _stunRoutine = StartCoroutine(Stun());
-        AudioManager.Instance.PlaySFX(SFXConstants.Hit, true,true);
     }
     
     IEnumerator Stun()
@@ -219,10 +218,11 @@ public class Player : NetworkBehaviour
         _nextAttackTime = Time.time + attackDelay;
         
         _anim.SetTrigger("Attack", true);
-        AudioManager.Instance.PlaySFX(SFXConstants.Attack);
+        AudioManager.Instance.PlaySFX(SFXConstants.PlayerAttack);
         
         if (Runner.IsServer)
         {
+            AudioManager.Instance.PlaySFX3D(SFXConstants.PlayerAttack, transform.position);
             if(data.ChargeAttack)
                 _damager.InitiateAttack(true);
             else

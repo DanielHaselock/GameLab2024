@@ -406,11 +406,17 @@ namespace Networking.Behaviours
             if(rotations.Count<_connectedPlayers.Count)
                 throw new Exception("Not enough rotations to spawn players");
             var index = 0;
+
+            var playerPrefabs = new List<NetworkPrefabRef>(_networkPropertiesRef.PlayerPrefabs);
+            playerPrefabs.Shuffle();
+
             foreach (var playerRef in _connectedPlayers)
             {
                 var position = positions[index];
-                var rotation = rotations[index]; 
-                var playerNetObj = _runner.Spawn(_networkPropertiesRef.PlayerPrefab,
+                var rotation = rotations[index];
+                var prefabToUse = playerPrefabs[0];
+                playerPrefabs.RemoveAt(0);
+                var playerNetObj = _runner.Spawn(prefabToUse,
                     position, rotation, playerRef);
 
                 _runner.SetPlayerObject(playerRef, playerNetObj);

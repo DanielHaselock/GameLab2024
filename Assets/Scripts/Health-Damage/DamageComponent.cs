@@ -106,7 +106,6 @@ public class DamageComponent : NetworkBehaviour
 
     private void DoAttack(string tag, bool charged)
     {
-        AudioManager.Instance.PlaySFX(SFXConstants.Attack);
         foreach (var hc in GetAllHealthAroundMe())
         {
             if (hc.transform.tag.Contains(tag))

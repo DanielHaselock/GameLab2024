@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Audio;
 using UnityEngine;
 
 namespace Effects
@@ -40,6 +41,8 @@ namespace Effects
             hitMaterialUpdateRountine = StartCoroutine(DoHitMaterialUpdate());
             if (hitGameObjectFx != null)
                 Instantiate(hitGameObjectFx, transform.position, Quaternion.identity);
+            
+            AudioManager.Instance.PlaySFX3D(SFXConstants.Hit,  transform.position,true, false);
         }
 
         IEnumerator DoHitMaterialUpdate()

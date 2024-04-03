@@ -1,3 +1,4 @@
+using GameLoop;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,9 @@ public class HealthBar : MonoBehaviour
 
     private void Update()
     {
+        if(!GameManager.instance.gameStarted)
+            return;
+        
         if(healthComponent != null)
             _healthBar.fillAmount = (float)healthComponent.Health / healthComponent.MaxHealth;
     }

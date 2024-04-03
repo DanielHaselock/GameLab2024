@@ -493,18 +493,18 @@ namespace GameLoop
             gameStarted = false;
             _gameUI.ShowGameTimer(false);
             LevelManager.LevelComplete(false, _timeLeft);
-            ResetManager();
-            _gameUI.ShowLostGameUI(true);
             RPC_ShowLoseScreenOnClients();
+            _gameUI.ShowLostGameUI(true);
+            ResetManager();
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void RPC_ShowLoseScreenOnClients()
         {
-            if(!Runner.IsServer)
+            if(Runner.IsServer)
                 return;
-            ResetManager();
             _gameUI.ShowLostGameUI(true);
+            ResetManager();
         }
         
         //so main logic is as such, when an enemy dies,

@@ -481,7 +481,7 @@ MonoBehaviour:
   itemsToDisableDuringHit:
   - {fileID: 1600007779325261638}
   materialHitEfectDelay: 0.15
-  hitGameObjectFx: {fileID: 0}
+  hitGameObjectFx: {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
 --- !u!1 &5697162202745845752
 GameObject:
   m_ObjectHideFlags: 0

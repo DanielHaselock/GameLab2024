@@ -115,7 +115,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: aa6c648ab08635d4a8fb39efe2b7664c, type: 2}
+  - {fileID: 2100000, guid: 74e6c0666b9d30348928206fc39cb971, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -361,7 +361,7 @@ MonoBehaviour:
   itemsToDisableDuringHit:
   - {fileID: 5248564372801618642}
   materialHitEfectDelay: 0.15
-  hitGameObjectFx: {fileID: 0}
+  hitGameObjectFx: {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
 --- !u!1 &3301958258171632831
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,7 +572,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0a9efb7292fa5854db2cf88dfc775d70, type: 2}
+  - {fileID: 2100000, guid: 0d64f2df65d22db469c0429aa2afb376, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

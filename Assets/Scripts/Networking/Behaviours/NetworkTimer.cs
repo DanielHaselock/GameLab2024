@@ -50,6 +50,9 @@ namespace Networking.Behaviours
                 OnTimerEnded?.Invoke();
             }
 
+            if (_timer.RemainingTime(Runner) == null)
+                return;
+
             var remainingTime = Mathf.RoundToInt(_timer.RemainingTime(Runner).Value);
             if (!wasTimerRunning)
             {
