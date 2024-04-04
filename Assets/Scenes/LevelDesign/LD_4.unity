@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: a8043fcc473495a408ac964699f9422b, type: 2}
 --- !u!1001 &491065
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1263,6 +1263,10 @@ PrefabInstance:
     - target: {fileID: 1055696601234238, guid: 95fe2533720aeb743ade98ad01dc2812, type: 3}
       propertyPath: m_Name
       value: island_A_01 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1055696601234238, guid: 95fe2533720aeb743ade98ad01dc2812, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4434392078504076, guid: 95fe2533720aeb743ade98ad01dc2812, type: 3}
       propertyPath: m_LocalScale.x
@@ -3968,6 +3972,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: rock_B_06 (14)
       objectReference: {fileID: 0}
+    - target: {fileID: 1625781416467160, guid: 71d9ac8f41d09d143a75c692c68b1ce6, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4975551950721474, guid: 71d9ac8f41d09d143a75c692c68b1ce6, type: 3}
       propertyPath: m_LocalScale.x
       value: 74.625435
@@ -5532,6 +5540,10 @@ PrefabInstance:
     - target: {fileID: 1275605674657416, guid: 87ba70ffeb5cf0042b9c74cf165df40c, type: 3}
       propertyPath: m_Name
       value: island_B_02
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275605674657416, guid: 87ba70ffeb5cf0042b9c74cf165df40c, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4151462079729124, guid: 87ba70ffeb5cf0042b9c74cf165df40c, type: 3}
       propertyPath: m_LocalScale.x
@@ -7192,6 +7204,10 @@ PrefabInstance:
     - target: {fileID: 1055696601234238, guid: 95fe2533720aeb743ade98ad01dc2812, type: 3}
       propertyPath: m_Name
       value: island_A_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1055696601234238, guid: 95fe2533720aeb743ade98ad01dc2812, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4434392078504076, guid: 95fe2533720aeb743ade98ad01dc2812, type: 3}
       propertyPath: m_LocalScale.x
@@ -10699,6 +10715,10 @@ PrefabInstance:
     - target: {fileID: 1803979185537350, guid: 8b404e5e7b6ccea4895a317b2617cc89, type: 3}
       propertyPath: m_Name
       value: island_C_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1803979185537350, guid: 8b404e5e7b6ccea4895a317b2617cc89, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4225331389641038, guid: 8b404e5e7b6ccea4895a317b2617cc89, type: 3}
       propertyPath: m_LocalScale.x
@@ -19298,6 +19318,10 @@ PrefabInstance:
     - target: {fileID: 1975688226987720, guid: 1e5360f1c1a55cb488d2240d77443600, type: 3}
       propertyPath: m_Name
       value: bridge_A_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1975688226987720, guid: 1e5360f1c1a55cb488d2240d77443600, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4468465738965994, guid: 1e5360f1c1a55cb488d2240d77443600, type: 3}
       propertyPath: m_LocalScale.x
