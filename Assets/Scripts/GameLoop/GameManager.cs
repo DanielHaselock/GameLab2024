@@ -118,7 +118,7 @@ namespace GameLoop
             int downedPlayers = 0;
             foreach(var player in _players)
             {
-                if (player.PlayerDowned)
+                if (player != null && player.PlayerDowned)
                     downedPlayers+=1;
             }
 
