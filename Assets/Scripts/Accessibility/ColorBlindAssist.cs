@@ -22,7 +22,7 @@ namespace Accessibility
             }
         }
         
-        private void Awake()
+        private void OnEnable()
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
             _colorblindness = GetComponent<Colorblindness>();

@@ -131,6 +131,9 @@ namespace Interactables
 
         private void Update()
         {
+            if(Runner == null)
+                return;
+            
             reviveGUI.SetActive(Reviving);
             reviveImg.fillAmount = (timeToRevive - ReviveTimeLeft) / timeToRevive;
         }

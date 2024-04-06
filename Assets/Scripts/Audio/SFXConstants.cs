@@ -12,5 +12,6 @@ namespace Audio
         public static string ItemCollect = "item_collect";
         public static string ItemReject = "item_reject";
         public static string Clock = "clock";
+        public static string ObjectiveComplete = "objective_complete";
     }
 }

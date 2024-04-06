@@ -201,8 +201,9 @@ namespace Audio
         
         private void PlaySFXLocal(string sfxName, bool random)
         {
-            if(_sfxMemory.Contains(sfxName))
-                return;
+            // if(_sfxMemory.Contains(sfxName))
+            //     return;
+            
             var clip = _map.GetSFX(sfxName, random);
             if (clip == null)
                 return;
@@ -218,8 +219,9 @@ namespace Audio
         
         private void PlaySFXLocal3D(string sfxName, bool random, Vector3 position)
         {
-            if(_sfxMemory.Contains(sfxName))
-                return;
+            // if(_sfxMemory.Contains(sfxName))
+            //     return;
+            
             var clip = _map.GetSFX(sfxName, random);
             if (clip == null)
                 return;

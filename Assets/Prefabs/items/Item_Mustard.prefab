@@ -228,6 +228,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1039553502021398591}
+  - component: {fileID: 3774301378763131730}
   m_Layer: 0
   m_Name: Interpolation
   m_TagString: Untagged
@@ -251,6 +252,20 @@ Transform:
   - {fileID: 5619919700130285909}
   m_Father: {fileID: 1870056140976682569}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3774301378763131730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9212515056495570676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d86f11f4405af445595a83cb4750b641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entityType: 2
+  asset: {fileID: 11400000, guid: e11f400d08de546ffbca8e8f9b8ca273, type: 2}
 --- !u!1001 &5365843571217870526
 PrefabInstance:
   m_ObjectHideFlags: 0

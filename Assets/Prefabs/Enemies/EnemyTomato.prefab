@@ -695,6 +695,7 @@ GameObject:
   - component: {fileID: 5196482466935022729}
   - component: {fileID: 2126398291509448568}
   - component: {fileID: 8200245259359149486}
+  - component: {fileID: 1572979144948158660}
   m_Layer: 0
   m_Name: Graphics
   m_TagString: Untagged
@@ -758,3 +759,17 @@ MonoBehaviour:
   SyncSettings: 79
   StateHashes: 000000002b1a167c7940695520e23b685928a8cea1609f62d8aa0cc40d286c404e865f43
   TriggerHashes: 00000000
+--- !u!114 &1572979144948158660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8409607821398374551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d86f11f4405af445595a83cb4750b641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entityType: 1
+  asset: {fileID: 11400000, guid: e11f400d08de546ffbca8e8f9b8ca273, type: 2}

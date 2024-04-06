@@ -420,7 +420,11 @@ namespace GameLoop
             objectivesGUIData[key].SetValue(objective.Current);
             RPC_UpdateObjectiveData(key, objective.Current);
             if (objective.IsCompleted)
+            {
+                AudioManager.Instance.PlaySFX(SFXConstants.ObjectiveComplete, syncNetwork:true);
                 objectivesMap.Remove(key);
+            }
+
             TryUpdateGameState();
             UpdateGameUI();
         }

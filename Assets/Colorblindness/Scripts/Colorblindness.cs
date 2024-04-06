@@ -108,7 +108,6 @@ namespace SOHNE.Accessibility.Colorblindness
                 foreach (var volume in volumes)
                 {
                     volume.profile.components.Remove(lastFilter);
-
                     foreach (var component in filter.components)
                         volume.profile.components.Add(component);
                 }

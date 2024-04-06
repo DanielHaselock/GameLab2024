@@ -51,5 +51,8 @@ MonoBehaviour:
     - Key: item_reject
       Value:
       - {fileID: 8300000, guid: f3044f7a9e5eee24abdd8673ee7e991f, type: 3}
+    - Key: objective_complete
+      Value:
+      - {fileID: 8300000, guid: bc222cb31c57240b389d639d255d6098, type: 3}
   InitialBackgroundMusic: mainmenu
   InitialAmbiance: 
