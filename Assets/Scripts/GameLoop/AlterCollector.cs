@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using Audio;
 using Fusion;
-using Networking.Data;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -18,7 +14,9 @@ namespace GameLoop
         [SerializeField] private float delayBeforeDespawn=1f;
         [SerializeField] private Collider _collider;
         [SerializeField] private Transform effectPos;
+        
         [SerializeField] private GameObject collectionEffectFx;
+        [SerializeField] private GameObject rejectionEffectFx;
         
         private void OnTriggerEnter(Collider other)
         {
@@ -37,7 +35,17 @@ namespace GameLoop
         private IEnumerator DestroyAfter(NetworkObject no, float delay)
         {
             yield return new WaitForSeconds(delay);
-            RPC_SpawnEffect();
+            var raiseObj = no.GetComponent<RaiseObjective>();
+            if (raiseObj != null)
+            {
+                if(LevelManager.ContainsObjective(raiseObj.Key))
+                    RPC_SpawnCollectEffect();
+                else
+                {
+                    RPC_SpawnRejectEffect();
+                }
+            }
+            
             Runner.Despawn(no);
         }
 
@@ -60,10 +68,21 @@ namespace GameLoop
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-        private void RPC_SpawnEffect()
+        private void RPC_SpawnCollectEffect()
         {
-            Instantiate(collectionEffectFx, effectPos.position, Quaternion.identity);
-            AudioManager.Instance.PlaySFX(SFXConstants.ItemCollect);
+            if(collectionEffectFx != null)
+                Instantiate(collectionEffectFx, effectPos.position, Quaternion.identity);
+            
+            AudioManager.Instance.PlaySFX3D(SFXConstants.ItemCollect, transform.position);
+        }
+        
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_SpawnRejectEffect()
+        {
+            if(rejectionEffectFx != null)
+                Instantiate(rejectionEffectFx, effectPos.position, Quaternion.identity);
+            
+            AudioManager.Instance.PlaySFX3D(SFXConstants.ItemReject, transform.position);
         }
     }
 }

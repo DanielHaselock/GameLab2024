@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Audio;
+using CartoonFX;
+using Fusion;
 using UnityEngine;
 
 namespace Effects
@@ -44,13 +46,24 @@ namespace Effects
                 StopCoroutine(hitMaterialUpdateRountine);
             
             hitMaterialUpdateRountine = StartCoroutine(DoHitMaterialUpdate());
+            
             if (hitGameObjectFx != null)
             {
+                var player = GetComponent<Player>();
+                bool allowShake = player != null && player.HasInputAuthority;
+
                 var pos = transform.position;
                 if (effectSpawnPosition != null)
                     pos = effectSpawnPosition.position;
                 
-                Instantiate(hitGameObjectFx, pos, Quaternion.identity);
+                var fx = Instantiate(hitGameObjectFx, pos, Quaternion.identity);
+                if (!allowShake)
+                {
+                    var eff = fx.GetComponent<CFXR_Effect>();
+                    if(eff == null)
+                        return;
+                    eff.cameraShake.enabled = false;
+                }
             }
 
             AudioManager.Instance.PlaySFX3D(SFXConstants.Hit,  transform.position,true, false);

@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Audio;
 using UnityEngine;
 using Fusion;
 using Fusion.Addons.Physics;
 using Networking.Behaviours;
+using Networking.Data;
 using UnityEngine.AI;
 using Utils;
 using UnityEngine.EventSystems;
@@ -148,6 +150,7 @@ namespace GameLoop
         
         private void TimerTick(TimeSpan timeLeft)
         {
+            AudioManager.Instance.PlaySFX(SFXConstants.Clock);
             this._timeLeft = timeLeft;
             _gameUI.UpdateTimerText(timeLeft);
             if (gameStarted && timeLeft.TotalSeconds <=0)

@@ -67,7 +67,9 @@ public class Enemy : NetworkBehaviour
         navMeshAgent.stoppingDistance = attackRange - 0.5f;
         navMeshAgent.speed = speed;
         navMeshAgent.angularSpeed = angularSpeed;
-        
+
+        navMeshAgent.Warp(transform.position);
+
         //we want to manually update our agent position
         /*navMeshAgent.updatePosition = false;
         navMeshAgent.updateRotation = false;*/

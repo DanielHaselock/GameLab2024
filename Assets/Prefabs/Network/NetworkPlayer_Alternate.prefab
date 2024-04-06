@@ -260,7 +260,7 @@ MonoBehaviour:
   moveSpeed: 6.83
   lookSpeed: 720
   gravity: -30
-  jumpForce: 15
+  jumpForce: 1000
   stunDur: 0.5
   attackDelay: 0.35
 --- !u!114 &4957056992829801187
@@ -780,7 +780,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1185932670729973215}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 70
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -934,6 +934,7 @@ MonoBehaviour:
   itemsToDisableDuringHit: []
   materialHitEfectDelay: 0.15
   hitGameObjectFx: {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
+  effectSpawnPosition: {fileID: 0}
 --- !u!1 &1293184470575388673
 GameObject:
   m_ObjectHideFlags: 0

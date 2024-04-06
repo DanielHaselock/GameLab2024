@@ -10,5 +10,7 @@ namespace Audio
         public static string Throw = "throw";
         public static string Help = "help";
         public static string ItemCollect = "item_collect";
+        public static string ItemReject = "item_reject";
+        public static string Clock = "clock";
     }
 }

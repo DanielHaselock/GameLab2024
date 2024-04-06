@@ -255,7 +255,7 @@ MonoBehaviour:
   moveSpeed: 6.83
   lookSpeed: 720
   gravity: -30
-  jumpForce: 15
+  jumpForce: 1000
   stunDur: 0.5
   attackDelay: 0.35
 --- !u!114 &3346815095413396157
@@ -775,7 +775,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096714271386515055}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 70
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}

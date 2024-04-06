@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Fusion;
 using GameLoop;
 using Networking.Data;
@@ -27,6 +28,12 @@ public static class LevelManager
 
     public static int LevelSceneIndx => _data == null ? 1 : _data.SceneIndx;
     public static int LevelTime => _data == null ? 180 : _data.LevelTimeInSeconds;
+
+    public static bool ContainsObjective(string key)
+    {
+        var single = Objectives.SingleOrDefault(a => a.key.Equals(key));
+        return single != null;
+    }
     
     public static void LoadLevel(int level)
     {

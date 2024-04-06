@@ -8,6 +8,9 @@ public class RaiseObjective : MonoBehaviour
     public enum InvokeType { OnSpawn, OnDestroy, Manual};
     [SerializeField] private InvokeType invokeType;
     [SerializeField] private string key;
+
+    public string Key => key;
+    
     private void Start()
     {
         if (invokeType == InvokeType.OnSpawn)
