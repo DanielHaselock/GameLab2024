@@ -45,10 +45,10 @@ MonoBehaviour:
       - {fileID: 8300000, guid: 7d0c306f8fcba574d8207cde5022ddf4, type: 3}
       - {fileID: 8300000, guid: ce9182c2b2e401b4ba2923bcd0a4812e, type: 3}
       - {fileID: 8300000, guid: 498018e431e936d48872d194c900334c, type: 3}
-    - Key: collect
+    - Key: item_collect
       Value:
       - {fileID: 8300000, guid: 28fcf33769d8c2c4aa41d02e03d1af52, type: 3}
-    - Key: reject
+    - Key: item_reject
       Value:
       - {fileID: 8300000, guid: f3044f7a9e5eee24abdd8673ee7e991f, type: 3}
   InitialBackgroundMusic: mainmenu
