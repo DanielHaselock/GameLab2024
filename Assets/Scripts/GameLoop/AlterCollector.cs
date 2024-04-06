@@ -35,6 +35,9 @@ namespace GameLoop
         private IEnumerator DestroyAfter(NetworkObject no, float delay)
         {
             yield return new WaitForSeconds(delay);
+            if(no == null)
+                yield break;
+            
             var raiseObj = no.GetComponent<RaiseObjective>();
             if (raiseObj != null)
             {
