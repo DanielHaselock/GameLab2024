@@ -44,7 +44,8 @@ Material:
     m_Ints: []
     m_Floats: []
     m_Colors:
-    - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
+    - _BaseColor: {r: 0.5188679, g: 0.5188679, b: 0.5188679, a: 1}
+    - _ColorDim: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &3899859020227442211
 MonoBehaviour:
