@@ -60,7 +60,8 @@ public class EnemyHerring : Enemy
             {
                 delta = 0;
                 targetTime = Random.Range(1, 10);
-                navMeshAgent.destination = new Vector3(transform.position.x + Random.Range(-20f, 20f), transform.position.y, transform.position.z + Random.Range(-10f, 10f));
+                navMeshAgent.destination = GetNextWanderPos();
+                //navMeshAgent.destination = new Vector3(transform.position.x + Random.Range(-20f, 20f), transform.position.y, transform.position.z + Random.Range(-10f, 10f));
             }
         }
 

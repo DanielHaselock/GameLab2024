@@ -50,6 +50,7 @@ MonoBehaviour:
     m_Bits: 128
   attackRadius: 5.75
   attackCone: 69.85
+  knockBackForce: 5
   hittableObjects: []
 --- !u!1 &537772541077962610
 GameObject:
@@ -266,6 +267,7 @@ GameObject:
   - component: {fileID: 562528255689470982}
   - component: {fileID: 8543681794899040091}
   - component: {fileID: 2752349285918896187}
+  - component: {fileID: 6440332793880064431}
   m_Layer: 0
   m_Name: EnemyBread
   m_TagString: Enemy
@@ -371,6 +373,7 @@ MonoBehaviour:
   speed: 3
   angularSpeed: 120
   attackRange: 3
+  maxNextWanderPosDist: 5
   enemyPickupDummy:
     RawGuidValue: 1cc57f0b0dbbeab4482daa06bfa7307c
   enemyObjectiveType: bread
@@ -461,6 +464,23 @@ MonoBehaviour:
   - {fileID: 8459324129368649210}
   materialHitEfectDelay: 0.15
   hitGameObjectFx: {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
+  effectSpawnPosition: {fileID: 0}
+--- !u!208 &6440332793880064431
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5383752530929584873}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.5, y: 3, z: 3.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 2.45, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &5735511717253222796
 GameObject:
   m_ObjectHideFlags: 0
@@ -561,7 +581,7 @@ Transform:
   m_GameObject: {fileID: 6786683501358152536}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 253.82643, z: 0}
+  m_LocalPosition: {x: 607, y: 253.82643, z: 0}
   m_LocalScale: {x: 313.9041, y: 313.9041, z: 313.9041}
   m_ConstrainProportionsScale: 0
   m_Children: []

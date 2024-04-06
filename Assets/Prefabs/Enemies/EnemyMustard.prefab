@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 997156868744225323}
   - component: {fileID: 3558754717268942362}
   - component: {fileID: 1981508747916463852}
+  - component: {fileID: 532881895182938665}
   m_Layer: 0
   m_Name: EnemyMustard
   m_TagString: Enemy
@@ -122,6 +123,7 @@ MonoBehaviour:
   speed: 3
   angularSpeed: 120
   attackRange: 3
+  maxNextWanderPosDist: 5
   enemyPickupDummy:
     RawGuidValue: f2fcb6b286b4ccb43902cb2c9a0cbddf
   enemyObjectiveType: mustard
@@ -214,6 +216,23 @@ MonoBehaviour:
   - {fileID: 7072590400097457934}
   materialHitEfectDelay: 0.15
   hitGameObjectFx: {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
+  effectSpawnPosition: {fileID: 0}
+--- !u!208 &532881895182938665
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2349836710898626275}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.75, y: 3.87, z: 1.75}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 3.67, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &2701636891196200273
 GameObject:
   m_ObjectHideFlags: 0
@@ -708,6 +727,7 @@ MonoBehaviour:
     m_Bits: 128
   attackRadius: 4
   attackCone: 120
+  knockBackForce: 5
   hittableObjects: []
 --- !u!1 &8716880535069835684
 GameObject:

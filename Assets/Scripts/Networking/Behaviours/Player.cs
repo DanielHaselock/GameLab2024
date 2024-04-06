@@ -6,7 +6,6 @@ using Interactables;
 using Networking.Behaviours;
 using Networking.Data;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Utils;
 
 public class Player : NetworkBehaviour
@@ -79,7 +78,8 @@ public class Player : NetworkBehaviour
         this.name = "Player_" + no.InputAuthority.PlayerId;
         if (no.InputAuthority == Runner.LocalPlayer)
         {
-            GetComponent<SetCamera>().SetCameraParams(gameObject.transform.GetChild(1).gameObject);
+            var cameraTarget = GetComponentInChildren<CameraTarget>();
+            GetComponent<SetCamera>().SetCameraParams(cameraTarget.gameObject);
             GetComponent<PlayerInputController>().OnSpawned();
         }
         _controller.SetGravity(gravity);

@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 2960818826373571837}
   - component: {fileID: 801126053971309692}
   - component: {fileID: 5931747157997634221}
+  - component: {fileID: 4133423573713835193}
   m_Layer: 0
   m_Name: EnemyOignon
   m_TagString: Enemy
@@ -272,6 +273,7 @@ MonoBehaviour:
   speed: 3
   angularSpeed: 120
   attackRange: 3
+  maxNextWanderPosDist: 5
   myState: 0
   enemyPickupDummy:
     RawGuidValue: f67e4d1b9ae9b8546a0204d81cb9e54b
@@ -362,6 +364,23 @@ MonoBehaviour:
   - {fileID: 5248564372801618642}
   materialHitEfectDelay: 0.15
   hitGameObjectFx: {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
+  effectSpawnPosition: {fileID: 0}
+--- !u!208 &4133423573713835193
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2685400961200451971}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.065, y: 1.065, z: 1.065}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 1, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &3301958258171632831
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,6 +496,7 @@ MonoBehaviour:
     m_Bits: 128
   attackRadius: 3
   attackCone: 120
+  knockBackForce: 5
   hittableObjects: []
 --- !u!1 &5162002924583334785
 GameObject:

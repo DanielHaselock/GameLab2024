@@ -20,6 +20,9 @@ namespace Effects
         [SerializeField]
         private GameObject hitGameObjectFx;
 
+        [SerializeField] 
+        private Transform effectSpawnPosition;
+        
         private Dictionary<Renderer, Material> _materialMap;
 
         private Coroutine hitMaterialUpdateRountine;
@@ -29,6 +32,8 @@ namespace Effects
             _materialMap = new Dictionary<Renderer, Material>();
             foreach (var renderer in GetComponentsInChildren<Renderer>())
             {
+                if(renderer is ParticleSystemRenderer)
+                    continue;
                 _materialMap.Add(renderer, renderer.material);
             }
         }
@@ -40,8 +45,14 @@ namespace Effects
             
             hitMaterialUpdateRountine = StartCoroutine(DoHitMaterialUpdate());
             if (hitGameObjectFx != null)
-                Instantiate(hitGameObjectFx, transform.position, Quaternion.identity);
-            
+            {
+                var pos = transform.position;
+                if (effectSpawnPosition != null)
+                    pos = effectSpawnPosition.position;
+                
+                Instantiate(hitGameObjectFx, pos, Quaternion.identity);
+            }
+
             AudioManager.Instance.PlaySFX3D(SFXConstants.Hit,  transform.position,true, false);
         }
 

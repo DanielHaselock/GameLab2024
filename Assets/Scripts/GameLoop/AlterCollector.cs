@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Audio;
 using Fusion;
+using Networking.Data;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -14,6 +17,8 @@ namespace GameLoop
     {
         [SerializeField] private float delayBeforeDespawn=1f;
         [SerializeField] private Collider _collider;
+        [SerializeField] private Transform effectPos;
+        [SerializeField] private GameObject collectionEffectFx;
         
         private void OnTriggerEnter(Collider other)
         {
@@ -32,6 +37,7 @@ namespace GameLoop
         private IEnumerator DestroyAfter(NetworkObject no, float delay)
         {
             yield return new WaitForSeconds(delay);
+            RPC_SpawnEffect();
             Runner.Despawn(no);
         }
 
@@ -51,6 +57,13 @@ namespace GameLoop
             #if UNITY_EDITOR
             Handles.Label(transform.position + new Vector3(0,2,0), "Alter Collectible Area");
             #endif
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_SpawnEffect()
+        {
+            Instantiate(collectionEffectFx, effectPos.position, Quaternion.identity);
+            AudioManager.Instance.PlaySFX(SFXConstants.ItemCollect);
         }
     }
 }

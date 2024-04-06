@@ -309,6 +309,7 @@ GameObject:
   - component: {fileID: 9065326324698851428}
   - component: {fileID: 6640896786750959092}
   - component: {fileID: 1257160950604808675}
+  - component: {fileID: 3338342394580962803}
   m_Layer: 0
   m_Name: EnemySausage
   m_TagString: Enemy
@@ -414,6 +415,7 @@ MonoBehaviour:
   speed: 3
   angularSpeed: 120
   attackRange: 3
+  maxNextWanderPosDist: 5
   enemyPickupDummy:
     RawGuidValue: 640447ee0b5ee6b45b0f7ecfdaebdfb4
   enemyObjectiveType: hotdog
@@ -506,6 +508,23 @@ MonoBehaviour:
   - {fileID: 6111577379737926720}
   materialHitEfectDelay: 0.15
   hitGameObjectFx: {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
+  effectSpawnPosition: {fileID: 0}
+--- !u!208 &3338342394580962803
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4247089632577231859}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.065, y: 1.46, z: 3.525}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 1.49, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &5511401706906587033
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,6 +760,7 @@ MonoBehaviour:
     m_Bits: 128
   attackRadius: 5.9
   attackCone: 56.3
+  knockBackForce: 5
   hittableObjects: []
 --- !u!1 &8655100301604559480
 GameObject:

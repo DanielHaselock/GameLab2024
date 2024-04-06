@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using Fusion;
 using Fusion.Addons.Physics;
@@ -30,6 +31,7 @@ public class Enemy : NetworkBehaviour
     [SerializeField] protected float speed=3;
     [SerializeField] protected float angularSpeed=120;
     [SerializeField] protected float attackRange=3;
+    [SerializeField] protected float maxNextWanderPosDist=5;
     
     protected bool dead = false;
     protected bool stunned = false;
@@ -45,6 +47,13 @@ public class Enemy : NetworkBehaviour
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
+
+    protected Vector3 GetNextWanderPos()
+    {
+        var delta = Random.insideUnitCircle * maxNextWanderPosDist;
+        return new Vector3(transform.position.x + delta.x, transform.position.y, transform.position.z + delta.y);
+    }
+    
     protected virtual void Start()
     {
         animator = GetComponentInChildren<Animator>();
@@ -60,8 +69,8 @@ public class Enemy : NetworkBehaviour
         navMeshAgent.angularSpeed = angularSpeed;
         
         //we want to manually update our agent position
-        //navMeshAgent.updatePosition = false;
-        //navMeshAgent.updateRotation = false;
+        /*navMeshAgent.updatePosition = false;
+        navMeshAgent.updateRotation = false;*/
     }
 
     protected void UpdateMoveAndRotation(float deltaTime)

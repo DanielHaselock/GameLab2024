@@ -9,5 +9,6 @@ namespace Audio
         public static string Drop = "drop";
         public static string Throw = "throw";
         public static string Help = "help";
+        public static string ItemCollect = "item_collect";
     }
 }

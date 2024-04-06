@@ -17,7 +17,7 @@ public class DamageComponent : NetworkBehaviour
     [SerializeField] private LayerMask _layerMask;
     [SerializeField] private float attackRadius;
     [SerializeField] private float attackCone = 60;
-    
+    [SerializeField] private float knockBackForce = 5;
     [SerializeField] private List<HealthComponent> hittableObjects = new List<HealthComponent>();
     
     HealthComponent selfheal;
@@ -59,6 +59,14 @@ public class DamageComponent : NetworkBehaviour
             other.UpdateHealth(-_chargedamageToDeal, _damagerId);
         else
             other.UpdateHealth(-_damageToDeal, _damagerId);
+
+        var rb = other.GetComponentInParent<Rigidbody>();
+        if (rb != null)
+        {
+            var revDir = rb.position - transform.position;
+            revDir.y = 1;
+            rb.AddForce(revDir.normalized*knockBackForce, ForceMode.Impulse);
+        }
     }
     
     private bool WithinAttackCone(Transform target)

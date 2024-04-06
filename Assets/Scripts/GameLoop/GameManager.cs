@@ -2,9 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using Fusion;
+using Fusion.Addons.Physics;
 using Networking.Behaviours;
+using UnityEngine.AI;
 using Utils;
 using UnityEngine.EventSystems;
 
@@ -106,6 +109,9 @@ namespace GameLoop
             
             if (EventSystem.current == null)
                 Instantiate(Resources.Load("EventSystem"));
+
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Confined;
         }
 
         private void Update()
@@ -215,6 +221,8 @@ namespace GameLoop
             }
 
             IsPaused = pause;
+            Cursor.visible = pause;
+            Cursor.lockState = pause?CursorLockMode.None : CursorLockMode.Locked;
         }
 
         public void Pause(bool pause)
@@ -265,9 +273,13 @@ namespace GameLoop
             }
             _enemies = new List<NetworkObject>();
             NetworkManager.Instance.SpawnPlayers(spawnPositions, spawnRotations);
+
+            await Task.Delay(100);
+            
             foreach (var spawner in FindObjectsOfType<GenericEnemySpawner>())
             {
                 var no = Runner.Spawn(spawner.Prefab, spawner.transform.position, spawner.transform.rotation);
+                no.GetComponent<NetworkRigidbody3D>().Teleport(spawner.transform.position);
                 _enemies.Add(no);
             }
             //change objectives
@@ -363,7 +375,9 @@ namespace GameLoop
 
         public void UpdateScore(int player, string enemyKey)
         {
-            ScoreManager.UpdateScore(player, LevelManager.ScoreMap[enemyKey]);
+            if(LevelManager.ScoreMap.ContainsKey(enemyKey))
+                ScoreManager.UpdateScore(player, LevelManager.ScoreMap[enemyKey]);
+            
             _gameUI.UpdateScore(player, ScoreManager.Score[player]);
             if (enemyKey.Equals(BOSS_KEY))
             {
