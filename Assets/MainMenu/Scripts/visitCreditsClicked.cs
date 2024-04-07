@@ -26,7 +26,7 @@ public class visitCreditsClicked : MonoBehaviour
             startButton.gameObject.SetActive(false);
             settingsButton.gameObject.SetActive(false);
             visitCredits.creditsClicked = true;
-            fade.SetActive(false);
+            fade.SetActive(true);
             gameObject.SetActive(false);
         }
     }
