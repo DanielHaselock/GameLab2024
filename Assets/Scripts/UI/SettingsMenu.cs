@@ -15,8 +15,4 @@ public class SettingsMenu : MonoBehaviour
         PauseMenuUI.SetActive(true);
         SettingsMenuUI.SetActive(false);
     }
-    public void MainMenu()
-    {
-        GameManager.instance.UpdateGameState(GameManager.GameState.MainMenu);
-    }
 }

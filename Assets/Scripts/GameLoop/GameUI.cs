@@ -16,6 +16,7 @@ public class GameUI : MonoBehaviour
     
     [SerializeField] private GameObject timerObject;
     [SerializeField] private TMPro.TMP_Text timerText;
+    [SerializeField] private Image timerBar;
 
     [SerializeField] private GameObject scoreObject;
     [SerializeField] private Transform scoreTextParent;
@@ -111,6 +112,7 @@ public class GameUI : MonoBehaviour
         var min = timeSpan.Minutes;
         var sec = timeSpan.Seconds;
         timerText.text = $"{min:00}:{sec:00}";
+        timerBar.fillAmount = (float)timeSpan.TotalSeconds / LevelManager.LevelTime;
     }
 
     public void InitialiseScores(Dictionary<int,int> scoreMap, Dictionary<int, string> nameMap)
