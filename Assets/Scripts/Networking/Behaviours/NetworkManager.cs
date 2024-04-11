@@ -81,6 +81,8 @@ namespace Networking.Behaviours
             }
         }
 
+        public bool ShowCutsceneBeforeFirstLevel => _networkPropertiesRef.ShowCutscene;
+        
         private void Awake()
         {
             DontDestroyOnLoad(this);

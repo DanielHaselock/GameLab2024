@@ -23,6 +23,7 @@ namespace GameLoop
         public enum GameState
         {
             MainMenu,
+            Cutscene,
             ActiveLevel,
             Lost,
             Win
@@ -32,7 +33,7 @@ namespace GameLoop
         
         [SerializeField] private int maxLevels;
         [SerializeField] private RewardsMap rewardsMap;
-        
+
         private ChangeDetector _change;
         private Dictionary<string, Objective> objectivesMap;
         private Dictionary<string, Objective> objectivesGUIData;
@@ -43,6 +44,9 @@ namespace GameLoop
         private List<Player> _players;
         private List<NetworkObject> _enemies;
         private RewardManager _rewardManager;
+
+        private bool cutscenePlayed = false;
+        private int _cutscenesCompleted = 0;
         
         public event Action<bool> OnPauseStatusChanged;
         public GameState CurrentGameState { get; private set; }
@@ -98,15 +102,14 @@ namespace GameLoop
                 _enemies.Clear();
             }
         }
-        
-        // Creates the Pause UI in scene
-        void Start()
+        private void Initialise()
         {
             IsPausable = true; //for testing
             var gameUIObj = Instantiate(Resources.Load<GameObject>("GameUI"), transform);
             _gameUI = gameUIObj.GetComponentInChildren<GameUI>();
             _gameUI.RegisterLoadToMainMenu(LoadMainMenu);
             _gameUI.RegisterLoadNextLevel(LoadNextLevel);
+            _gameUI.OnCutsceneCompleted += OnCutsceneCompleted;
             _rewardManager = new RewardManager();
             
             if (EventSystem.current == null)
@@ -115,7 +118,7 @@ namespace GameLoop
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Confined;
         }
-
+        
         private void Update()
         {
             if(!Runner.IsServer)
@@ -139,12 +142,14 @@ namespace GameLoop
         
         public override void Spawned()
         {
+            Initialise();
             objectivesMap = new Dictionary<string, Objective>();
             _timer = GetComponentInChildren<NetworkTimer>();
             _timer.OnTimerTick += TimerTick;
             _change = GetChangeDetector(ChangeDetector.Source.SimulationState);
             if (!Runner.IsServer)
                 return;
+            
             UpdateGameState(GameState.ActiveLevel);
         }
         
@@ -192,6 +197,9 @@ namespace GameLoop
                 case GameState.MainMenu:
                     LoadMainMenu();
                     break;
+                case GameState.Cutscene:
+                    PlayCutscene();
+                    break;
                 case GameState.ActiveLevel:
                     StartLevel();
                     break;
@@ -204,12 +212,61 @@ namespace GameLoop
             }
             OnGameStateChanged?.Invoke(newState);
         }
-
+        
         private void LoadMainMenu()
         {
             RPC_LoadMainMenuOnClient();
         }
 
+        private void PlayCutscene()
+        {
+            if (!Runner.IsServer)
+                return;
+            
+            _cutscenesCompleted = 0;
+            RPC_PlayCutsceneForAll();
+        }
+        
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_PlayCutsceneForAll()
+        {
+            _gameUI.PlayCutscene();
+        }
+
+        private void OnCutsceneCompleted()
+        {
+            if (Runner.IsServer)
+            {
+                _cutscenesCompleted += 1;
+                CheckIfCutsceneCompletedForAll();
+            }
+            else
+            {
+                RPC_CutsceneCompleted();
+            }
+        }
+
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        private void RPC_CutsceneCompleted()
+        {
+            _cutscenesCompleted += 1;
+            CheckIfCutsceneCompletedForAll();
+        }
+        
+        private void CheckIfCutsceneCompletedForAll()
+        {
+            if (_cutscenesCompleted < NetworkManager.Instance.ConnectedPlayers.Count)
+                return;
+            RPC_HideCutsceneGUI();
+            UpdateGameState(GameState.ActiveLevel);
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_HideCutsceneGUI()
+        {
+            _gameUI.HideCutscenePlayer();
+        }
+        
         [Rpc(RpcSources.All, RpcTargets.All)]
         private void RPC_LoadMainMenuOnClient()
         {
@@ -260,6 +317,16 @@ namespace GameLoop
                 Debug.LogError("Failed to load level");
                 return;
             }
+
+            //quick-hack to load a scene and then play cutscene :p
+            //I know I'm loadin the same scene twice but fk it.
+            if (NetworkManager.Instance.ShowCutsceneBeforeFirstLevel && !cutscenePlayed)
+            {
+                cutscenePlayed = true;
+                UpdateGameState(GameState.Cutscene);
+                return;
+            }
+            
             var defPos = new List<Vector3> { new Vector3(0, 2, 0), new Vector3(0, 4, 0) };
             var defRot = new List<Quaternion> { Quaternion.identity, Quaternion.identity };
             var spawnPositions = new List<Vector3>();

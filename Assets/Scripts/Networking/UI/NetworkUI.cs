@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Audio;
 using Fusion;
 using Networking.Behaviours;
@@ -41,7 +42,9 @@ namespace Networking.UI
 
         
         private NetworkManager _networkManager;
-
+        private Coroutine _loadingScreenCoro;
+        
+        
         public void Initialise(NetworkManager manager)
         {
             _networkManager = manager;
@@ -86,7 +89,32 @@ namespace Networking.UI
         
         public void ShowLoadingScreen(bool show)
         {
-            loadingScreen.SetActive(show);
+            if(_loadingScreenCoro != null)
+                StopCoroutine(_loadingScreenCoro);
+
+            _loadingScreenCoro = StartCoroutine(FadeLoadingScreen(!show));
+        }
+
+        IEnumerator FadeLoadingScreen(bool fadeOut)
+        {
+            loadingScreen.SetActive(true);
+            var cg = loadingScreen.GetComponent<CanvasGroup>();
+            if (!fadeOut)
+            {
+                cg.alpha = 1;
+                yield break;    
+            }
+            
+            var curr = cg.alpha;
+            var next = fadeOut ? 0 : 1;
+            var t = 0f;
+            while (t <= 1)
+            {
+                t += Time.deltaTime / 0.25f;
+                cg.alpha = Mathf.Lerp(curr, next, t);
+                yield return new WaitForEndOfFrame();
+            }
+            loadingScreen.SetActive(false);
         }
         
         private void OnPlayerConnected(int playerId)

@@ -10,6 +10,7 @@ namespace Networking.Data
     public class NetworkProperties : ScriptableObject
     {
         public int MaxPlayers=2;
+        public bool ShowCutscene = true;
         public List<NetworkPrefabRef> PlayerPrefabs;
         public List<SpawnData> NetworkObjectsToSpawnOnGameStart;
 

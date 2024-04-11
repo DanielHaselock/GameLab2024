@@ -46,6 +46,8 @@ namespace Audio
 
         private HashSet<string> _sfxMemory;
 
+        private bool muted = false;
+
         [SerializeField] private AudioMixer _mixer;
         [SerializeField] private AudioMap _map;
         [SerializeField] private float _bgFadeDuration = 0.5f;
@@ -243,6 +245,20 @@ namespace Audio
         {
             yield return new WaitForSeconds(delay);
             _sfxMemory.Remove(key);
+        }
+
+        public void MuteBGAndAmbiance(bool mute)
+        {
+            if (mute)
+            {
+                _bgSource.volume = 0;
+                _ambianceSource.volume = 0;
+            }
+            else
+            {
+                _bgSource.volume = 1;
+                _ambianceSource.volume = 1;
+            }
         }
     }
 }

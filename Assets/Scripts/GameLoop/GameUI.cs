@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Audio;
 using Fusion;
 using GameLoop;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class GameUI : MonoBehaviour
 {
@@ -28,6 +30,9 @@ public class GameUI : MonoBehaviour
     [SerializeField] private GameObject winUI;
     [SerializeField] private Button winMainMenuBttn;
     [SerializeField] private Button winNextLevelBttn;
+
+    [SerializeField] private VideoPlayer cutscenePlayer;
+    [SerializeField] private GameObject cutSceneObj;
     
     private List<TMP_Text> _allObjectivesTexts;
     private Dictionary<int, TMP_Text> _scoreTexts;
@@ -35,7 +40,9 @@ public class GameUI : MonoBehaviour
 
     private Action OnMainMenuRequested;
     private Action OnNextLevelClicked;
-    
+
+    public Action OnCutsceneCompleted;
+
     public void RegisterLoadToMainMenu(Action action)
     {
         OnMainMenuRequested += action;
@@ -145,5 +152,25 @@ public class GameUI : MonoBehaviour
     {
         winNextLevelBttn.gameObject.SetActive(showNextButton);
         winUI.SetActive(show);
+    }
+
+    public void PlayCutscene()
+    {
+        cutSceneObj.SetActive(true);
+        AudioManager.Instance.MuteBGAndAmbiance(true);
+        cutscenePlayer.Play();
+        StartCoroutine(TrackCutscenePlayback());
+    }
+
+    public void HideCutscenePlayer()
+    {
+        cutSceneObj.SetActive(false);
+    }
+    
+    IEnumerator TrackCutscenePlayback()
+    {
+        yield return new WaitForSeconds((int)cutscenePlayer.length + 1);
+        AudioManager.Instance.MuteBGAndAmbiance(false);
+        OnCutsceneCompleted?.Invoke();
     }
 }
