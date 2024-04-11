@@ -36296,6 +36296,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BossBurger
       objectReference: {fileID: 0}
+    - target: {fileID: 7238786831675120389, guid: 2c9fd5401e030074689393afd3d2c9ce, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -36751,6 +36755,67 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1001 &3473218748901157072
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 764108332958619018, guid: 12b1b8c4a468184478cd248f2d0dae91, type: 3}
+      propertyPath: SortKey
+      value: 1474250621
+      objectReference: {fileID: 0}
+    - target: {fileID: 1815193464933398746, guid: 12b1b8c4a468184478cd248f2d0dae91, type: 3}
+      propertyPath: m_Name
+      value: souvlaki
+      objectReference: {fileID: 0}
+    - target: {fileID: 5711375525310497753, guid: 12b1b8c4a468184478cd248f2d0dae91, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.52816486
+      objectReference: {fileID: 0}
+    - target: {fileID: 5711375525310497753, guid: 12b1b8c4a468184478cd248f2d0dae91, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.19329262
+      objectReference: {fileID: 0}
+    - target: {fileID: 5711375525310497753, guid: 12b1b8c4a468184478cd248f2d0dae91, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 54.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5711375525310497753, guid: 12b1b8c4a468184478cd248f2d0dae91, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5711375525310497753, guid: 12b1b8c4a468184478cd248f2d0dae91, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5711375525310497753, guid: 12b1b8c4a468184478cd248f2d0dae91, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5711375525310497753, guid: 12b1b8c4a468184478cd248f2d0dae91, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5711375525310497753, guid: 12b1b8c4a468184478cd248f2d0dae91, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5711375525310497753, guid: 12b1b8c4a468184478cd248f2d0dae91, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5711375525310497753, guid: 12b1b8c4a468184478cd248f2d0dae91, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 12b1b8c4a468184478cd248f2d0dae91, type: 3}
 --- !u!1001 &4309540067204132391
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36839,3 +36904,4 @@ SceneRoots:
   - {fileID: 451387883}
   - {fileID: 451425041}
   - {fileID: 2127843844}
+  - {fileID: 3473218748901157072}

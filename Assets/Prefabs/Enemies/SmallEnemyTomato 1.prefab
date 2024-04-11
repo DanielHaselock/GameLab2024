@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.74367, y: 0.74367, z: 0.74367}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1901750932922405724}
@@ -215,7 +215,7 @@ MonoBehaviour:
   _layerMask:
     serializedVersion: 2
     m_Bits: 128
-  attackRadius: 4
+  attackRadius: 2.89
   attackCone: 120
   knockBackForce: 5
   hittableObjects: []
@@ -357,7 +357,7 @@ GameObject:
   - component: {fileID: 8190116394176879489}
   - component: {fileID: 5207710927767791205}
   m_Layer: 0
-  m_Name: EnemyTomato
+  m_Name: SmallEnemyTomato 1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -414,7 +414,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 4217828543
+  SortKey: 2127779779
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -434,7 +434,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.97
-  m_Speed: 3
+  m_Speed: 1.5
   m_Acceleration: 14
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -463,7 +463,7 @@ MonoBehaviour:
   attackRange: 3
   maxNextWanderPosDist: 5
   enemyPickupDummy:
-    RawGuidValue: 8913ca8a1329e5d47b44714df1e039c2
+    RawGuidValue: 00000000000000000000000000000000
   enemyObjectiveType: tomato
 --- !u!54 &8811991411979795774
 Rigidbody:
@@ -713,7 +713,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 0.0058458, y: 0.0058458, z: 0.0058458}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7244214646366215087}

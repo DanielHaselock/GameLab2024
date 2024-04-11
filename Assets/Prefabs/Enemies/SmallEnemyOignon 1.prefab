@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 5931747157997634221}
   - component: {fileID: 4133423573713835193}
   m_Layer: 0
-  m_Name: EnemyOignon
+  m_Name: SmallEnemyOignon 1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -226,7 +226,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 2937043473
+  SortKey: 713789499
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -276,7 +276,7 @@ MonoBehaviour:
   maxNextWanderPosDist: 5
   myState: 0
   enemyPickupDummy:
-    RawGuidValue: f67e4d1b9ae9b8546a0204d81cb9e54b
+    RawGuidValue: 00000000000000000000000000000000
 --- !u!54 &829520058137553155
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -747,7 +747,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 117a369fff712734f8b3cdf5a48e330a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 15
+  maxHealth: 10
   _Health: 0
   _CanDeplete: 1
   _HealthDepleted: 0

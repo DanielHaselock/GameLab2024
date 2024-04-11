@@ -26,7 +26,7 @@ public class BossBurger : Enemy
         canAttack = true;
         //Go crazy        
         lastPosition = transform.position;
-        animator.CrossFade("Idle", .25f);
+        animator.CrossFade("Rise", .25f);
         healthComponent.OnDamaged += OnAttacked;
         healthComponent.OnHealthDepleted += KillMyself;
 
@@ -76,20 +76,21 @@ public class BossBurger : Enemy
                 navMeshAgent.destination = _targetPlayer.transform.position;
                 if (_targetPlayer && canAttack && !stunned)
                 {
-                    if (Random.Range(1, 100) > 50)
-                    {
-                        if (Random.Range(1, 100) > 50)
-                            StartCoroutine(SummoningRoar());
-                        else
-                            StartCoroutine(SummonWalls());
-                    }
+                    
                     //Melee Attacks
-                        if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= attackRange)
+                    if (Vector3.Distance(transform.position, _targetPlayer.transform.position) <= attackRange)
                     {
                         if (Random.Range(1,100) > 50)
                             StartCoroutine(WaitAndAttack());
                         else
                             StartCoroutine(WaitAndAttackLong());
+                    }
+                    else if (Random.Range(1, 100) > 80)
+                    {
+                        if (Random.Range(1, 100) > 60)
+                            StartCoroutine(SummoningRoar());
+                        else
+                            StartCoroutine(SummonWalls());
                     }
                 }
             }
@@ -103,7 +104,8 @@ public class BossBurger : Enemy
                 idle = false;
             else
                 idle = true;
-            if (idle != prevIdle && !attacking)
+            AnimatorStateInfo currentState = animator.GetCurrentAnimatorStateInfo(0);
+            if (idle != prevIdle && !attacking && !currentState.IsName("Rise"))
             {
                 if (idle)
                 {
@@ -202,7 +204,7 @@ public class BossBurger : Enemy
         canAttack = false;
         attacking = true;
         navMeshAgent.speed = 0;
-        animator.CrossFade("AttackLong", .1f);
+        animator.CrossFade("Roar", .1f);
         //attack windup
         yield return new WaitForSeconds(.8f);
         if (stunned)
@@ -217,12 +219,14 @@ public class BossBurger : Enemy
             Vector3 summonPosition = new Vector3(Random.Range(transform.position.x - (i + 2), transform.position.x + (i + 2)), transform.position.y, Random.Range(transform.position.z - (i + 2), transform.position.z + (i + 2)));
             if (Random.Range(1, 100) > 50)
             {
-                enemy = Instantiate(summonBellPepper, summonPosition, Quaternion.identity);
+                var no = Runner.Spawn(summonBellPepper, summonPosition, Quaternion.identity);
+                enemy = no.gameObject;
                 enemy.GetComponent<EnemyPepper>().myState = EnemyPepper.PepperState.Aggressive;
             }
             else
             {
-                enemy = Instantiate(summonTomato, summonPosition, Quaternion.identity);
+                var no = Runner.Spawn(summonTomato, summonPosition, Quaternion.identity);
+                enemy = no.gameObject;
             }
 
         }
@@ -240,7 +244,7 @@ public class BossBurger : Enemy
         canAttack = false;
         attacking = true;
         navMeshAgent.speed = 0;
-        animator.CrossFade("AttackLong", .1f);
+        animator.CrossFade("Jump", .1f);
         //attack windup
         yield return new WaitForSeconds(.8f);
         if (stunned)
