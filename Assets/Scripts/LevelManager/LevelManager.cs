@@ -46,6 +46,7 @@ public static class LevelManager
     {
         var objectivePath = LevelDataPath;
         var lvlData = Resources.Load<LevelData>(objectivePath);
+        _data = lvlData;
         if (lvlData == null)
         {
             Objectives = new List<ObjectiveData>();
@@ -62,6 +63,7 @@ public static class LevelManager
     public static void LoadLevelObjectivesFrom(string path)
     {
         var lvlData = Resources.Load<LevelData>(path);
+        _data = lvlData;
         if (lvlData == null)
         {
             Objectives = new List<ObjectiveData>();

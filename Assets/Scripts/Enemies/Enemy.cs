@@ -118,16 +118,35 @@ public class Enemy : NetworkBehaviour
     }
     IEnumerator Stun()
     {
-        Debug.Log("STUN!!");
-        canAttack = false;
-        navMeshAgent.speed = 0;
-        animator.CrossFade("Hit", .01f);
-        stunned = true;
-        yield return new WaitForSecondsRealtime(.5f);
-        animator.CrossFade("Idle", .25f);
-        yield return new WaitForSecondsRealtime(1.5f);
-        stunned = false;
-        navMeshAgent.speed = speed;
-        canAttack = true;
+        if (!name.Contains("Boss"))
+        {
+            Debug.Log("STUN!!");
+            canAttack = false;
+            navMeshAgent.speed = 0;
+
+            animator.CrossFade("Hit", .01f);
+            stunned = true;
+            yield return new WaitForSecondsRealtime(.5f);
+            animator.CrossFade("Idle", .25f);
+            yield return new WaitForSecondsRealtime(1.5f);
+            stunned = false;
+
+            navMeshAgent.speed = speed;
+            canAttack = true;
+        }
+        else if (!attacking)
+        {
+            Debug.Log("STUN!!");
+            navMeshAgent.speed = 0;
+
+            animator.CrossFade("Hit", .01f);
+            stunned = true;
+            yield return new WaitForSecondsRealtime(.5f);
+            animator.CrossFade("Idle", .25f);
+            yield return new WaitForSecondsRealtime(1.5f);
+            stunned = false;
+
+            navMeshAgent.speed = speed;
+        }
     }
 }

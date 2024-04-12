@@ -23,10 +23,13 @@ public class BossSouvlaki : Enemy
 
     protected bool rolling = false;
 
+    float yPos = 0;
+
     protected override void Start()
     {
         base.Start();
         trigger.radius = 35;
+        yPos = transform.position.y;
         canAttack = true;
         //Go crazy        
         lastPosition = transform.position;
@@ -61,6 +64,7 @@ public class BossSouvlaki : Enemy
         //UpdateMoveAndRotation(Runner.DeltaTime);
         velocity = Vector3.Distance(transform.position, lastPosition) / Runner.DeltaTime;
         lastPosition = transform.position;
+        transform.position = new Vector3(transform.position.x, yPos, transform.position.z);
 
         if (_seenPlayers.Count <= 0)
         {
@@ -77,6 +81,17 @@ public class BossSouvlaki : Enemy
         {
             if (_targetPlayer != null)
             {
+                // Calculate the direction vector from the object to the target player
+                Vector3 directionToTarget = _targetPlayer.transform.position - transform.position;
+
+                // Rotate the direction vector by 90 degrees to the left
+                Vector3 rotatedDirection = Quaternion.Euler(0, 105, 0) * directionToTarget;
+
+                // Calculate the desired rotation based on the rotated direction
+                Quaternion desiredRotation = Quaternion.LookRotation(rotatedDirection, Vector3.up);
+
+                // Smoothly rotate towards the final rotation
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, desiredRotation, 90 * Time.deltaTime);
                 //navMeshAgent.destination = _targetPlayer.transform.position;
                 if (_targetPlayer && canAttack && !stunned)
                 {
@@ -88,7 +103,7 @@ public class BossSouvlaki : Enemy
                     }
                     else if (Random.Range(1, 100) > 30)
                     {
-                        if (Random.Range(1, 100) > 95)//change this when log is done
+                        if (Random.Range(1, 100) > 75)
                             StartCoroutine(SummoningRoar());
                         else
                         {
@@ -165,6 +180,7 @@ public class BossSouvlaki : Enemy
         if (stunned)
         {
             attacking = false;
+            yield return new WaitForSeconds(.17f);
             canAttack = true;
             yield break;
         }
@@ -220,7 +236,7 @@ public class BossSouvlaki : Enemy
         attacking = false;
         navMeshAgent.speed = speed;
         //attack delay
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(1.5f);
         canAttack = true;
     }
 
@@ -232,20 +248,6 @@ public class BossSouvlaki : Enemy
         navMeshAgent.speed = 0;
         animator.CrossFade("Roll", .1f);
         //attack windup
-        // Calculate the direction vector from the object to the target player
-        Vector3 directionToTarget = _targetPlayer.transform.position - transform.position;
-
-        // Rotate the direction vector by 90 degrees to the left
-        Vector3 rotatedDirection = Quaternion.Euler(0, -90, 0) * directionToTarget;
-
-        // Calculate the desired rotation based on the rotated direction
-        Quaternion desiredRotation = Quaternion.LookRotation(rotatedDirection, Vector3.up);
-
-        // Rotate an additional 90 degrees past the desired rotation
-        Quaternion finalRotation = desiredRotation * Quaternion.Euler(0, 90, 0);
-
-        // Smoothly rotate towards the final rotation
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, finalRotation, 90 * Time.deltaTime);
         yield return new WaitForSeconds(.7f);
         
         rolling = true;
@@ -271,7 +273,7 @@ public class BossSouvlaki : Enemy
         attacking = false;
         navMeshAgent.speed = speed;
         //attack delay
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1f);
         canAttack = true;
     }
     protected override void OnTriggerEnter(Collider other)
@@ -294,6 +296,7 @@ public class BossSouvlaki : Enemy
         {
             animator.CrossFade("Die", .1f);
             await Task.Delay(1500);
+            GameManager.instance.UpdateScore(0, "boss");
             Runner.Despawn(GetComponent<NetworkObject>());
         }
     }

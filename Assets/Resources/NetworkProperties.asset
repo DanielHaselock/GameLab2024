@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NetworkProperties
   m_EditorClassIdentifier: 
   MaxPlayers: 1
-  ShowCutscene: 1
+  ShowCutscene: 0
   PlayerPrefabs:
   - RawGuidValue: 84bb177b727c34779a356fe8958bbf63
   - RawGuidValue: 84bb177b727c34779a356fe8958bbf63

@@ -15,5 +15,5 @@ MonoBehaviour:
   objectiveText: Defeat and Collect 1 Bell Pepper
   key: bellpepper
   value: 0
-  targetValue: 3
+  targetValue: 1
   operationType: 0
