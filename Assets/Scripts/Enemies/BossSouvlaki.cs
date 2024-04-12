@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Fusion;
 using GameLoop;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,6 +11,7 @@ public class BossSouvlaki : Enemy
 {
     [SerializeField] private GameObject summonOnion;
     [SerializeField] private GameObject summonBellPepper;
+    [SerializeField] private CapsuleCollider trigger;
 
     float delta = 0;
     int targetTime = 2;
@@ -24,6 +26,7 @@ public class BossSouvlaki : Enemy
     protected override void Start()
     {
         base.Start();
+        trigger.radius = 35;
         canAttack = true;
         //Go crazy        
         lastPosition = transform.position;
@@ -32,7 +35,7 @@ public class BossSouvlaki : Enemy
         healthComponent.OnHealthDepleted += KillMyself;
 
         navMeshAgent.updatePosition = false;
-        //navMeshAgent.updateRotation = false;
+        navMeshAgent.updateRotation = false;
     }
 
     private void OnDestroy()
@@ -89,7 +92,8 @@ public class BossSouvlaki : Enemy
                             StartCoroutine(SummoningRoar());
                         else
                         {
-                            //Roll log
+                            
+                            StartCoroutine(RollAttack());
                         }
                     }
                 }
@@ -201,16 +205,11 @@ public class BossSouvlaki : Enemy
         //attack windup
         yield return new WaitForSeconds(.7f);
         rolling = true;
-        if (stunned)
-        {
-            attacking = false;
-            canAttack = true;
-            yield break;
-        }
-
+        trigger.radius = 2;
         //activate spin collider or something
         yield return new WaitForSeconds(2.08f);
         rolling = false;
+        trigger.radius = 35;
         //deactivate colliders n stuff
 
 
@@ -224,20 +223,69 @@ public class BossSouvlaki : Enemy
         yield return new WaitForSeconds(4f);
         canAttack = true;
     }
+
+    IEnumerator RollAttack()
+    {
+        //deactivate health collider so cant be hit
+        canAttack = false;
+        attacking = true;
+        navMeshAgent.speed = 0;
+        animator.CrossFade("Roll", .1f);
+        //attack windup
+        // Calculate the direction vector from the object to the target player
+        Vector3 directionToTarget = _targetPlayer.transform.position - transform.position;
+
+        // Rotate the direction vector by 90 degrees to the left
+        Vector3 rotatedDirection = Quaternion.Euler(0, -90, 0) * directionToTarget;
+
+        // Calculate the desired rotation based on the rotated direction
+        Quaternion desiredRotation = Quaternion.LookRotation(rotatedDirection, Vector3.up);
+
+        // Rotate an additional 90 degrees past the desired rotation
+        Quaternion finalRotation = desiredRotation * Quaternion.Euler(0, 90, 0);
+
+        // Smoothly rotate towards the final rotation
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, finalRotation, 90 * Time.deltaTime);
+        yield return new WaitForSeconds(.7f);
+        
+        rolling = true;
+        trigger.radius = 2;
+        float startTime = Time.time;
+        float duration = 1.8333f;
+        while (Time.time - startTime < duration)
+        {
+            GetComponent<Rigidbody>().AddForce(transform.right * -.5f, ForceMode.Impulse);
+
+            yield return null;
+        }
+
+        rolling = false;
+        trigger.radius = 35;
+        //deactivate colliders n stuff
+
+
+        //attack recovery
+        yield return new WaitForSeconds(.75f);
+        //reactivate health collider so cant be hit
+        animator.CrossFade("Idle", .5f);
+        attacking = false;
+        navMeshAgent.speed = speed;
+        //attack delay
+        yield return new WaitForSeconds(3f);
+        canAttack = true;
+    }
     protected override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
+        if (rolling && other.tag.Equals("Player"))
+        {
+            
+            damageComponent.InitiateAttack("Player");
+        }
     }
     protected override void OnTriggerExit(Collider other)
     {
         base.OnTriggerExit(other);
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (rolling && collision.gameObject.tag.Equals("Player"))
-        {
-            damageComponent.InitiateAttack("Player");
-        }
     }
 
     private async void KillMyself(int damager)

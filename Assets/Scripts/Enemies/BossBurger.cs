@@ -187,7 +187,7 @@ public class BossBurger : Enemy
             canAttack = true;
             yield break;
         }
-        damageComponent.DefaultAttackDamage = 5;
+        damageComponent.DefaultAttackDamage = 3;
         damageComponent.InitiateAttack("Player");
         damageComponent.DefaultAttackDamage = 2;
         //attack recovery
