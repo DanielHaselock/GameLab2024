@@ -7,7 +7,7 @@ namespace GameLoop
 {
     public class BossSpawner : MonoBehaviour
     {
-        public Vector3 SpawnPos => transform.position + new Vector3(0,1,0);
+        public Vector3 SpawnPos => transform.position;
         public Quaternion SpawnRotation => transform.rotation;
         
         private void OnDrawGizmos()

@@ -16,5 +16,11 @@ namespace GameLoop
         {
             GameManager.instance.UpdateGameState(GameManager.GameState.Lost);
         }
+        
+        [Button("Test Boss Spawn")]
+        private void TestBossSpawn()
+        {
+            GameManager.instance.UpdateGameState(GameManager.GameState.SpawnBoss);
+        }
     }
 }

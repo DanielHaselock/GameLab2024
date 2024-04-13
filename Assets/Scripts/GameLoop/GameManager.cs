@@ -25,6 +25,7 @@ namespace GameLoop
             MainMenu,
             Cutscene,
             ActiveLevel,
+            SpawnBoss,
             Lost,
             Win
         }
@@ -202,6 +203,9 @@ namespace GameLoop
                     break;
                 case GameState.ActiveLevel:
                     StartLevel();
+                    break;
+                case GameState.SpawnBoss:
+                    SpawnBoss();
                     break;
                 case GameState.Win:
                     OnGameWon();
@@ -435,7 +439,7 @@ namespace GameLoop
             var pos = Vector3.zero;
             var rot = Quaternion.identity;
             var spawner = FindObjectOfType<BossSpawner>();
-            if (spawner == null)
+            if (spawner != null)
             {
                 pos = spawner.SpawnPos;
                 rot = spawner.SpawnRotation;
@@ -491,7 +495,7 @@ namespace GameLoop
                 AudioManager.Instance.PlaySFX(SFXConstants.ObjectiveComplete, syncNetwork:true);
                 objectivesMap.Remove(key);
             }
-
+            
             TryUpdateGameState();
             UpdateGameUI();
         }
@@ -506,7 +510,7 @@ namespace GameLoop
                 return;
             if (objectivesMap.Count <= 0)
             {
-                SpawnBoss();
+                UpdateGameState(GameState.SpawnBoss);
             }
         }
         
