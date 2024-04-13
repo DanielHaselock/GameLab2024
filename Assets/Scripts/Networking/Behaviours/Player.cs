@@ -17,6 +17,7 @@ public class Player : NetworkBehaviour
     [SerializeField] private float jumpForce = 15;
     [SerializeField] private float stunDur = 0.5f;
     [SerializeField] private float attackDelay=0.25f;
+    [SerializeField] private float attackChargeDur = 1f;
     
     private NetworkObject _no;
     private CharacterController _stdController;
@@ -33,6 +34,9 @@ public class Player : NetworkBehaviour
     private Coroutine _stunRoutine;
     private Tick _initial;
     private float _nextAttackTime = 0;
+
+    private bool _charging;
+    private float _charge;
     
     [Networked] private bool Stunned { get; set; } = false;
 
@@ -105,7 +109,7 @@ public class Player : NetworkBehaviour
                 return;
             
             HandleInteract(data);
-            HandleAttack(data);
+            HandleChargedAttack(data);
             HandleRevive(data, Runner.DeltaTime);
         }
         
@@ -202,31 +206,38 @@ public class Player : NetworkBehaviour
         Debug.Log("RPC");
         _pickupHandler.InputThrow();
     }
-
-    private void HandleAttack(PlayerInputData data)
+    
+    private void HandleChargedAttack(PlayerInputData data)
     {
-        if (data.ActionChargeAttack && data.StartChargeAttack)
-        {
-            _anim.SetTrigger("ChargeAttack", true);
-        }
-
-        if (!data.Attack && !data.ChargeAttack)
-            return;
-        
         if(Time.time < _nextAttackTime)
             return;
-        _nextAttackTime = Time.time + attackDelay;
         
-        _anim.SetTrigger("Attack", true);
-        AudioManager.Instance.PlaySFX(SFXConstants.PlayerAttack);
-        
-        if (Runner.IsServer)
+        if (data.ChargeAttack)
         {
-            AudioManager.Instance.PlaySFX3D(SFXConstants.PlayerAttack, transform.position);
-            if(data.ChargeAttack)
-                _damager.InitiateAttack(true);
-            else
-                _damager.InitiateAttack(false);
+            if(!_charging)
+                _anim.Animator.SetBool("ChargeAttack", true);
+
+            data.Attack = false;
+            _charging = true;
+            _charge += Runner.DeltaTime / attackChargeDur;
+            _charge = Mathf.Clamp01(_charge);
+        }
+
+        if (!data.ChargeAttack && _charging)
+        {
+            _anim.Animator.SetBool("ChargeAttack", false);
+            _charging = false;
+            _nextAttackTime = Time.time + attackDelay;
+            if (Runner.IsServer)
+            {
+                AudioManager.Instance.PlaySFX3D(SFXConstants.PlayerAttack, transform.position);
+                bool charged = _charge >= 1;
+                _damager.InitiateAttack(charged);
+                if (charged)
+                    Debug.Log("Charged Attack");
+                else
+                    Debug.Log("Attack");
+            }
         }
     }
 

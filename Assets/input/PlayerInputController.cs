@@ -35,6 +35,13 @@ public class PlayerInputController : MonoBehaviour
     private void Start()
     {
     }
+
+    private void Update()
+    {
+        bool pressed = playerInput["ChargeAttack"].IsPressed();
+        OnChargeAttack.Raise(this, pressed);
+    }
+
     public void OnSpawned()
     {
         playerInput.Enable();
@@ -97,21 +104,7 @@ public class PlayerInputController : MonoBehaviour
 
     public void ChargeAttack(InputAction.CallbackContext context) //Charged --> requires Hold interaction in IA
     {
-        if (context.performed)
-        {
-            OnStartChargeAttack.Raise(this, true);
-            CanChargeAttack = true;
-        }
-
-        if(context.canceled)
-        {
-            OnStartChargeAttack.Raise(this, false);
-            if (CanChargeAttack)
-            {
-                CanChargeAttack = false;
-                OnChargeAttack.Raise(this, true);
-            }
-        }
+       
     }
 
     public void Pause(InputAction.CallbackContext context)
