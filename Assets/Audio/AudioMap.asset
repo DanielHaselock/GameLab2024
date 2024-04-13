@@ -54,5 +54,8 @@ MonoBehaviour:
     - Key: objective_complete
       Value:
       - {fileID: 8300000, guid: bc222cb31c57240b389d639d255d6098, type: 3}
+    - Key: charge
+      Value:
+      - {fileID: 8300000, guid: 1027569d6216efa458deac9d09869f97, type: 3}
   InitialBackgroundMusic: mainmenu
   InitialAmbiance: 

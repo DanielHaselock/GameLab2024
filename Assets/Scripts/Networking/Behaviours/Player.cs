@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Audio;
 using Fusion;
@@ -18,6 +19,7 @@ public class Player : NetworkBehaviour
     [SerializeField] private float stunDur = 0.5f;
     [SerializeField] private float attackDelay=0.25f;
     [SerializeField] private float attackChargeDur = 1f;
+    [SerializeField] private GameObject chargedAttackGraphic;
     
     private NetworkObject _no;
     private CharacterController _stdController;
@@ -35,9 +37,9 @@ public class Player : NetworkBehaviour
     private Tick _initial;
     private float _nextAttackTime = 0;
 
-    private bool _charging;
-    private float _charge;
-    
+    private bool _charging { get; set; }
+    [Networked] private float _charge { get; set; }
+
     [Networked] private bool Stunned { get; set; } = false;
 
     public bool PlayerDowned => _health.HealthDepleted;
@@ -114,7 +116,21 @@ public class Player : NetworkBehaviour
         }
         
     }
-    
+
+    private void Update()
+    {
+        if (chargedAttackGraphic.activeSelf && _charge < 1)
+        {
+            chargedAttackGraphic.SetActive(false);
+        }
+        else if (!chargedAttackGraphic.activeSelf && _charge >= 1)
+        {
+            chargedAttackGraphic.SetActive(true);
+            if(_no.HasInputAuthority)
+                AudioManager.Instance.PlaySFX(SFXConstants.PlayerAttackCharge);
+        }
+    }
+
     private void Move(Vector3 moveDir, bool jump)
     {
         float jumpImpulse = default;
@@ -227,6 +243,7 @@ public class Player : NetworkBehaviour
         {
             _anim.Animator.SetBool("ChargeAttack", false);
             _charging = false;
+            _charge = 0;
             _nextAttackTime = Time.time + attackDelay;
             if (Runner.IsServer)
             {

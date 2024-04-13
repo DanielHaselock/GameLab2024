@@ -3,6 +3,7 @@ namespace Audio
     public static class SFXConstants
     {
         public static string PlayerAttack = "attack";
+        public static string PlayerAttackCharge = "charge";
         public static string Hit = "hit";
         public static string Jump = "jump";
         public static string Pickup = "pickup";
