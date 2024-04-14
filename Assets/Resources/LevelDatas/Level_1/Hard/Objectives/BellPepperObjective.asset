@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70af13f193372644d8ade8e04a6ab2f0, type: 3}
   m_Name: BellPepperObjective
   m_EditorClassIdentifier: 
-  objectiveText: Defeat and Collect 1 Bell Pepper
+  objectiveText: Defeat and Collect 4 Bell Peppers
   key: bellpepper
   value: 0
-  targetValue: 1
+  targetValue: 4
   operationType: 0

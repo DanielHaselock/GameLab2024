@@ -17,4 +17,4 @@ MonoBehaviour:
   BossToSpawn:
     RawGuidValue: 2c9fd5401e030074689393afd3d2c9ce
   SceneIndx: 1
-  LevelTimeInSeconds: 180
+  LevelTimeInSeconds: 360
