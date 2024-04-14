@@ -35,6 +35,10 @@ namespace Accessibility
             _type = type;
             OnAccessibilitySettingChanged?.Invoke();
             PlayerPrefs.SetInt(KEY, (int)_type);
+
+            if(ColorBlindAssist.Instance == null)
+                return;
+
             if (type != AccessibilityType.ColorBlindAssist)
                 ColorBlindAssist.Instance.Type = ColorblindTypes.Normal;
         }

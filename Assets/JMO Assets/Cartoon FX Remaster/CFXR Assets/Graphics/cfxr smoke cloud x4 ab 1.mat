@@ -7,19 +7,18 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: cfxr smoke cloud x4 ab
+  m_Name: cfxr smoke cloud x4 ab 1
   m_Shader: {fileID: -6465566751694194690, guid: 1a29b4d27eb8b04479ef89c00dea533d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ALPHABLEND_ON
-  - _CFXR_DISSOLVE
+  - _ALPHATEST_ON
+  - _CFXR_ADDITIVE
   - _CFXR_DITHERED_SHADOWS_ON
-  - _FADING_ON
+  - _CFXR_OVERLAYTEX_1X
   m_InvalidKeywords:
   - _
   - _CFXR_OVERLAYBLEND_RGBA
-  - _CFXR_OVERLAYTEX_OFF
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -65,16 +64,16 @@ Material:
     m_Ints: []
     m_Floats:
     - _BacklightTransmittance: 1
-    - _BlendingType: 0
+    - _BlendingType: 3
     - _BumpScale: 1
     - _CFXR_DITHERED_SHADOWS: 1
     - _CFXR_OVERLAYBLEND: 0
-    - _CFXR_OVERLAYTEX: 0
-    - _Cutoff: 0.596
+    - _CFXR_OVERLAYTEX: 1
+    - _Cutoff: 0.526
     - _DebugDissolveTime: 0
     - _DirLightScreenAtten: 1
     - _DirectLightingRamp: 1
-    - _DissolveSmooth: 0.15
+    - _DissolveSmooth: 0.0001
     - _Distort: 0.1
     - _DoubleDissolve: 0
     - _DstBlend: 10
@@ -95,9 +94,9 @@ Material:
     - _SoftParticlesFadeDistanceNear: 0
     - _SrcBlend: 5
     - _UVDistortionAdd: 0
-    - _UseAlphaClip: 0
+    - _UseAlphaClip: 1
     - _UseBackLighting: 0
-    - _UseDissolve: 1
+    - _UseDissolve: 0
     - _UseDissolveOffsetUV: 0
     - _UseEF: 0
     - _UseEmission: 0
@@ -107,11 +106,11 @@ Material:
     - _UseLighting: 0
     - _UseLightingWorldPosOffset: 0
     - _UseNormalMap: 0
-    - _UseSP: 1
+    - _UseSP: 0
     - _UseSecondColor: 0
     - _UseUV2Distortion: 0
     - _UseUVDistortion: 0
-    - _ZWrite: 0
+    - _ZWrite: 1
     m_Colors:
     - _Color: {r: 2, g: 2, b: 2, a: 1}
     - _DissolveScroll: {r: 0, g: 0, b: 0, a: 0}

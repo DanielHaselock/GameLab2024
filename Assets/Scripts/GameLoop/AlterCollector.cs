@@ -18,6 +18,21 @@ namespace GameLoop
         [SerializeField] private GameObject collectionEffectFx;
         [SerializeField] private GameObject rejectionEffectFx;
         
+        //-------------------------------
+        [Header("Visual References")] 
+        [SerializeField] private GameObject alterCamClose;
+        [SerializeField] private GameObject alterCamFar;
+        
+        [SerializeField] private GameObject alterGraphic;
+        [SerializeField] private GameObject spawnFx;
+        [SerializeField] private Transform spawnFxTrf;
+        
+        public GameObject AlterCamClose => alterCamClose;
+        public GameObject AlterCamFar => alterCamFar;
+        public GameObject AlterGraphic => alterGraphic;
+        public GameObject SpawnEffect => spawnFx;
+        public Transform SpawnFXTRF => spawnFxTrf;
+        
         private void OnTriggerEnter(Collider other)
         {
             if (Runner == null)

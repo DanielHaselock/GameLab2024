@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Audio;
+using Cinemachine;
 using UnityEngine;
 using Fusion;
 using Fusion.Addons.Physics;
@@ -429,7 +430,47 @@ namespace GameLoop
             UpdateGameUI();
         }
 
+        
+        
+        //-----------------------------------------------------------
+        // Boss Spawn
+        //-----------------------------------------------------------
         private void SpawnBoss()
+        {
+            RPC_ShowBossSpawnVisual();
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_ShowBossSpawnVisual()
+        {
+            AlterCollector collectible = FindObjectOfType<AlterCollector>();
+            var alterCamObjC = collectible.AlterCamClose;
+            var alterCamObjF = collectible.AlterCamFar;
+            var alterGraphic = collectible.AlterGraphic;
+            Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend = new CinemachineBlendDefinition()
+            {
+                m_Style = CinemachineBlendDefinition.Style.Cut
+            };
+            
+            var wiggler = alterGraphic.GetComponentInChildren<Wiggle>();
+            alterCamObjC.SetActive(true);
+            alterCamObjF.SetActive(false);
+            
+            wiggler.enabled = true;
+            StartCoroutine(BossSpawnCoroutine());
+        }
+
+        IEnumerator BossSpawnCoroutine()
+        {
+            yield return new WaitForSeconds(3);
+            if (!Runner.IsServer)
+                yield break;
+            SpawnBossInstanceOnServer();
+            yield return new WaitForSeconds(3);
+            RPC_SpawnExplosionAndHideAlterGraphic();
+        }
+        
+        private void SpawnBossInstanceOnServer()
         {
             if (LevelManager.BossToSpawn.Equals(default))
             {
@@ -445,8 +486,45 @@ namespace GameLoop
                 rot = spawner.SpawnRotation;
             }
             Runner.Spawn(LevelManager.BossToSpawn, pos, rot);
+            RPC_SpawnFX();
         }
 
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_SpawnFX()
+        {
+            AlterCollector collectible = FindObjectOfType<AlterCollector>();
+            Instantiate(collectible.SpawnEffect, collectible.SpawnFXTRF.position, Quaternion.identity);
+            Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend = new CinemachineBlendDefinition()
+            {
+                m_Style = CinemachineBlendDefinition.Style.EaseInOut,
+                m_Time = 0.5f,
+            };
+            var alterGraphic = collectible.AlterGraphic;
+            var alterCamClose = collectible.AlterCamClose;
+            var alterCamFar = collectible.AlterCamFar;
+            
+            alterCamClose.SetActive(false);
+            alterCamFar.SetActive(true);
+            alterGraphic.gameObject.SetActive(false);
+        }
+        
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_SpawnExplosionAndHideAlterGraphic()
+        {
+            Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend = new CinemachineBlendDefinition()
+            {
+                m_Style = CinemachineBlendDefinition.Style.Cut
+            };
+            AlterCollector collectible = FindObjectOfType<AlterCollector>();
+            collectible.transform.parent.gameObject.SetActive(false);
+        }
+        
+        //-----------------------------------------------------------
+        // Boss Spawn End
+        //-----------------------------------------------------------
+        
+        
+        
         public void UpdateScore(int player, string enemyKey)
         {
             if(LevelManager.ScoreMap.ContainsKey(enemyKey))
