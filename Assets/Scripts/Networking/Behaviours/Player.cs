@@ -60,7 +60,7 @@ public class Player : NetworkBehaviour
         _health.OnDamaged += AnimateHit;
     }
 
-    private void AnimateHit(int damager)
+    private void AnimateHit(int damager, bool charged)
     {
         if(_stunRoutine != null)
             return;

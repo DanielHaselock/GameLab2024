@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 6850433671624559809}
   - component: {fileID: 5725269121673030562}
   - component: {fileID: 355808878472953947}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: ReviveIconFill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -950,7 +950,7 @@ GameObject:
   - component: {fileID: 3120968068916862500}
   - component: {fileID: 108503998913660150}
   - component: {fileID: 1502457865588807085}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: ReviveCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1065,7 +1065,7 @@ GameObject:
   - component: {fileID: 8331579270712992278}
   - component: {fileID: 2449837108031793436}
   - component: {fileID: 4202934311757659794}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: PlayerGUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1180,7 +1180,7 @@ GameObject:
   - component: {fileID: 7243786377803130709}
   - component: {fileID: 3534190980565119369}
   - component: {fileID: 701711970394196995}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: ReviveIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1290,7 +1290,7 @@ GameObject:
   - component: {fileID: 6691460030596694801}
   - component: {fileID: 6571968155445568278}
   - component: {fileID: 8259099801010732274}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1422,7 +1422,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3204518809343905873}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: ReviveVisuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1570,7 +1570,7 @@ GameObject:
   - component: {fileID: 5722213439247912079}
   - component: {fileID: 4983855201932273660}
   - component: {fileID: 5884206923787670192}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1785,7 +1785,7 @@ GameObject:
   - component: {fileID: 4424530119000078806}
   - component: {fileID: 7987526114892780848}
   - component: {fileID: 249512383377163881}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: HealFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6704,7 +6704,7 @@ GameObject:
   - component: {fileID: 7479036724302369756}
   - component: {fileID: 3405579898508365451}
   - component: {fileID: 2531315420580184027}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}

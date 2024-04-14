@@ -56,9 +56,9 @@ public class DamageComponent : NetworkBehaviour
         
         Debug.Log($"Dealing Damage {_damageToDeal}");
         if(charge)
-            other.UpdateHealth(-_chargedamageToDeal, _damagerId);
+            other.UpdateHealth(-_chargedamageToDeal, _damagerId, charge);
         else
-            other.UpdateHealth(-_damageToDeal, _damagerId);
+            other.UpdateHealth(-_damageToDeal, _damagerId, charge);
 
         var rb = other.GetComponentInParent<Rigidbody>();
         if (rb != null)

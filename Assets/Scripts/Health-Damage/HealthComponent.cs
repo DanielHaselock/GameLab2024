@@ -20,7 +20,7 @@ public class HealthComponent : NetworkBehaviour
     private ChangeDetector _change;
 
     public Action<int> OnHealthDepleted;
-    public Action<int> OnDamaged;
+    public Action<int, bool> OnDamaged;
 
     private HitEffects _hitEffects;
     private float _myLocalHealth;
@@ -62,7 +62,7 @@ public class HealthComponent : NetworkBehaviour
         IsInitialised = true;
     }
     
-    public void UpdateHealth(float Value, int damager)
+    public void UpdateHealth(float Value, int damager, bool charged)
     {
         if (!Runner.IsServer)
             return;
@@ -72,7 +72,7 @@ public class HealthComponent : NetworkBehaviour
         if (Value < 0)
         {
             Debug.Log("Ow!!"); 
-            OnDamaged?.Invoke(damager);
+            OnDamaged?.Invoke(damager, charged);
         }
 
         Health += Value;

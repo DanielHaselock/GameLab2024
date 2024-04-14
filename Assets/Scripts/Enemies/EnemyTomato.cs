@@ -39,7 +39,7 @@ public class EnemyTomato : Enemy
         healthComponent.OnDamaged -= OnAttacked;
     }
 
-    private void OnAttacked(int damager)
+    private void OnAttacked(int damager, bool charged)
     {
         OnAttack();
     }
