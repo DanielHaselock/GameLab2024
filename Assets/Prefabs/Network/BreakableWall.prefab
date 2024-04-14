@@ -188,6 +188,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 7e5c26846bfb343e3988b9d55b0f8082, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f4c065b25454e41499d9578c5c5a8b78, type: 2}
     - target: {fileID: 919132149155446097, guid: 7e5c26846bfb343e3988b9d55b0f8082, type: 3}
       propertyPath: m_Name
       value: CrackedWall
@@ -291,6 +295,22 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -5383855691196786095, guid: a3c52bfc8cecb4503b30208db06db65e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f4c065b25454e41499d9578c5c5a8b78, type: 2}
+    - target: {fileID: -2937328706024197032, guid: a3c52bfc8cecb4503b30208db06db65e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f4c065b25454e41499d9578c5c5a8b78, type: 2}
+    - target: {fileID: -2108810978346006523, guid: a3c52bfc8cecb4503b30208db06db65e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f4c065b25454e41499d9578c5c5a8b78, type: 2}
+    - target: {fileID: -52993971047898617, guid: a3c52bfc8cecb4503b30208db06db65e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f4c065b25454e41499d9578c5c5a8b78, type: 2}
     - target: {fileID: 919132149155446097, guid: a3c52bfc8cecb4503b30208db06db65e, type: 3}
       propertyPath: m_Name
       value: BrokenWall
@@ -303,6 +323,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1943316725068974786, guid: a3c52bfc8cecb4503b30208db06db65e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f4c065b25454e41499d9578c5c5a8b78, type: 2}
     - target: {fileID: 5162873927842524427, guid: a3c52bfc8cecb4503b30208db06db65e, type: 3}
       propertyPath: m_IsActive
       value: 1
