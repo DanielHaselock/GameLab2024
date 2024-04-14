@@ -7,7 +7,7 @@ public class startClicked : MonoBehaviour
     startMovement startScript;
     public GameObject goToSettingsButton;
     public GameObject creditsButton;
-    public TMP_Text gameName;
+    public GameObject gameName;
     public bool closeDoor;
     public GameObject fade;
 

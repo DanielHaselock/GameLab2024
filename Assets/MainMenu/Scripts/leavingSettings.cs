@@ -6,7 +6,7 @@ public class leavingSettings : MonoBehaviour
     public bool leavingSettingsBool;
     public float moveSpeed = 5f;
     public GameObject cam;
-    public TMP_Text gameName;
+    public GameObject gameName;
     public GameObject settings;
     public GameObject creditsButton;
     public GameObject startButton;

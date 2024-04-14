@@ -6,7 +6,7 @@ public class visitCreditsClicked : MonoBehaviour
     public GameObject visitCreditObj; 
     public GameObject settingsButton;
     visitCredits visitCredits;
-    public TMP_Text gameName;
+    public GameObject gameName;
     public GameObject startButton;
     public bool closeDoor;
     public GameObject fade;

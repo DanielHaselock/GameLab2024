@@ -7,7 +7,7 @@ public class returnMovement : MonoBehaviour
     public bool returning;
     public float moveSpeed = 5f;
     public GameObject cam;
-    public TMP_Text gameName;
+    public GameObject gameName;
     public GameObject creditsButton;
     public GameObject door;
     public GameObject startButton;
