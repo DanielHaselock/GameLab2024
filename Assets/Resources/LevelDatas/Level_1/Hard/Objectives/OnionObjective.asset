@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70af13f193372644d8ade8e04a6ab2f0, type: 3}
   m_Name: OnionObjective
   m_EditorClassIdentifier: 
-  objectiveText: Defeat and Collect 2 Onions
+  objectiveText: Defeat and Collect 4 Onions
   key: onion
   value: 0
-  targetValue: 2
+  targetValue: 4
   operationType: 0
