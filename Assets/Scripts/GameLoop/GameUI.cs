@@ -5,6 +5,7 @@ using System.Linq;
 using Audio;
 using Fusion;
 using GameLoop;
+using Networking.Behaviours;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -90,7 +91,7 @@ public class GameUI : MonoBehaviour
 
         foreach (var objectiveText in _allObjectivesTexts)
         {
-            Destroy(objectiveText.gameObject);
+            Destroy(objectiveText.gameObject.transform.parent.gameObject);
         }
         _allObjectivesTexts.Clear();
         
@@ -98,7 +99,7 @@ public class GameUI : MonoBehaviour
         {
             var go = Instantiate(objectiveBody, objectivesParent.transform);
             go.gameObject.SetActive(true);
-            var str = $"{data.Value.ObjectiveString} ({data.Value.Current.ToString()}/{data.Value.Target.ToString()})";
+            var str = $"{data.Value.Current.ToString()}/{data.Value.Target.ToString()}";
             var txt = go.GetComponentInChildren<TMP_Text>();
             _allObjectivesTexts.Add(txt);
             txt.text = str;
@@ -126,21 +127,37 @@ public class GameUI : MonoBehaviour
     {
         _nicknameMap = nameMap;
         _scoreTexts = new Dictionary<int, TMP_Text>();
+        var players = FindObjectsOfType<Player>().ToList();
+        string playerNickname = null;
+
+        foreach (var player in players)
+        {
+            if (player.HasInputAuthority)
+            {
+                playerNickname = NetworkManager.Instance.GetPlayerNickNameById(player.PlayerId);
+                break;
+            }
+        }
+
         foreach (var kv in scoreMap)
         {
-            var go = Instantiate(scoreText, scoreTextParent);
-            go.SetActive(true);
-            var text = go.GetComponentInChildren<TMP_Text>();
-            text.text = $"{nameMap[kv.Key]}: {kv.Value}";
+            TMP_Text text = null;
+            if (nameMap[kv.Key].Equals(playerNickname))
+            {
+                var go = Instantiate(scoreText, scoreTextParent);
+                go.SetActive(true);
+                text = go.GetComponentInChildren<TMP_Text>();
+                text.text = $"{kv.Value}";
+            }
             _scoreTexts.Add(kv.Key, text);
         }
     }
 
     public void UpdateScore(int id, int score)
     {
-        if(_scoreTexts == null)
+        if(_scoreTexts == null || _scoreTexts[id] == null)
             return;
-        _scoreTexts[id].text =  $"{_nicknameMap[id]}: {score}";
+        _scoreTexts[id].text =  $"{score}";
     }
 
     public void ShowLostGameUI(bool show)
