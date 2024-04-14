@@ -222,7 +222,8 @@ public class Player : NetworkBehaviour
         Debug.Log("RPC");
         _pickupHandler.InputThrow();
     }
-    
+
+    private bool _chargeAnimTriggered;
     private void HandleChargedAttack(PlayerInputData data)
     {
         if(Time.time < _nextAttackTime)
@@ -230,8 +231,11 @@ public class Player : NetworkBehaviour
         
         if (data.ChargeAttack)
         {
-            if(!_charging)
+            if (_charging && _charge > 0.15f && !_chargeAnimTriggered)
+            {
+                _chargeAnimTriggered = true;
                 _anim.Animator.SetBool("ChargeAttack", true);
+            }
 
             data.Attack = false;
             _charging = true;
@@ -241,20 +245,30 @@ public class Player : NetworkBehaviour
 
         if (!data.ChargeAttack && _charging)
         {
-            _anim.Animator.SetBool("ChargeAttack", false);
+            if(_charge > 0.15f){
+                _anim.Animator.SetBool("ChargeAttack", false);
+            }
+            else
+            {
+                _anim.SetTrigger("Attack", true);
+                _anim.Animator.SetTrigger("Attack");
+            }
+            
             _charging = false;
-            _charge = 0;
-            _nextAttackTime = Time.time + attackDelay;
+            _chargeAnimTriggered = false;
             if (Runner.IsServer)
             {
                 AudioManager.Instance.PlaySFX3D(SFXConstants.PlayerAttack, transform.position);
                 bool charged = _charge >= 1;
                 _damager.InitiateAttack(charged);
                 if (charged)
-                    Debug.Log("Charged Attack");
+                    Debug.Log($"Charged Attack {_charge}");
                 else
-                    Debug.Log("Attack");
+                    Debug.Log($"Attack {_charge}");
+               
             }
+            _nextAttackTime = Time.time + attackDelay;
+            _charge = 0;
         }
     }
 
