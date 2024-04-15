@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class GameUI : MonoBehaviour
 {
@@ -25,11 +26,8 @@ public class GameUI : MonoBehaviour
     [SerializeField] private Transform scoreTextParent;
     [SerializeField] private GameObject scoreText;
 
-    [SerializeField] private GameObject loseUI;
+    [SerializeField] private RoundOverUI roundOverUI;
     [SerializeField] private Button loseMainMenuBttn;
-    
-    [SerializeField] private GameObject winUI;
-    [SerializeField] private Button winMainMenuBttn;
     [SerializeField] private Button winNextLevelBttn;
 
     [SerializeField] private VideoPlayer cutscenePlayer;
@@ -67,11 +65,6 @@ public class GameUI : MonoBehaviour
     private void Start()
     {
         loseMainMenuBttn.onClick.AddListener(() =>
-        {
-            OnMainMenuRequested?.Invoke();
-        });
-        
-        winMainMenuBttn.onClick.AddListener(() =>
         {
             OnMainMenuRequested?.Invoke();
         });
@@ -162,13 +155,15 @@ public class GameUI : MonoBehaviour
 
     public void ShowLostGameUI(bool show)
     {
-        loseUI.SetActive(show);
+        roundOverUI.gameObject.SetActive(show);
+        roundOverUI.ShowEndScreen(false, timerBar.fillAmount);
     }
 
     public void ShowWinGameUI(bool show, bool showNextButton)
     {
         winNextLevelBttn.gameObject.SetActive(showNextButton);
-        winUI.SetActive(show);
+        roundOverUI.gameObject.SetActive(show);
+        roundOverUI.ShowEndScreen(true, timerBar.fillAmount);
     }
 
     public void PlayCutscene()
@@ -189,5 +184,37 @@ public class GameUI : MonoBehaviour
         yield return new WaitForSeconds((int)cutscenePlayer.length + 1);
         AudioManager.Instance.MuteBGAndAmbiance(false);
         OnCutsceneCompleted?.Invoke();
+    }
+
+    public string GetCurrentPlayerScore()
+    {
+        var players = FindObjectsOfType<Player>().ToList();
+        string playerNickname = null;
+        foreach (var player in players)
+        {
+            if (player.HasInputAuthority)
+            {
+                playerNickname = NetworkManager.Instance.GetPlayerNickNameById(player.PlayerId);
+                break;
+            }
+        }
+
+        if (playerNickname == null)
+            return null;
+
+        int i = -1;
+        foreach (var name in _nicknameMap)
+        {
+            if (name.Value == playerNickname)
+            {
+                i = name.Key;
+                break;
+            }
+        }
+
+        if (i == -1)
+            return null;
+
+        return _scoreTexts.GetValueOrDefault(i).text;
     }
 }
