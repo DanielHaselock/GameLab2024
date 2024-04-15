@@ -467,7 +467,7 @@ namespace GameLoop
             if (!Runner.IsServer)
                 yield break;
             SpawnBossInstanceOnServer();
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForEndOfFrame();
             RPC_UpdateMusic();
             yield return new WaitForSeconds(3);
             RPC_SpawnExplosionAndHideAlterGraphic();

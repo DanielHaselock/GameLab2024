@@ -1,4 +1,5 @@
 using System;
+using RuntimeDeveloperConsole;
 using SOHNE.Accessibility.Colorblindness;
 using UnityEngine;
 
@@ -49,6 +50,51 @@ namespace Accessibility
             OnAccessibilitySettingChanged?.Invoke();
             PlayerPrefs.SetInt(KEY, (int)_type);
             ColorBlindAssist.Instance.Type = type;
+        }
+
+        [ConsoleCommand("update high contrast accessibility", "0 - off, 1 - on")]
+        public static void Acc_HC(String[] args)
+        {
+            if(args.Length < 1)
+                return;
+            switch (args[0])
+            {
+                case "0": SetAccessibilityType(AccessibilityType.None);
+                            break;
+                case "1": SetAccessibilityType(AccessibilityType.HighContrast);
+                    break;
+            }
+        }
+        
+        [ConsoleCommand("update color filter", "0 - off, 1 - protanopia\n" +
+                                               "\t,2 - protanomaly, 3 - deuteranopia, 4 - deuteranomaly\n" +
+                                               "\t,5 - tritanopia, 6 - tritanomaly, 7 - achromatopsia\n" +
+                                               "\t,8 - Achromatomaly")]
+        public static void Acc_Cf(String[] args)
+        {
+            if(args.Length < 1)
+                return;
+            switch (args[0])
+            {
+                case "0": SetColorBlindFilterType(ColorblindTypes.Normal);
+                    break;
+                case "1": SetColorBlindFilterType(ColorblindTypes.Protanopia);
+                    break;
+                case "2": SetColorBlindFilterType(ColorblindTypes.Protanomaly);
+                    break;
+                case "3": SetColorBlindFilterType(ColorblindTypes.Deuteranopia);
+                    break;
+                case "4": SetColorBlindFilterType(ColorblindTypes.Deuteranomaly);
+                    break;
+                case "5": SetColorBlindFilterType(ColorblindTypes.Tritanopia);
+                    break;
+                case "6": SetColorBlindFilterType(ColorblindTypes.Tritanomaly);
+                    break;
+                case "7": SetColorBlindFilterType(ColorblindTypes.Achromatopsia);
+                    break;
+                case "8": SetColorBlindFilterType(ColorblindTypes.Achromatomaly);
+                    break;
+            }
         }
         
 #if UNITY_EDITOR

@@ -1,4 +1,5 @@
 ﻿using NaughtyAttributes;
+using RuntimeDeveloperConsole;
 using UnityEngine;
 
 namespace GameLoop
@@ -21,6 +22,26 @@ namespace GameLoop
         private void TestBossSpawn()
         {
             GameManager.instance.UpdateGameState(GameManager.GameState.SpawnBoss);
+        }
+
+
+        [ConsoleCommand("Update Game State", "0 - Win, 1 - Lost, 2 - SpawnBoss")]
+        public static void UGS(string[] args)
+        {
+            GameManagerTest test = FindObjectOfType<GameManagerTest>();
+            if(test == null)
+                return;
+            if(args.Length < 1)
+                return;
+            switch (args[0])
+            {
+                case "0": test.TestWin();
+                    break;
+                case "1": test.TestLose();
+                    break;
+                case "2": test.TestBossSpawn();
+                    break;
+            }
         }
     }
 }

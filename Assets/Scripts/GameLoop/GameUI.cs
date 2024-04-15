@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Audio;
-using Fusion;
 using GameLoop;
 using Networking.Behaviours;
 using TMPro;
@@ -11,7 +10,6 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityEngine.Video;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class GameUI : MonoBehaviour
 {
