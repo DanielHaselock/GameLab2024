@@ -7,6 +7,7 @@ using Interactables;
 using Networking.Behaviours;
 using Networking.Data;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utils;
 
 public class Player : NetworkBehaviour
@@ -20,6 +21,7 @@ public class Player : NetworkBehaviour
     [SerializeField] private float attackDelay=0.25f;
     [SerializeField] private float attackChargeDur = 1f;
     [SerializeField] private GameObject chargedAttackGraphic;
+    [SerializeField] private SpatialAudioController spatialAudioController;
     
     private NetworkObject _no;
     private CharacterController _stdController;
@@ -148,6 +150,15 @@ public class Player : NetworkBehaviour
             var rot = Quaternion.RotateTowards(transform.rotation, newRot, lookSpeed*Runner.DeltaTime);
             _controller.SetLookRotation(rot);
         }
+
+        if (moveDir != Vector3.zero && _controller.IsGrounded)
+        {
+            spatialAudioController.PlayFootStep();
+        }
+        else
+        {
+            spatialAudioController.StopFootStep();
+        }
         
         _controller.Move(moveDir * moveSpeed, jumpImpulse);
         _anim.Animator.SetFloat("Move", moveDir.normalized.magnitude);
@@ -258,9 +269,8 @@ public class Player : NetworkBehaviour
             _chargeAnimTriggered = false;
             if (Runner.IsServer)
             {
-                AudioManager.Instance.PlaySFX3D(SFXConstants.PlayerAttack, transform.position);
                 bool charged = _charge >= 1;
-                _damager.InitiateAttack(charged);
+                StartCoroutine(InitiateAttack(0.15f, charged));
                 if (charged)
                     Debug.Log($"Charged Attack {_charge}");
                 else
@@ -272,6 +282,13 @@ public class Player : NetworkBehaviour
         }
     }
 
+    IEnumerator InitiateAttack(float attackDelay, bool charged)
+    {
+        yield return new WaitForSeconds(attackDelay);
+        AudioManager.Instance.PlaySFX3D(SFXConstants.PlayerAttack, transform.position);
+        _damager.InitiateAttack(charged);
+    }
+    
     private void HandleRevive(PlayerInputData data, float deltaTime)
     {
         _reviver.TryReviveOther(data.Revive, deltaTime);   
@@ -280,8 +297,16 @@ public class Player : NetworkBehaviour
     private void OnHealthDepleted(int damager)
     {
         AudioManager.Instance.PlaySFX(SFXConstants.Help, syncNetwork:true);
+        if (Runner.IsServer)
+            RPC_SetDowned(true);
     }
 
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_SetDowned(bool downed)
+    {
+        _anim.Animator.SetBool("Downed", downed);
+    }
+    
     public void SetWeapon(int indx)
     {
         if(!Runner.IsServer)

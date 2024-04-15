@@ -754,7 +754,7 @@ MonoBehaviour:
     m_Bits: 128
   attackRadius: 4
   attackCone: 0
-  knockBackForce: 5
+  knockBackForce: 1
   hittableObjects: []
 --- !u!1 &4277635516861028337
 GameObject:

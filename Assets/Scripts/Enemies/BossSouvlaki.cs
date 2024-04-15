@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using GameLoop;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public class BossSouvlaki : Enemy
 {
@@ -40,7 +42,7 @@ public class BossSouvlaki : Enemy
         navMeshAgent.updatePosition = false;
         navMeshAgent.updateRotation = false;
     }
-
+    
     private void OnDestroy()
     {
         healthComponent.OnDamaged -= OnAttacked;

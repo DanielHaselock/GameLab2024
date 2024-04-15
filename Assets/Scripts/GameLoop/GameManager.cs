@@ -458,6 +458,7 @@ namespace GameLoop
             
             wiggler.enabled = true;
             StartCoroutine(BossSpawnCoroutine());
+            AudioManager.Instance.PlaySFX(LevelManager.BossSFXKey);
         }
 
         IEnumerator BossSpawnCoroutine()
@@ -466,8 +467,16 @@ namespace GameLoop
             if (!Runner.IsServer)
                 yield break;
             SpawnBossInstanceOnServer();
+            yield return new WaitForSeconds(0.5f);
+            RPC_UpdateMusic();
             yield return new WaitForSeconds(3);
             RPC_SpawnExplosionAndHideAlterGraphic();
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_UpdateMusic()
+        {
+            AudioManager.Instance.PlayBackgroundMusic(LevelManager.BossMusic);
         }
         
         private void SpawnBossInstanceOnServer()

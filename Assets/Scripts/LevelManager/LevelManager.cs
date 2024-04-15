@@ -25,6 +25,8 @@ public static class LevelManager
     public static Dictionary<string, int> ScoreMap { get; private set; }
     public static List<ObjectiveData> Objectives { get; private set; }
     public static NetworkPrefabRef BossToSpawn => _data == null ? default : _data.BossToSpawn;
+    public static string BossSFXKey => _data == null ? "" : _data.BossSFXKey;
+    public static string BossMusic => _data == null ? "" : _data.BossMusicKey;
 
     public static int LevelSceneIndx => _data == null ? 1 : _data.SceneIndx;
     public static int LevelTime => _data == null ? 180 : _data.LevelTimeInSeconds;

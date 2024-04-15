@@ -50,7 +50,6 @@ namespace Audio
 
         [SerializeField] private AudioMixer _mixer;
         [SerializeField] private AudioMap _map;
-        [SerializeField] private float _bgFadeDuration = 0.5f;
 
         [RuntimeInitializeOnLoadMethod]
         private static void SpawnAudioManager()
@@ -89,49 +88,17 @@ namespace Audio
             PlaySFX(_map.InitialAmbiance);
         }
         
-        public void PlayBackgroundMusic(string bgName, bool doFadeTransition = true)
+        public void PlayBackgroundMusic(string bgName)
         {
             var clip = _map.GetBackgroundClip(bgName);
             if (clip == null)
                 return;
 
-            if (!doFadeTransition || _bgFadeDuration <= 0 || _bgSource.clip == null)
-            {
-                _bgSource.loop = true;
-                _bgSource.clip = clip;
-                _bgSource.Play();
-            }
-            else
-            {
-                var current = _bgSource;
-                _bgSource = _bgSource.gameObject.AddComponent<AudioSource>();
-                _bgSource.outputAudioMixerGroup = current.outputAudioMixerGroup;
-                _bgSource.volume = 0;
-                _bgSource.loop = true;
-                _bgSource.clip = clip;
-                _bgSource.Play();
-
-                StartCoroutine(FadeAudioSourceRoutine(current, false, _bgFadeDuration / 2));
-                StartCoroutine(FadeAudioSourceRoutine(_bgSource, true, _bgFadeDuration / 2));
-            }
+            _bgSource.loop = true;
+            _bgSource.clip = clip;
+            _bgSource.Play();
         }
-
-        private IEnumerator FadeAudioSourceRoutine(AudioSource _src, bool fadeIn, float dur)
-        {
-            float final = fadeIn ? 1f : 0f;
-            float current = fadeIn ? 0 : 1;
-            float timeStep = 0;
-            while (timeStep <= 1)
-            {
-                timeStep += Time.deltaTime / dur;
-                _src.volume = Mathf.Lerp(current, final, timeStep);
-                yield return new WaitForEndOfFrame();
-            }
-
-            if (!fadeIn)
-                Destroy(_src);
-        }
-
+        
         public void PlayAmbiance(string ambName)
         {
             var clip = _map.GetAmbianceClip(ambName);

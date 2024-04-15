@@ -113,7 +113,6 @@ MonoBehaviour:
   m_CameraType: 0
   m_Cameras:
   - {fileID: 5635440541774600372}
-  - {fileID: 0}
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
@@ -161,7 +160,7 @@ MonoBehaviour:
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
-    m_Time: 2
+    m_Time: 0.5
     m_CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -346,11 +345,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 107495204258719209, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
       propertyPath: m_BindingMode
-      value: 5
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 107495204258719209, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
+      propertyPath: m_Heading.m_Definition
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 107495204258719209, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
+      propertyPath: m_Heading.m_VelocityFilterStrength
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1052279642297351577, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
       propertyPath: m_BindingMode
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1052279642297351577, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
       propertyPath: m_YAxis.Value
@@ -362,7 +369,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1052279642297351577, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
       propertyPath: m_XAxis.m_MaxSpeed
-      value: 200
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 1052279642297351577, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
+      propertyPath: m_YAxis.m_MaxSpeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1052279642297351577, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
+      propertyPath: m_Heading.m_Definition
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1052279642297351577, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
       propertyPath: m_Orbits.Array.data[0].m_Height
@@ -370,6 +385,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1052279642297351577, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
       propertyPath: m_Orbits.Array.data[2].m_Height
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1052279642297351577, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
+      propertyPath: m_Heading.m_VelocityFilterStrength
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2351018377124505013, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
@@ -414,11 +433,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3147955552092555138, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
       propertyPath: m_BindingMode
-      value: 5
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3147955552092555138, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
+      propertyPath: m_Heading.m_Definition
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3147955552092555138, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
+      propertyPath: m_Heading.m_VelocityFilterStrength
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4354295006353729999, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
       propertyPath: m_BindingMode
-      value: 5
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4354295006353729999, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
+      propertyPath: m_Heading.m_Definition
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4354295006353729999, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
+      propertyPath: m_Heading.m_VelocityFilterStrength
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6103129544245897193, guid: 27f22c6f4a556aa47a915779a45eebde, type: 3}
       propertyPath: m_Name

@@ -16,5 +16,7 @@ MonoBehaviour:
   ScoringMap: {fileID: 11400000, guid: 72380e7950345024986ebf915325694d, type: 2}
   BossToSpawn:
     RawGuidValue: 2f6bbf4e5b51e294e8fefd1c23ad13c1
+  BossSFXKey: boss_souvlaki
+  BossMusicKey: boss_souvlaki
   SceneIndx: 1
   LevelTimeInSeconds: 360

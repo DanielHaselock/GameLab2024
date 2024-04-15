@@ -16,13 +16,15 @@ MonoBehaviour:
     _items:
     - Key: mainmenu
       Value: {fileID: 8300000, guid: da51e4ca2faa99a4ab3202caa311fdc9, type: 3}
+    - Key: boss_souvlaki
+      Value: {fileID: 8300000, guid: 5e293f2caabc28b43bbb83edc8de97cf, type: 3}
   _ambianceClips:
     _items: []
   _sfxClips:
     _items:
     - Key: click
       Value:
-      - {fileID: 8300000, guid: a72ee8e1f09986c439fbe68da40ae48f, type: 3}
+      - {fileID: 8300000, guid: 5e9dfd5b22acf164284114b12847fcbb, type: 3}
     - Key: type
       Value:
       - {fileID: 8300000, guid: 6bb0d86f26e165c4f8426cb4ace0296b, type: 3}
@@ -57,5 +59,17 @@ MonoBehaviour:
     - Key: charge
       Value:
       - {fileID: 8300000, guid: 1027569d6216efa458deac9d09869f97, type: 3}
+    - Key: drop
+      Value:
+      - {fileID: 8300000, guid: c645361dd88744241b634e64bc0d2ae6, type: 3}
+    - Key: throw
+      Value:
+      - {fileID: 8300000, guid: 696104c0518e2b840b95b0d5928343e8, type: 3}
+    - Key: pickup
+      Value:
+      - {fileID: 8300000, guid: 1efbf0268a33bea4b8a75d2021cefaaa, type: 3}
+    - Key: boss_souvlaki
+      Value:
+      - {fileID: 8300000, guid: deec8f33f67d64d4eb17255e6e19c486, type: 3}
   InitialBackgroundMusic: mainmenu
   InitialAmbiance: 
