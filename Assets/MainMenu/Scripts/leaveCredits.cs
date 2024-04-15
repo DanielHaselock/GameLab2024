@@ -5,13 +5,14 @@ public class leaveCredits : MonoBehaviour
     public bool leavingCreditsBool;
     public float moveSpeed = 5f;
     public GameObject cam;
-    public TMP_Text gameName;
+    public GameObject gameName;
     public GameObject settingsButton;
     public GameObject visitCreditsButton;
     public GameObject startButton;
     private Transform targetPoint;
     private Transform startingPoint;
     public GameObject startingPosition;
+    public GameObject fade;
     void Start()
     {
         leavingCreditsBool = false; 
@@ -43,6 +44,7 @@ public class leaveCredits : MonoBehaviour
                     visitCreditsButton.gameObject.SetActive(true);
                     gameName.gameObject.SetActive(true);
                     leavingCreditsBool=false;
+                    fade.SetActive(false);
                 }
             }
         }

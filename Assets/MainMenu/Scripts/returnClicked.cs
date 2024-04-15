@@ -6,6 +6,7 @@ public class returnClicked : MonoBehaviour
     public GameObject returnObj;
     public GameObject startGameButton;
     returnMovement returnMove;
+    public GameObject fade;
 
     void Start()
     {
@@ -17,6 +18,7 @@ public class returnClicked : MonoBehaviour
     public void OnButtonClick()
     {
         returnMove.returning = true;
+        fade.SetActive(true);
         gameObject.SetActive(false);
         startGameButton.gameObject.SetActive(true);
     }

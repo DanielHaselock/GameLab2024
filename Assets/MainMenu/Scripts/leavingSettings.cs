@@ -6,13 +6,14 @@ public class leavingSettings : MonoBehaviour
     public bool leavingSettingsBool;
     public float moveSpeed = 5f;
     public GameObject cam;
-    public TMP_Text gameName;
+    public GameObject gameName;
     public GameObject settings;
     public GameObject creditsButton;
     public GameObject startButton;
     private Transform targetPoint;
     private Transform startingPoint;
     public GameObject startingPosition;
+    public GameObject fade;
 
     void Start()
     {
@@ -44,6 +45,7 @@ public class leavingSettings : MonoBehaviour
                     settings.gameObject.SetActive(true);
                     creditsButton.gameObject.SetActive(true);
                     leavingSettingsBool=false;
+                    fade.SetActive(false);
                 }
             }
         }   

@@ -6,9 +6,10 @@ public class visitCreditsClicked : MonoBehaviour
     public GameObject visitCreditObj; 
     public GameObject settingsButton;
     visitCredits visitCredits;
-    public TMP_Text gameName;
+    public GameObject gameName;
     public GameObject startButton;
     public bool closeDoor;
+    public GameObject fade;
 
     void Start()
     {
@@ -25,6 +26,7 @@ public class visitCreditsClicked : MonoBehaviour
             startButton.gameObject.SetActive(false);
             settingsButton.gameObject.SetActive(false);
             visitCredits.creditsClicked = true;
+            fade.SetActive(true);
             gameObject.SetActive(false);
         }
     }

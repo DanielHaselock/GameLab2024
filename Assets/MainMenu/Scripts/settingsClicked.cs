@@ -5,10 +5,11 @@ public class settingsClicked : MonoBehaviour
 {
     public GameObject settingsObj; 
     settingsMovement settingsMove;
-    public TMP_Text gameName;
+    public GameObject gameName;
     public GameObject startButton;
     public GameObject creditsButton;
     public bool closeDoor;
+    public GameObject fade;
 
     void Start()
     {
@@ -26,6 +27,7 @@ public class settingsClicked : MonoBehaviour
             startButton.gameObject.SetActive(false);
             creditsButton.gameObject.SetActive(false);
             settingsMove.settingsClicked = true;
+            fade.SetActive(true);
             gameObject.SetActive(false);
         }
     }

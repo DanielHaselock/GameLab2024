@@ -7,7 +7,7 @@ public class returnMovement : MonoBehaviour
     public bool returning;
     public float moveSpeed = 5f;
     public GameObject cam;
-    public TMP_Text gameName;
+    public GameObject gameName;
     public GameObject creditsButton;
     public GameObject door;
     public GameObject startButton;
@@ -17,6 +17,7 @@ public class returnMovement : MonoBehaviour
     public  Quaternion targetCameraRotation;
     public bool closeDoor;
     public GameObject startingPosition;
+    public GameObject fade;
 
     void Start()
     {
@@ -88,6 +89,7 @@ public class returnMovement : MonoBehaviour
                     startButton.gameObject.SetActive(true);
                     creditsButton.gameObject.SetActive(true);
                     goToSettingsButton.gameObject.SetActive(true);
+                    fade.SetActive(false);
                 }
             }
         }

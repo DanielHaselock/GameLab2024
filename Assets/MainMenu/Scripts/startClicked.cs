@@ -7,8 +7,9 @@ public class startClicked : MonoBehaviour
     startMovement startScript;
     public GameObject goToSettingsButton;
     public GameObject creditsButton;
-    public TMP_Text gameName;
+    public GameObject gameName;
     public bool closeDoor;
+    public GameObject fade;
 
     void Start()
     {
@@ -24,7 +25,8 @@ public class startClicked : MonoBehaviour
             startScript.started = true;
             goToSettingsButton.gameObject.SetActive(false);
             creditsButton.gameObject.SetActive(false);
-            gameName.gameObject.SetActive(false);;
+            gameName.gameObject.SetActive(false);
+            fade.SetActive(true);
             gameObject.SetActive(false);
         }
     }
