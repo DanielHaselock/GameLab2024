@@ -14,6 +14,7 @@ public class Player : NetworkBehaviour
 {
     [SerializeField] private TMPro.TMP_Text nicknameText;
     [SerializeField] private float moveSpeed=6.83f;
+    [SerializeField] private float sprintSpeed = 13.66f;
     [SerializeField] private float lookSpeed=720;
     [SerializeField] private float gravity=-9.81f;
     [SerializeField] private float jumpForce = 15;
@@ -43,6 +44,7 @@ public class Player : NetworkBehaviour
     [Networked] private float _charge { get; set; }
 
     [Networked] private bool Stunned { get; set; } = false;
+    [Networked] private bool Sprinting { get; set; } = false;
 
     public bool PlayerDowned => _health.HealthDepleted;
     
@@ -99,7 +101,9 @@ public class Player : NetworkBehaviour
         base.FixedUpdateNetwork();
         if (GetInput(out PlayerInputData data))
         {
-            if(_myPickupable.IsPickedUp)
+            Sprinting = data.Sprint;
+
+            if (_myPickupable.IsPickedUp)
                 return;
             
             Move(_health.HealthDepleted?Vector3.zero:data.MoveDirection, data.Jump);
@@ -160,7 +164,7 @@ public class Player : NetworkBehaviour
             spatialAudioController.StopFootStep();
         }
         
-        _controller.Move(moveDir * moveSpeed, jumpImpulse);
+        _controller.Move(moveDir * (Sprinting? sprintSpeed : moveSpeed), jumpImpulse);
         _anim.Animator.SetFloat("Move", moveDir.normalized.magnitude);
     }
 

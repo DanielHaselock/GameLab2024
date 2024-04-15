@@ -88,6 +88,11 @@ public class PlayerNetworkedActions : MonoBehaviour
         GameManager.instance.Pause(!GameManager.instance.IsPaused);
     }
 
+    public void BroadcastSprint(Component Sender, object data)
+    {
+        InputData.Sprint = (bool)data;
+    }
+
     public void RefreshInputData()
     {
         InputData.RefreshInputs();

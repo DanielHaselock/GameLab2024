@@ -30,6 +30,8 @@ public class PlayerInputController : MonoBehaviour
 
     public GameEvent OnPause;
 
+    public GameEvent OnSprint;
+
     private bool CanChargeAttack = false;
 
     private void Start()
@@ -125,6 +127,19 @@ public class PlayerInputController : MonoBehaviour
         else if (context.canceled)
         {
             OnRevive.Raise(this, false);
+        }
+    }
+
+
+    public void Sprint(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnSprint.Raise(this, true);
+        }
+        else if (context.canceled)
+        {
+            OnSprint.Raise(this, false);
         }
     }
 }
