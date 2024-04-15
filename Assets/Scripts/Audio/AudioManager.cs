@@ -21,7 +21,7 @@ namespace Audio
         private static void SpawnAudioManager()
         {
             var manager = Resources.Load<GameObject>("AudioManager");
-            //Instantiate(manager);
+            Instantiate(manager);
         }
 
         private void OnDestroy()
