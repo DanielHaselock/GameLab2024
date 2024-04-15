@@ -20,6 +20,6 @@ public class returnClicked : MonoBehaviour
         returnMove.returning = true;
         fade.SetActive(true);
         gameObject.SetActive(false);
-        startGameButton.gameObject.SetActive(true);
+        startGameButton.gameObject.SetActive(false);
     }
 }
