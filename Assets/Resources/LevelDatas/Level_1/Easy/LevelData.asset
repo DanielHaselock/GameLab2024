@@ -18,5 +18,6 @@ MonoBehaviour:
     RawGuidValue: 2f6bbf4e5b51e294e8fefd1c23ad13c1
   BossSFXKey: boss_souvlaki
   BossMusicKey: boss_souvlaki
+  AllowChargedAttacks: 0
   SceneIndx: 1
   LevelTimeInSeconds: 360
