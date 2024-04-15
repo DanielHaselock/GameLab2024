@@ -25,8 +25,6 @@ public class GameUI : MonoBehaviour
     [SerializeField] private GameObject scoreText;
 
     [SerializeField] private RoundOverUI roundOverUI;
-    [SerializeField] private Button loseMainMenuBttn;
-    [SerializeField] private Button winNextLevelBttn;
 
     [SerializeField] private VideoPlayer cutscenePlayer;
     [SerializeField] private GameObject cutSceneObj;
@@ -35,42 +33,26 @@ public class GameUI : MonoBehaviour
     private Dictionary<int, TMP_Text> _scoreTexts;
     private Dictionary<int, string> _nicknameMap;
 
-    private Action OnMainMenuRequested;
-    private Action OnNextLevelClicked;
-
     public Action OnCutsceneCompleted;
 
     public void RegisterLoadToMainMenu(Action action)
     {
-        OnMainMenuRequested += action;
-    }
-    
-    public void DeRegisterLoadToMainMenu(Action action)
-    {
-        OnMainMenuRequested -= action;
-    }
-    
-    public void RegisterLoadNextLevel(Action action)
-    {
-        OnNextLevelClicked += action;
-    }
-    
-    public void DeRegisterLoadNextLevel(Action action)
-    {
-        OnNextLevelClicked -= action;
+        roundOverUI.RegisterLoadToMainMenu(action);
     }
 
-    private void Start()
+    public void DeRegisterLoadToMainMenu(Action action)
     {
-        loseMainMenuBttn.onClick.AddListener(() =>
-        {
-            OnMainMenuRequested?.Invoke();
-        });
-        
-        winNextLevelBttn.onClick.AddListener(() =>
-        {
-            OnNextLevelClicked?.Invoke();
-        });
+        roundOverUI.DeRegisterLoadToMainMenu(action);
+    }
+
+    public void RegisterLoadNextLevel(Action action)
+    {
+        roundOverUI.RegisterLoadNextLevel(action);
+    }
+
+    public void DeRegisterLoadNextLevel(Action action)
+    {
+        roundOverUI.DeRegisterLoadNextLevel(action);
     }
 
     public void UpdateLevelObjectives(Dictionary<string, Objective> map)
@@ -159,7 +141,6 @@ public class GameUI : MonoBehaviour
 
     public void ShowWinGameUI(bool show, bool showNextButton)
     {
-        winNextLevelBttn.gameObject.SetActive(showNextButton);
         roundOverUI.gameObject.SetActive(show);
         roundOverUI.ShowEndScreen(true, timerBar.fillAmount);
     }
