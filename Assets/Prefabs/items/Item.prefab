@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 534861c9ed24d3c47a1ec9561cb38c11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemClass: 0
+  itemClass: 9
 --- !u!114 &7005245570521251642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,9 +154,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _IsPickedUp: 0
   _Thrown: 0
+  localPosDelta: {x: 0, y: 0, z: 0}
   slotsNeeded: 1
-  _throwMaxHeight: 3
-  _throwInterpolation:
+  throwMaxHeight: 3
+  throwInterpolation:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3

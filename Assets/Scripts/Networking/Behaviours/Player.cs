@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Audio;
 using Fusion;
@@ -7,17 +8,20 @@ using Networking.Behaviours;
 using Networking.Data;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Utils;
 
 public class Player : NetworkBehaviour
 {
-    new ref NetworkCCData Data => ref ReinterpretState<NetworkCCData>();
-
     [SerializeField] private TMPro.TMP_Text nicknameText;
     [SerializeField] private float moveSpeed=6.83f;
     [SerializeField] private float lookSpeed=720;
     [SerializeField] private float gravity=-9.81f;
     [SerializeField] private float jumpForce = 15;
     [SerializeField] private float stunDur = 0.5f;
+    [SerializeField] private float attackDelay=0.25f;
+    [SerializeField] private float attackChargeDur = 1f;
+    [SerializeField] private GameObject chargedAttackGraphic;
+    [SerializeField] private SpatialAudioController spatialAudioController;
     
     private NetworkObject _no;
     private CharacterController _stdController;
@@ -33,13 +37,22 @@ public class Player : NetworkBehaviour
 
     private Coroutine _stunRoutine;
     private Tick _initial;
-    
+    private float _nextAttackTime = 0;
+
+    private bool _charging { get; set; }
+    [Networked] private float _charge { get; set; }
+
     [Networked] private bool Stunned { get; set; } = false;
+
+    public bool PlayerDowned => _health.HealthDepleted;
+    
+    public int PlayerId { get; private set; }
     
     private void Awake()
     {
         _controller = GetComponent<SimpleKCC>();
         _reviver = GetComponentInChildren<PlayerReviver>();
+        _damager = GetComponentInChildren<DamageComponent>();
         _health = GetComponentInChildren<HealthComponent>();
         _no = GetComponent<NetworkObject>();
         _anim = GetComponent<NetworkMecanimAnimator>();
@@ -49,15 +62,15 @@ public class Player : NetworkBehaviour
         _health.OnDamaged += AnimateHit;
     }
 
-    private void AnimateHit()
+    private void AnimateHit(int damager, bool charged)
     {
         if(_stunRoutine != null)
             return;
         
-        _anim.SetTrigger("Hit");
+        _anim.SetTrigger("Hit", true);
         _stunRoutine = StartCoroutine(Stun());
     }
-
+    
     IEnumerator Stun()
     {
         Stunned = true;
@@ -69,13 +82,14 @@ public class Player : NetworkBehaviour
     public override void Spawned()
     {
         var no = GetComponent<NetworkObject>();
+        PlayerId = no.InputAuthority.PlayerId;
         this.name = "Player_" + no.InputAuthority.PlayerId;
         if (no.InputAuthority == Runner.LocalPlayer)
         {
-            GetComponent<SetCamera>().SetCameraParams(gameObject.transform.GetChild(1).gameObject);
+            var cameraTarget = GetComponentInChildren<CameraTarget>();
+            GetComponent<SetCamera>().SetCameraParams(cameraTarget.gameObject);
             GetComponent<PlayerInputController>().OnSpawned();
         }
-
         _controller.SetGravity(gravity);
         nicknameText.text = NetworkManager.Instance.GetPlayerNickNameById(no.InputAuthority.PlayerId);
     }
@@ -83,25 +97,42 @@ public class Player : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
-        if(_health.HealthDepleted)
-            return;
-        
-        if(!_myPickupable.AllowInputs)
-            return;
-        
-        if(Stunned)
-            return;
-        
         if (GetInput(out PlayerInputData data))
         {
+            if(_myPickupable.IsPickedUp)
+                return;
+            
+            Move(_health.HealthDepleted?Vector3.zero:data.MoveDirection, data.Jump);
+            if(_health.HealthDepleted)
+                return;
+        
+            if(!_myPickupable.AllowInputs)
+                return;
+        
+            if(Stunned)
+                return;
+            
             HandleInteract(data);
-            HandleAttack(data);
+            HandleChargedAttack(data);
             HandleRevive(data, Runner.DeltaTime);
-            Move(data.MoveDirection, data.Jump);
         }
         
     }
-    
+
+    private void Update()
+    {
+        if (chargedAttackGraphic.activeSelf && _charge < 1)
+        {
+            chargedAttackGraphic.SetActive(false);
+        }
+        else if (!chargedAttackGraphic.activeSelf && _charge >= 1)
+        {
+            chargedAttackGraphic.SetActive(true);
+            if(_no.HasInputAuthority)
+                AudioManager.Instance.PlaySFX(SFXConstants.PlayerAttackCharge);
+        }
+    }
+
     private void Move(Vector3 moveDir, bool jump)
     {
         float jumpImpulse = default;
@@ -118,6 +149,15 @@ public class Player : NetworkBehaviour
             var newRot = Quaternion.LookRotation(moveDir.normalized, Vector3.up);
             var rot = Quaternion.RotateTowards(transform.rotation, newRot, lookSpeed*Runner.DeltaTime);
             _controller.SetLookRotation(rot);
+        }
+
+        if (moveDir != Vector3.zero && _controller.IsGrounded)
+        {
+            spatialAudioController.PlayFootStep();
+        }
+        else
+        {
+            spatialAudioController.StopFootStep();
         }
         
         _controller.Move(moveDir * moveSpeed, jumpImpulse);
@@ -194,25 +234,110 @@ public class Player : NetworkBehaviour
         _pickupHandler.InputThrow();
     }
 
-    private void HandleAttack(PlayerInputData data)
+    private bool _chargeAnimTriggered;
+    private void HandleChargedAttack(PlayerInputData data)
     {
-        if (data.Attack && HasInputAuthority)
+        if(Time.time < _nextAttackTime)
+            return;
+        
+        if (data.ChargeAttack)
         {
-            if (_damager == null)
-                _damager = GetComponentInChildren<DamageComponent>();
-            _damager.InitiateAttack();
-            _anim.SetTrigger("Attack", true);
-            AudioManager.Instance.PlaySFX(SFXConstants.Attack);
+            if (_charging && _charge > 0.15f && !_chargeAnimTriggered)
+            {
+                _chargeAnimTriggered = true;
+                _anim.Animator.SetBool("ChargeAttack", true);
+            }
+
+            data.Attack = false;
+            _charging = true;
+            _charge += Runner.DeltaTime / attackChargeDur;
+            _charge = Mathf.Clamp01(_charge);
+        }
+
+        if (!data.ChargeAttack && _charging)
+        {
+            if(_charge > 0.15f){
+                _anim.Animator.SetBool("ChargeAttack", false);
+            }
+            else
+            {
+                _anim.SetTrigger("Attack", true);
+                _anim.Animator.SetTrigger("Attack");
+            }
+            
+            _charging = false;
+            _chargeAnimTriggered = false;
+            if (Runner.IsServer)
+            {
+                bool charged = _charge >= 1;
+                StartCoroutine(InitiateAttack(0.15f, charged));
+                if (charged)
+                    Debug.Log($"Charged Attack {_charge}");
+                else
+                    Debug.Log($"Attack {_charge}");
+               
+            }
+            _nextAttackTime = Time.time + attackDelay;
+            _charge = 0;
         }
     }
 
+    IEnumerator InitiateAttack(float attackDelay, bool charged)
+    {
+        yield return new WaitForSeconds(attackDelay);
+        AudioManager.Instance.PlaySFX3D(SFXConstants.PlayerAttack, transform.position);
+        _damager.InitiateAttack(charged);
+    }
+    
     private void HandleRevive(PlayerInputData data, float deltaTime)
     {
         _reviver.TryReviveOther(data.Revive, deltaTime);   
     }
     
-    private void OnHealthDepleted()
+    private void OnHealthDepleted(int damager)
     {
         AudioManager.Instance.PlaySFX(SFXConstants.Help, syncNetwork:true);
+        if (Runner.IsServer)
+            RPC_SetDowned(true);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_SetDowned(bool downed)
+    {
+        _anim.Animator.SetBool("Downed", downed);
+    }
+    
+    public void SetWeapon(int indx)
+    {
+        if(!Runner.IsServer)
+            return;
+        
+        var weaponLoc = transform.FindDeepChild("WeaponLoc");
+        for (int i = 0; i < weaponLoc.childCount; i++)
+        {
+            if (i == indx)
+                weaponLoc.GetChild(i).gameObject.SetActive(true);
+            else
+                weaponLoc.GetChild(i).gameObject.SetActive(false);
+        }
+
+        RPC_ReflectWeaponUpgradeOnClient(indx);
+        _damager.UpdateWeapon();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_ReflectWeaponUpgradeOnClient(int indx)
+    {
+        if(Runner.IsServer)
+            return;
+        
+        var weaponLoc = transform.FindDeepChild("WeaponLoc");
+        for (int i = 0; i < weaponLoc.childCount; i++)
+        {
+            if (i == indx)
+                weaponLoc.GetChild(i).gameObject.SetActive(true);
+            else
+                weaponLoc.GetChild(i).gameObject.SetActive(false);
+        }
     }
 }

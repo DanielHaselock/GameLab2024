@@ -9,6 +9,9 @@ namespace Networking.Data
         public bool Revive;
         public bool Jump;
         public bool Attack;
+        public bool ChargeAttack;
+        public bool StartChargeAttack;
+        public bool ActionChargeAttack;
         public bool Throw;
        [Networked] public bool Interact { get => default; set { } }
         public bool Drop;
@@ -19,6 +22,8 @@ namespace Networking.Data
            // MoveDirection = Vector3.zero; Movement is handled on it's own
             Jump = false;
             Attack = false;
+            ChargeAttack = false;
+            ActionChargeAttack = false;
             Interact = false;
             Drop = false;
             Throw = false;

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using GameLoop;
 using UnityEngine;
 
 public class SettingsMenu : MonoBehaviour
@@ -13,9 +14,5 @@ public class SettingsMenu : MonoBehaviour
     {
         PauseMenuUI.SetActive(true);
         SettingsMenuUI.SetActive(false);
-    }
-    public void MainMenu()
-    {
-        GameManager.instance.UpdateGameState(GameManager.GameState.MainMenu);
     }
 }

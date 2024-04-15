@@ -1,6 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using GameLoop;
 using UnityEngine;
 
 public class RaiseObjective : MonoBehaviour
@@ -10,6 +9,8 @@ public class RaiseObjective : MonoBehaviour
     [SerializeField] private InvokeType invokeType;
     [SerializeField] private string key;
 
+    public string Key => key;
+    
     private void Start()
     {
         if (invokeType == InvokeType.OnSpawn)
@@ -24,11 +25,8 @@ public class RaiseObjective : MonoBehaviour
             GameManager.instance.RaiseObjective(key);
         }
     }
-    private void Raise()
+    public void Raise()
     {
             GameManager.instance.RaiseObjective(key);
-     
     }
-
-
 }

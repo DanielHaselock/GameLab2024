@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Audio;
 using Fusion;
 using Networking.Behaviours;
@@ -14,6 +15,7 @@ namespace Networking.UI
     {
         
         [SerializeField] private GameObject waitPanel;
+        [SerializeField] private GameObject loadingScreen;
 
         [Header("NickName")]
         [SerializeField] private TMPro.TMP_InputField _nickNameField;
@@ -40,7 +42,9 @@ namespace Networking.UI
 
         
         private NetworkManager _networkManager;
-
+        private Coroutine _loadingScreenCoro;
+        
+        
         public void Initialise(NetworkManager manager)
         {
             _networkManager = manager;
@@ -53,6 +57,8 @@ namespace Networking.UI
             var randName = $"Random{Random.Range(1, 300).ToString()}";
             _nickNameField.text = PlayerPrefs.GetString(Constants.MYUSERNAME_KEY,randName);
             NetworkManager.Instance.SetSessionUserNickName(_nickNameField.text);
+
+            NetworkManager.Instance.OnPlayerConnected += OnPlayerConnected;
             if (_nickNameField.text.Equals(randName))
             {
                 PlayerPrefs.SetString(Constants.MYUSERNAME_KEY, randName);
@@ -76,6 +82,55 @@ namespace Networking.UI
             };
         }
 
+        public void ShowWait(bool show)
+        {
+            waitPanel.SetActive(show);
+        }
+        
+        public void ShowLoadingScreen(bool show)
+        {
+            if(_loadingScreenCoro != null)
+                StopCoroutine(_loadingScreenCoro);
+
+            _loadingScreenCoro = StartCoroutine(FadeLoadingScreen(!show));
+        }
+
+        IEnumerator FadeLoadingScreen(bool fadeOut)
+        {
+            loadingScreen.SetActive(true);
+            var cg = loadingScreen.GetComponent<CanvasGroup>();
+            if (!fadeOut)
+            {
+                cg.alpha = 1;
+                yield break;    
+            }
+            
+            var curr = cg.alpha;
+            var next = fadeOut ? 0 : 1;
+            var t = 0f;
+            while (t <= 1)
+            {
+                t += Time.deltaTime / 0.25f;
+                cg.alpha = Mathf.Lerp(curr, next, t);
+                yield return new WaitForEndOfFrame();
+            }
+            loadingScreen.SetActive(false);
+        }
+        
+        private void OnPlayerConnected(int playerId)
+        {
+            if (NetworkManager.Instance.ConnectedPlayers.Count >= 2)
+            {
+                waitPanel.SetActive(false);
+                return;
+            }
+
+            if (NetworkManager.Instance.ConnectedPlayers.Count > 0)
+            {
+                waitPanel.SetActive(true);
+            }
+        }
+        
         private async void OnClickMainSmartConnect()
         {
             await NetworkManager.Instance.SmartConnect();

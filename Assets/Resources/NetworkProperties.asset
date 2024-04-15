@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9df731ee934edab6969427f6812fe9, type: 3}
   m_Name: NetworkProperties
   m_EditorClassIdentifier: 
-  GameSceneIndex: 2
-  PlayerPrefab:
-    RawGuidValue: 84bb177b727c34779a356fe8958bbf63
   MaxPlayers: 1
+  ShowCutscene: 0
+  PlayerPrefabs:
+  - RawGuidValue: 5e1f5fdf2da396c45bdf8442605a6692
+  - RawGuidValue: 5e1f5fdf2da396c45bdf8442605a6692
   NetworkObjectsToSpawnOnGameStart:
   - ObjectToSpawn:
       RawGuidValue: e20f15a179b7f0c41b89002525edeb00

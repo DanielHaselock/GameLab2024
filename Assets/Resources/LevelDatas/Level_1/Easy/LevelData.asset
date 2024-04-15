@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c0668381d3483fbe788eaf9c7bfea5, type: 3}
+  m_Name: LevelData
+  m_EditorClassIdentifier: 
+  Objectives: {fileID: 11400000, guid: 8aed840f8d8d04e618051f1548391c8f, type: 2}
+  ScoringMap: {fileID: 11400000, guid: 72380e7950345024986ebf915325694d, type: 2}
+  BossToSpawn:
+    RawGuidValue: 2f6bbf4e5b51e294e8fefd1c23ad13c1
+  BossSFXKey: boss_souvlaki
+  BossMusicKey: boss_souvlaki
+  SceneIndx: 1
+  LevelTimeInSeconds: 360

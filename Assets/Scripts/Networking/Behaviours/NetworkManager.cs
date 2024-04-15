@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Accessibility;
 using Fusion;
 using Fusion.Addons.Physics;
 using Fusion.Sockets;
 using Networking.Data;
 using Networking.UI;
-using Networking.Utils;
+using Utils;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -40,7 +42,7 @@ namespace Networking.Behaviours
 
         /// <summary>
         /// Invoked when session list is updated,
-        /// use AvailableSessions property to get updated list
+        /// use AvailableSessions property to get updated list__
         /// </summary>
         public Action OnAvailableSessionsListUpdated;
         /// <summary>
@@ -66,23 +68,7 @@ namespace Networking.Behaviours
         /// Invoked On Server, when GameOver method is invoked
         /// </summary>
         public Action OnGameOver;
-
-        /// <summary>
-        /// Invoked when a Timer is started
-        /// <param name="Time"> TimeSpan with Timer Duration </param>
-        /// </summary>
-        public Action<TimeSpan> OnTimerStarted;
-        /// <summary>
-        /// Invoked During Timer Tick
-        ///<param name="Remaining time"> TimeSpan with time remaining on the timer </param>
-        /// </summary>
-        public Action<TimeSpan> OnTimerTick;
-        /// <summary>
-        /// Invoked when a Timer ends, NOTE: NOT INVOKED WHEN TIMER IS STOPPED
-        /// </summary>
-        public Action OnTimerEnded;
-
-
+        
         private static NetworkManager _instance;
         public static NetworkManager Instance
         {
@@ -95,6 +81,8 @@ namespace Networking.Behaviours
             }
         }
 
+        public bool ShowCutsceneBeforeFirstLevel => _networkPropertiesRef.ShowCutscene;
+        
         private void Awake()
         {
             DontDestroyOnLoad(this);
@@ -105,13 +93,32 @@ namespace Networking.Behaviours
             _connectedPlayers = new List<PlayerRef>();
             _networkPropertiesRef = Resources.Load<NetworkProperties>(Constants.NETWORK_OBJ_SO_NAME);
             _connectionUI = Instantiate(Resources.Load<GameObject>(Constants.NETWORK_UI)).GetComponent<NetworkUI>();
+            _connectionUI.transform.parent = transform;
             _connectionUI.Initialise(this);
             AvailableSessions = new List<SessionInfo>();
             ConnectToLobby();
+            RegisterToGeneralNetworkEvents("loading_screen", LoadingScreenUpdate);
         }
 
+        private void LoadingScreenUpdate(NetworkEvent data)
+        {
+            if(_runner.IsServer)
+                return;
+            
+            if(!data.EventName.Equals("loading_screen"))
+                return;
+            
+            if(data.EventData.Equals("1"))
+                _connectionUI.ShowLoadingScreen(true);
+            else
+            {
+                _connectionUI.ShowLoadingScreen(false);
+            }
+        }
+        
         public async Task SmartConnect(float decisionDelayTime = 1f)
         {
+            _connectionUI.ShowWait(true);
             if (!_connectedToLobby)
             {
                 var wait = true;
@@ -236,31 +243,13 @@ namespace Networking.Behaviours
         {
             return _netSynchedHelper.GetPlayerNickNameById(playerId);
         }
-
-        /// <summary>
-        /// Starts The Global Timer, Can only be invoked by the server
-        /// </summary>
-        /// <param name="time"></param>
-        public void StartTimer(TimeSpan time)
-        {
-            _netSynchedHelper?.StartTimer(time);
-        }
-
-        /// <summary>
-        /// Stops The Global Timer, Can only be invoked by the server
-        /// </summary>
-        public void StopTimer()
-        {
-            _netSynchedHelper?.StopTimer();
-        }
-
+        
         /// <summary>
         /// Host a Game Session
         /// </summary>
         /// <param name="sessionName"></param>
         public void HostSession(String sessionName)
         {
-            _connectionUI.gameObject.SetActive(false);
             LaunchSession(sessionName, GameMode.Host);
         }
 
@@ -270,7 +259,6 @@ namespace Networking.Behaviours
         /// <param name="sessionName"></param>
         public void JoinSession(String sessionName)
         {
-            _connectionUI.gameObject.SetActive(false);
             LaunchSession(sessionName, GameMode.Client);
         }
 
@@ -297,9 +285,10 @@ namespace Networking.Behaviours
                 _runner.Spawn(spawnInfo.ObjectToSpawn, spawnInfo.Position, Quaternion.Euler(spawnInfo.Rotation));
             }
             _gameStarted = true;
+            _connectionUI.ShowWait(false);
             OnGameStarted?.Invoke();
         }
-
+        
         public void RegisterToGeneralNetworkEvents(string eventName, Action<NetworkEvent> action)
         {
             if (_generalNetworkMessages == null)
@@ -354,12 +343,11 @@ namespace Networking.Behaviours
             {
                 return;
             }
-            await SetupNetworkSynchedHelper(runner);
+            await SetupNetworkSynchedHelper(_runner);
             if (player == _runner.LocalPlayer)
             {
                 _netSynchedHelper.InitialiseUser(player.PlayerId, _sessionUserNickName);
             }
-
             _connectedPlayers.Add(player);
             //wait for other user to be ready
             while (!_netSynchedHelper.AllUsersReady(runner.SessionInfo.PlayerCount))
@@ -396,14 +384,7 @@ namespace Networking.Behaviours
         private void RegisterToNetSyncEvents()
         {
             //Todo: This is a Hack, clean it up later.
-            _netSynchedHelper.OnTimerStarted -= OnTimerStarted;
-            _netSynchedHelper.OnTimerTick -= OnTimerTick;
-            _netSynchedHelper.OnTimerEnded -= OnTimerEnded;
             _netSynchedHelper.OnSimpleNetworkMessageRecieved -= OnSimpleNetworkEventReceived;
-            _netSynchedHelper.OnTimerStarted += OnTimerStarted;
-            _netSynchedHelper.OnTimerTick += OnTimerTick;
-            _netSynchedHelper.OnTimerEnded += OnTimerEnded;
-
             _netSynchedHelper.OnSimpleNetworkMessageRecieved += OnSimpleNetworkEventReceived;
         }
 
@@ -427,11 +408,17 @@ namespace Networking.Behaviours
             if(rotations.Count<_connectedPlayers.Count)
                 throw new Exception("Not enough rotations to spawn players");
             var index = 0;
+
+            var playerPrefabs = new List<NetworkPrefabRef>(_networkPropertiesRef.PlayerPrefabs);
+            playerPrefabs.Shuffle();
+
             foreach (var playerRef in _connectedPlayers)
             {
                 var position = positions[index];
-                var rotation = rotations[index]; 
-                var playerNetObj = _runner.Spawn(_networkPropertiesRef.PlayerPrefab,
+                var rotation = rotations[index];
+                var prefabToUse = playerPrefabs[0];
+                playerPrefabs.RemoveAt(0);
+                var playerNetObj = _runner.Spawn(prefabToUse,
                     position, rotation, playerRef);
 
                 _runner.SetPlayerObject(playerRef, playerNetObj);
@@ -443,7 +430,7 @@ namespace Networking.Behaviours
                 index++;
             }
         }
-public void OnPlayerLeft(Fusion.NetworkRunner runner, PlayerRef player)
+        public void OnPlayerLeft(Fusion.NetworkRunner runner, PlayerRef player)
         {
             if (runner.SessionInfo.Name.Equals(Constants.GAME_LOBBY))
                 return;
@@ -557,26 +544,54 @@ public void OnPlayerLeft(Fusion.NetworkRunner runner, PlayerRef player)
         #endregion
         public async Task<bool> LoadSceneNetworked(int sceneIndex, bool isAdditive)
         {
+            _connectionUI.ShowLoadingScreen(true);
+            SendGlobalSimpleNetworkMessage(new NetworkEvent()
+            {
+                EventName = "loading_screen",
+                EventData = "1"
+            });
             var loadSceneParameters = new LoadSceneParameters();
             loadSceneParameters.loadSceneMode = isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single;
             if (!_runner)
+            {
+                _connectionUI.ShowLoadingScreen(false);
                 return false;
+            }
+            
             var scene = SceneRef.FromIndex(sceneIndex);
             if (!scene.IsValid)
+            {
+                _connectionUI.ShowLoadingScreen(false);
                 return false;
+            }
+
+            await Task.Delay(1000);
             var task = _runner.LoadScene(scene, loadSceneParameters);
             while (!task.IsDone)
                 await Task.Yield();
+            
+            await Task.Delay(1000);
+            _connectionUI.ShowLoadingScreen(false);
+            SendGlobalSimpleNetworkMessage(new NetworkEvent()
+            {
+                EventName = "loading_screen",
+                EventData = "0"
+            });
             return true;
         }
-
-
+        
         public NetworkObject GetLocalPlayer()
         {
             return _runner.GetPlayerObject(_runner.LocalPlayer);
         }
 
+        public void ResetGame()
+        {
+            _instance = null;
+            Destroy(_connectionUI.gameObject);
+            Destroy(_netSynchedHelper.gameObject);
+            Destroy(this.gameObject);
+            SceneManager.LoadScene(0);
+        }
     }
-
-
 }

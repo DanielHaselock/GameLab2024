@@ -21,14 +21,27 @@ public class PlayerInputController : MonoBehaviour
     public GameEvent OnJump;
 
     public GameEvent OnAttack;
-    
+
+    public GameEvent OnChargeAttack;
+
+    public GameEvent OnStartChargeAttack;
+
     public GameEvent OnRevive;
 
     public GameEvent OnPause;
 
+    private bool CanChargeAttack = false;
+
     private void Start()
     {
     }
+
+    private void Update()
+    {
+        bool pressed = playerInput["ChargeAttack"].IsPressed();
+        OnChargeAttack.Raise(this, pressed);
+    }
+
     public void OnSpawned()
     {
         playerInput.Enable();
@@ -81,12 +94,17 @@ public class PlayerInputController : MonoBehaviour
         }
     }
 
-    public void Attack(InputAction.CallbackContext context)
+    public void Attack(InputAction.CallbackContext context) //Regular --> requires Tap interaction in IA
     {
-        if (context.started)
+        if(context.performed)
         {
             OnAttack.Raise(this, true);
         }
+    }
+
+    public void ChargeAttack(InputAction.CallbackContext context) //Charged --> requires Hold interaction in IA
+    {
+       
     }
 
     public void Pause(InputAction.CallbackContext context)

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using Fusion;
 using Fusion.Addons.Physics;
@@ -30,9 +31,7 @@ public class Enemy : NetworkBehaviour
     [SerializeField] protected float speed=3;
     [SerializeField] protected float angularSpeed=120;
     [SerializeField] protected float attackRange=3;
-    [SerializeField] protected Material corpseMaterial;
-    [SerializeField] protected GameObject eyes;
-    [SerializeField] protected GameObject body;
+    [SerializeField] protected float maxNextWanderPosDist=5;
     
     protected bool dead = false;
     protected bool stunned = false;
@@ -48,6 +47,13 @@ public class Enemy : NetworkBehaviour
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
+
+    protected Vector3 GetNextWanderPos()
+    {
+        var delta = Random.insideUnitCircle * maxNextWanderPosDist;
+        return new Vector3(transform.position.x + delta.x, transform.position.y, transform.position.z + delta.y);
+    }
+    
     protected virtual void Start()
     {
         animator = GetComponentInChildren<Animator>();
@@ -61,10 +67,12 @@ public class Enemy : NetworkBehaviour
         navMeshAgent.stoppingDistance = attackRange - 0.5f;
         navMeshAgent.speed = speed;
         navMeshAgent.angularSpeed = angularSpeed;
-        
+
+        navMeshAgent.Warp(transform.position);
+
         //we want to manually update our agent position
-        navMeshAgent.updatePosition = false;
-        navMeshAgent.updateRotation = false;
+        /*navMeshAgent.updatePosition = false;
+        navMeshAgent.updateRotation = false;*/
     }
 
     protected void UpdateMoveAndRotation(float deltaTime)
@@ -72,7 +80,7 @@ public class Enemy : NetworkBehaviour
         var nextPosition = navMeshAgent.nextPosition;
         nextPosition.y = transform.position.y; //eliminate y position diff
         var dir = (nextPosition - transform.position).normalized;
-        rb.MovePosition(navMeshAgent.nextPosition);
+        rb.MovePosition(Vector3.Lerp(transform.position, navMeshAgent.nextPosition, 0.1f));
         if (Mathf.Approximately(dir.magnitude, 0))
             return;
         Quaternion lookRotation = Quaternion.LookRotation(dir);
@@ -103,8 +111,6 @@ public class Enemy : NetworkBehaviour
         else
         {
             animator.StopPlayback();
-            body.GetComponent<Renderer>().material = corpseMaterial;
-            eyes.SetActive(false);
             dead = true;
             navMeshAgent.speed = 0;
             rb.AddForce((transform.position - _targetPlayer.transform.position).normalized * 1f, ForceMode.Impulse);
@@ -112,16 +118,35 @@ public class Enemy : NetworkBehaviour
     }
     IEnumerator Stun()
     {
-        Debug.Log("STUN!!");
-        canAttack = false;
-        navMeshAgent.speed = 0;
-        animator.CrossFade("Hit", .01f);
-        stunned = true;
-        yield return new WaitForSecondsRealtime(.5f);
-        animator.CrossFade("Idle", .25f);
-        yield return new WaitForSecondsRealtime(1.5f);
-        stunned = false;
-        navMeshAgent.speed = speed;
-        canAttack = true;
+        if (!name.Contains("Boss"))
+        {
+            Debug.Log("STUN!!");
+            canAttack = false;
+            navMeshAgent.speed = 0;
+
+            animator.CrossFade("Hit", .01f);
+            stunned = true;
+            yield return new WaitForSecondsRealtime(.5f);
+            animator.CrossFade("Idle", .25f);
+            yield return new WaitForSecondsRealtime(1.5f);
+            stunned = false;
+
+            navMeshAgent.speed = speed;
+            canAttack = true;
+        }
+        else if (!attacking)
+        {
+            Debug.Log("STUN!!");
+            navMeshAgent.speed = 0;
+
+            animator.CrossFade("Hit", .01f);
+            stunned = true;
+            yield return new WaitForSecondsRealtime(.5f);
+            animator.CrossFade("Idle", .25f);
+            yield return new WaitForSecondsRealtime(1.5f);
+            stunned = false;
+
+            navMeshAgent.speed = speed;
+        }
     }
 }

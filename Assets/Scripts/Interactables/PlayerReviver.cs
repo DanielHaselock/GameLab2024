@@ -8,6 +8,8 @@ namespace Interactables
 {
     public class PlayerReviver : NetworkBehaviour
     {
+        [SerializeField] private NetworkMecanimAnimator anim;
+        
         [SerializeField] private GameObject reviveGUI;
         [SerializeField] private Image reviveImg;
         
@@ -15,6 +17,8 @@ namespace Interactables
         [SerializeField] private float playerDetectionRadius;
         [SerializeField] private float timeToRevive;
 
+        [SerializeField] private SpatialAudioController spatialAudioController;
+        
         [Networked] private bool Reviving { get; set; }
         [Networked] private float ReviveTimeLeft { get; set; }
 
@@ -70,10 +74,30 @@ namespace Interactables
                 _targetReviver = null;
         }
 
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_PlaySFX(bool play)
+        {
+            if(play)
+                spatialAudioController.PlayRevive();
+            else
+            {
+                spatialAudioController.StopRevive();
+            }
+        }
+        
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_UpdateAnim(bool downed)
+        {
+            anim.Animator.SetBool("Downed", downed);
+        }
+        
         private void OnReviveStarted()
         {
             ReviveTimeLeft = timeToRevive;
             Reviving = true;
+
+            if (!Runner.IsServer)
+                RPC_PlaySFX(true);
         }
         
         private void OnReviveUpdate(float deltaTime)
@@ -84,6 +108,7 @@ namespace Interactables
             if (ReviveTimeLeft <= 0 && _myHealthComp.HealthDepleted)
             {
                 _myHealthComp.SetHealth(_myHealthComp.MaxHealth);
+                RPC_UpdateAnim(false);
                 OnReviveCancelled();
             }
         }
@@ -92,6 +117,8 @@ namespace Interactables
         {
             Reviving = false;
             ReviveTimeLeft = -1;
+            if (!Runner.IsServer)
+                RPC_PlaySFX(false);
         }
         
         private PlayerReviver GetOtherPlayerReviver()
@@ -131,6 +158,9 @@ namespace Interactables
 
         private void Update()
         {
+            if(Runner == null)
+                return;
+            
             reviveGUI.SetActive(Reviving);
             reviveImg.fillAmount = (timeToRevive - ReviveTimeLeft) / timeToRevive;
         }

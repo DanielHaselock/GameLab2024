@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Audio;
 using Fusion;
 using Fusion.Addons.Physics;
 using Fusion.Addons.SimpleKCC;
@@ -58,9 +60,12 @@ namespace Interactables
             if (_controller)
             {
                 // special sceanrio, when a pickupable has a network controller attached....
-                _controller.enabled = !pickup;
-                // _controller.excludeLayers = pickup ? LayerMask.NameToLayer("Default") : 0;
-                // _controller.radius = pickup ? 0 : 0.5f;
+               
+                if (!pickup)
+                {
+                    _controller.SetPosition(_controller.transform.position);
+                    _controller.SetLookRotation(Quaternion.LookRotation(_controller.transform.forward));
+                }
                 _controller.enabled = !pickup;
                 RPC_ReplicateControllerParenting(pickup);
             }
@@ -135,7 +140,11 @@ namespace Interactables
             if (!pickup)
             {
                 if (_controller)
-                    _controller.enabled = true;
+                {
+                    _controller.SetPosition(_controller.transform.position);
+                    _controller.SetLookRotation(Quaternion.LookRotation(_controller.transform.forward));
+                }
+                
                 transform.SetParent(null);
                 IsPickedUp = false;
                 return;

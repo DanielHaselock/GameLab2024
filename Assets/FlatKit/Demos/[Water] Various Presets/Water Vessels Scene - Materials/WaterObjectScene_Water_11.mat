@@ -15,20 +15,28 @@ MonoBehaviour:
   version: 1
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: WaterObjectScene_Water_11
   m_Shader: {fileID: 4800000, guid: efcaf526ceb1f4efd9eb4e4c30c6ade6, type: 3}
-  m_ShaderKeywords: _COLORMODE_GRADIENT_TEXTURE _FOAMMODE_NONE _WAVEMODE_GRID
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _COLORMODE_GRADIENT_TEXTURE
+  - _FOAMMODE_NONE
+  - _WAVEMODE_GRID
+  m_InvalidKeywords:
+  - _OPAQUE_OFF
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -129,12 +137,12 @@ Material:
     - _UvFadeY: 0.1
     - _WaterClearness: 0
     - _WaterDepth: 13.51
-    - _WaveAmplitude: 0.83
+    - _WaveAmplitude: 0.1
     - _WaveDirection: 0
-    - _WaveFrequency: 1
+    - _WaveFrequency: 5
     - _WaveMode: 2
     - _WaveNoise: 0
-    - _WaveSpeed: 1.33
+    - _WaveSpeed: 1
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:

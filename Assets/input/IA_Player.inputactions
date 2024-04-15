@@ -76,6 +76,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ChargeAttack",
+                    "type": "Button",
+                    "id": "ebd022a6-de83-44de-b14c-14cd1abbc036",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -182,7 +191,7 @@
                     "name": "",
                     "id": "2a95d7b2-391e-4517-877c-91bdb1525d10",
                     "path": "<Mouse>/leftButton",
-                    "interactions": "",
+                    "interactions": "Tap(duration=0.5)",
                     "processors": "",
                     "groups": "",
                     "action": "Attack",
@@ -208,6 +217,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c58e162e-610a-4aa8-9d02-7e94ecbf6274",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Hold(duration=0.8)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChargeAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

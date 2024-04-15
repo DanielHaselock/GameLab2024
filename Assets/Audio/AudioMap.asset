@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3a2077d7bbc4fb192ed3d204d6ad4f6, type: 3}
+  m_Name: AudioMap
+  m_EditorClassIdentifier: 
+  _bgClips:
+    _items:
+    - Key: mainmenu
+      Value: {fileID: 8300000, guid: da51e4ca2faa99a4ab3202caa311fdc9, type: 3}
+    - Key: boss_souvlaki
+      Value: {fileID: 8300000, guid: 5e293f2caabc28b43bbb83edc8de97cf, type: 3}
+  _ambianceClips:
+    _items: []
+  _sfxClips:
+    _items:
+    - Key: click
+      Value:
+      - {fileID: 8300000, guid: 5e9dfd5b22acf164284114b12847fcbb, type: 3}
+    - Key: type
+      Value:
+      - {fileID: 8300000, guid: 6bb0d86f26e165c4f8426cb4ace0296b, type: 3}
+    - Key: attack
+      Value:
+      - {fileID: 8300000, guid: 311155ea99cee7448b15c08d51868cc7, type: 3}
+      - {fileID: 8300000, guid: f59e7678fcc43c64db1e804013b733cf, type: 3}
+      - {fileID: 8300000, guid: 025c1113ed77a004a9812bbe0ae7c07c, type: 3}
+    - Key: jump
+      Value:
+      - {fileID: 8300000, guid: 5d219b455bbbcd44a887b4cf95fdc9e7, type: 3}
+    - Key: help
+      Value:
+      - {fileID: 8300000, guid: 71119fcc6654247b585303b1ad23a1ce, type: 3}
+    - Key: hit
+      Value:
+      - {fileID: 8300000, guid: a72ee8e1f09986c439fbe68da40ae48f, type: 3}
+    - Key: clock
+      Value:
+      - {fileID: 8300000, guid: 7d0c306f8fcba574d8207cde5022ddf4, type: 3}
+      - {fileID: 8300000, guid: ce9182c2b2e401b4ba2923bcd0a4812e, type: 3}
+      - {fileID: 8300000, guid: 498018e431e936d48872d194c900334c, type: 3}
+    - Key: item_collect
+      Value:
+      - {fileID: 8300000, guid: 28fcf33769d8c2c4aa41d02e03d1af52, type: 3}
+    - Key: item_reject
+      Value:
+      - {fileID: 8300000, guid: f3044f7a9e5eee24abdd8673ee7e991f, type: 3}
+    - Key: objective_complete
+      Value:
+      - {fileID: 8300000, guid: bc222cb31c57240b389d639d255d6098, type: 3}
+    - Key: charge
+      Value:
+      - {fileID: 8300000, guid: 1027569d6216efa458deac9d09869f97, type: 3}
+    - Key: drop
+      Value:
+      - {fileID: 8300000, guid: c645361dd88744241b634e64bc0d2ae6, type: 3}
+    - Key: throw
+      Value:
+      - {fileID: 8300000, guid: 696104c0518e2b840b95b0d5928343e8, type: 3}
+    - Key: pickup
+      Value:
+      - {fileID: 8300000, guid: 1efbf0268a33bea4b8a75d2021cefaaa, type: 3}
+    - Key: boss_souvlaki
+      Value:
+      - {fileID: 8300000, guid: deec8f33f67d64d4eb17255e6e19c486, type: 3}
+  InitialBackgroundMusic: mainmenu
+  InitialAmbiance: 

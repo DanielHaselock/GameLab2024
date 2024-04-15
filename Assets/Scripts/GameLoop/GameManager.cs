@@ -1,209 +1,696 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using Fusion;
-using Networking.Data;
-using UnityEngine.Events;
-using Networking.Behaviours;
+using System.Linq;
 using System.Threading.Tasks;
+using Audio;
+using Cinemachine;
+using UnityEngine;
+using Fusion;
+using Fusion.Addons.Physics;
+using Networking.Behaviours;
+using Networking.Data;
+using UnityEngine.AI;
+using Utils;
+using UnityEngine.EventSystems;
 
-public class GameManager : NetworkBehaviour
+namespace GameLoop
 {
-    public static GameManager instance;
-    public GameState CurrentGameState { get; private set; }
-
-    [Networked] public bool IsPaused { get; private set; }
-    [Networked] public bool IsPausable { get; private set; } //checks if the player is allowed to pause (For example, cannot pause from main menu)
-    public static event Action<GameState> OnGameStateChanged;
-    public event Action<bool> OnPauseStatusChanged;
-
-    private ChangeDetector _change;
-    [SerializeField]
-    private Dictionary<string,ObjectiveData> objectivesMap = new Dictionary<string, ObjectiveData>();
-    [Networked] public bool bossDefeated { get; private set; }
-    [SerializeField] private int levelSceneIndex;
-    [SerializeField] private SerializableDictionary<string, NetworkPrefabRef> enemyMap;
-
-    public override async void Spawned()
+    public class GameManager : NetworkBehaviour
     {
-        if(!Runner.IsServer)
-            return;
+        private static string BOSS_KEY = "boss";
         
-        _change = GetChangeDetector(ChangeDetector.Source.SimulationState);
-        await Task.Delay(2000);
-        UpdateGameState(GameState.ActiveLevel);
-    }
-        
-    void Awake()
-    {
-        if (instance == null)
+        //best practice = keeping these in seperate script
+        public enum GameState
         {
-            instance = this;
-            DontDestroyOnLoad(this.gameObject);
+            MainMenu,
+            Cutscene,
+            ActiveLevel,
+            SpawnBoss,
+            Lost,
+            Win
         }
-    }
-
-    // Creates the Pause UI in scene
-    void Start()
-    {
-        IsPausable = true;//for testing
-        Instantiate(Resources.Load("GameUI"));
-        Instantiate(Resources.Load("EventSystem"));
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
-    }
-
-    public void UpdateGameState(GameState newState)
-    {
-        CurrentGameState = newState;
-
+        public static GameManager instance;
         
+        [SerializeField] private int maxLevels;
+        [SerializeField] private RewardsMap rewardsMap;
 
-        switch (newState)
+        private ChangeDetector _change;
+        private Dictionary<string, Objective> objectivesMap;
+        private Dictionary<string, Objective> objectivesGUIData;
+        private int _currentLevel = 1;
+        private TimeSpan _timeLeft;
+        private GameUI _gameUI;
+        private NetworkTimer _timer;
+        private List<Player> _players;
+        private List<NetworkObject> _enemies;
+        private RewardManager _rewardManager;
+
+        private bool cutscenePlayed = false;
+        private int _cutscenesCompleted = 0;
+        
+        public event Action<bool> OnPauseStatusChanged;
+        public GameState CurrentGameState { get; private set; }
+        public static event Action<GameState> OnGameStateChanged;
+
+        [Networked] public bool gameStarted { get; private set; } = false;
+        [Networked] public bool bossDefeated { get; private set; }
+        [Networked] public bool IsPaused { get; private set; }
+        [Networked] public bool IsPausable { get; private set; }
+
+        void Awake()
         {
-            case GameState.MainMenu:
-                //place holder for now
-                
-                SceneManager.LoadScene("Network Test 1");
-                
-                break;
-            case GameState.ActiveLevel:
-                StartLevel();
-                RunLevel();
-                break;
-            case GameState.BetweenLevels:
-                //replace with win state only? 
-                break;
-            case GameState.GameOver:
-                break;
-            case GameState.Win:
-
-                break;
-            default:
-                break;
-        }
-        OnGameStateChanged?.Invoke(newState);
-    }
-
-    //best practice = keeping these in seperate script
-    public enum GameState
-    {
-        MainMenu,
-        ActiveLevel,
-        BetweenLevels,
-        GameOver,
-        Win
-    }
-    public override void Render()
-    {
-        base.Render();
-        foreach (var change in _change.DetectChanges(this))
-        {
-            switch (change)
+            if (instance == null)
             {
-                case nameof(IsPaused):
-                    OnPauseStatusChanged?.Invoke(IsPaused);
-                    break;
+                instance = this;
+                DontDestroyOnLoad(this.gameObject);
             }
         }
-    }
 
-    private void DoPause(bool pause)
-    {   if(!IsPausable)
+        private void OnDestroy()
         {
-            return;
+            if(_gameUI == null)
+                return;
+            _gameUI.DeRegisterLoadToMainMenu(LoadMainMenu);
+            _gameUI.DeRegisterLoadNextLevel(LoadNextLevel);
         }
-
-        IsPaused = pause;
-    }
-    public void Pause(bool pause)
-    {
-        Debug.Log($"Pause {pause}");
-       if(Runner.IsServer)
-        DoPause(pause);
-       else
-        RPC_Pause(pause);
-    }
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    private void RPC_Pause(bool pause)
-    {
-        DoPause(pause);
-    }
-
-    private async void StartLevel()
-    {
-        if(Runner==null)
-            return;
-        if (!Runner.IsServer)
-        {
-            Debug.Log("Cannot call StartLevel on client");
-            return;
-        }
-        IsPausable = true;
-        bool result= await NetworkManager.Instance.LoadSceneNetworked(levelSceneIndex, false);
-        if (!result)
-        {
-            Debug.LogError("Failed to load level");
-            return;
-        }
-        NetworkManager.Instance.SpawnPlayers(new List<Vector3> { new Vector3(0,2,0), new Vector3(0,4,0)}, new List<Quaternion> { Quaternion.identity,Quaternion.identity});
-        Runner.Spawn(enemyMap["test"], Vector3.zero,Quaternion.identity);
         
-        //change objectives
-        ObjectiveData testObjective = ScriptableObject.CreateInstance<ObjectiveData>();
-        testObjective.Initialize("OBLITERATE 1 enemy", "onion", 1, 0, ObjectiveData.OperationType.Sub);
-        objectivesMap.Add("onion", testObjective);
-        bossDefeated = false;
-    }
-    private void RunLevel()
-    {   //while loop? Like while objectives not met and boss not defeated?
-        if(objectivesMap.Count > 0 && !bossDefeated)
+        public void ResetManager()
         {
-           
+            if(objectivesMap != null)
+                objectivesMap.Clear();
+            
+            if(objectivesGUIData != null)
+                objectivesGUIData.Clear();
+            
+            if (_players != null)
+            {
+                foreach (var player in _players)
+                {
+                    if(player != null)
+                        Runner.Despawn(player.GetComponent<NetworkObject>());
+                }
+                _players.Clear();
+            }
+
+            if (_enemies != null)
+            {
+                foreach (var enemy in _enemies)
+                {
+                    if(enemy != null)
+                        Runner.Despawn(enemy);
+                }
+                _enemies.Clear();
+            }
         }
-        else if (objectivesMap.Count == 0 && !bossDefeated)
+        private void Initialise()
         {
-            SpawnBoss();
+            IsPausable = true; //for testing
+            var gameUIObj = Instantiate(Resources.Load<GameObject>("GameUI"), transform);
+            _gameUI = gameUIObj.GetComponentInChildren<GameUI>();
+            _gameUI.RegisterLoadToMainMenu(LoadMainMenu);
+            _gameUI.RegisterLoadNextLevel(LoadNextLevel);
+            _gameUI.OnCutsceneCompleted += OnCutsceneCompleted;
+            _rewardManager = new RewardManager();
+            
+            if (EventSystem.current == null)
+                Instantiate(Resources.Load("EventSystem"));
+
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Confined;
         }
-      
-        else
+        
+        private void Update()
         {
+            if(!Runner.IsServer)
+                return;
+            if(!gameStarted)
+                return;
+
+            int downedPlayers = 0;
+            foreach(var player in _players)
+            {
+                if (player != null && player.PlayerDowned)
+                    downedPlayers+=1;
+            }
+
+            if (downedPlayers >= _players.Count)
+            {
+                gameStarted = false;
+                StartCoroutine(DelayedGameLost());
+            }
+        }
+        
+        public override void Spawned()
+        {
+            Initialise();
+            objectivesMap = new Dictionary<string, Objective>();
+            _timer = GetComponentInChildren<NetworkTimer>();
+            _timer.OnTimerTick += TimerTick;
+            _change = GetChangeDetector(ChangeDetector.Source.SimulationState);
+            if (!Runner.IsServer)
+                return;
+            
+            UpdateGameState(GameState.ActiveLevel);
+        }
+        
+        private void TimerTick(TimeSpan timeLeft)
+        {
+            AudioManager.Instance.PlaySFX(SFXConstants.Clock);
+            this._timeLeft = timeLeft;
+            _gameUI.UpdateTimerText(timeLeft);
+            if (gameStarted && timeLeft.TotalSeconds <=0)
+            {
+                gameStarted = false;
+                StartCoroutine(DelayedGameLost());
+            }
+        }
+
+        private IEnumerator DelayedGameLost()
+        {
+            yield return new WaitForSeconds(1);
+            UpdateGameState(GameState.Lost);
+        }
+
+        public override void Render()
+        {
+            base.Render();
+            if (_change == null)
+                return;
+            foreach (var change in _change.DetectChanges(this))
+            {
+                switch (change)
+                {
+                    case nameof(IsPaused):
+                        OnPauseStatusChanged?.Invoke(IsPaused);
+                        break;
+                }
+            }
+        }
+        
+        public void UpdateGameState(GameState newState)
+        {
+            if(!Runner.IsServer)
+                return;
+            CurrentGameState = newState;
+            switch (newState)
+            {
+                case GameState.MainMenu:
+                    LoadMainMenu();
+                    break;
+                case GameState.Cutscene:
+                    PlayCutscene();
+                    break;
+                case GameState.ActiveLevel:
+                    StartLevel();
+                    break;
+                case GameState.SpawnBoss:
+                    SpawnBoss();
+                    break;
+                case GameState.Win:
+                    OnGameWon();
+                    break;
+                case GameState.Lost:
+                    OnGameLost();
+                    break;
+            }
+            OnGameStateChanged?.Invoke(newState);
+        }
+        
+        private void LoadMainMenu()
+        {
+            RPC_LoadMainMenuOnClient();
+        }
+
+        private void PlayCutscene()
+        {
+            if (!Runner.IsServer)
+                return;
+            
+            _cutscenesCompleted = 0;
+            RPC_PlayCutsceneForAll();
+        }
+        
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_PlayCutsceneForAll()
+        {
+            _gameUI.PlayCutscene();
+        }
+
+        private void OnCutsceneCompleted()
+        {
+            if (Runner.IsServer)
+            {
+                _cutscenesCompleted += 1;
+                CheckIfCutsceneCompletedForAll();
+            }
+            else
+            {
+                RPC_CutsceneCompleted();
+            }
+        }
+
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        private void RPC_CutsceneCompleted()
+        {
+            _cutscenesCompleted += 1;
+            CheckIfCutsceneCompletedForAll();
+        }
+        
+        private void CheckIfCutsceneCompletedForAll()
+        {
+            if (_cutscenesCompleted < NetworkManager.Instance.ConnectedPlayers.Count)
+                return;
+            RPC_HideCutsceneGUI();
+            UpdateGameState(GameState.ActiveLevel);
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_HideCutsceneGUI()
+        {
+            _gameUI.HideCutscenePlayer();
+        }
+        
+        [Rpc(RpcSources.All, RpcTargets.All)]
+        private void RPC_LoadMainMenuOnClient()
+        {
+            NetworkManager.Instance.ResetGame();
+        }
+        
+        private void DoPause(bool pause)
+        {
+            if (!IsPausable)
+            {
+                return;
+            }
+
+            IsPaused = pause;
+            Cursor.visible = pause;
+            Cursor.lockState = pause?CursorLockMode.None : CursorLockMode.Locked;
+        }
+
+        public void Pause(bool pause)
+        {
+            Debug.Log($"Pause {pause}");
+            if (Runner.IsServer)
+                DoPause(pause);
+            else
+                RPC_Pause(pause);
+        }
+
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        private void RPC_Pause(bool pause)
+        {
+            DoPause(pause);
+        }
+
+        private async void StartLevel()
+        {
+            if (Runner == null)
+                return;
+            if (!Runner.IsServer)
+            {
+                Debug.LogError("Cannot call StartLevel on client");
+                return;
+            }
+            IsPausable = true;
+            LevelManager.LoadLevel(_currentLevel);
+            bool result = await NetworkManager.Instance.LoadSceneNetworked(LevelManager.LevelSceneIndx, false);
+            if (!result)
+            {
+                Debug.LogError("Failed to load level");
+                return;
+            }
+
+            //quick-hack to load a scene and then play cutscene :p
+            //I know I'm loadin the same scene twice but fk it.
+            if (NetworkManager.Instance.ShowCutsceneBeforeFirstLevel && !cutscenePlayed)
+            {
+                cutscenePlayed = true;
+                UpdateGameState(GameState.Cutscene);
+                return;
+            }
+            
+            var defPos = new List<Vector3> { new Vector3(0, 2, 0), new Vector3(0, 4, 0) };
+            var defRot = new List<Quaternion> { Quaternion.identity, Quaternion.identity };
+            var spawnPositions = new List<Vector3>();
+            var spawnRotations = new List<Quaternion>();
+            foreach (var spawnpoint in FindObjectsOfType<PlayerSpawnPoint>())
+            {
+                spawnPositions.Add(spawnpoint.SpawnPosition);
+                spawnRotations.Add(spawnpoint.SpawnRotation);
+            }
+            if (spawnPositions.Count < 0 || spawnRotations.Count < 0)
+            {
+                spawnPositions = defPos;
+                spawnRotations = defRot;
+            }
+            _enemies = new List<NetworkObject>();
+            NetworkManager.Instance.SpawnPlayers(spawnPositions, spawnRotations);
+
+            await Task.Delay(100);
+            
+            foreach (var spawner in FindObjectsOfType<GenericEnemySpawner>())
+            {
+                var no = Runner.Spawn(spawner.Prefab, spawner.transform.position, spawner.transform.rotation);
+                no.GetComponent<NetworkRigidbody3D>().Teleport(spawner.transform.position);
+                _enemies.Add(no);
+            }
+            //change objectives
+            
+            string levelPath = LevelManager.LevelDataPath;
+            objectivesMap = new Dictionary<string, Objective>();
+            foreach (var objectiveData in LevelManager.Objectives)
+            {
+                objectivesMap.Add(objectiveData.key, new Objective(objectiveData));
+            }
+            bossDefeated = false;
+            InitialiseObjectiveTexts();
+            RPC_LoadLevelObjectivesOnClient(levelPath);
+            //start game timer
+            NetworkLogger.Log("Starting timer");
+            _timer.StartTimer(TimeSpan.FromSeconds(LevelManager.LevelTime));
+            _gameUI.ShowGameTimer(true);
+            _players = FindObjectsOfType<Player>().ToList();
+            foreach (var player in _players)
+            {
+                int indx = _rewardManager.GetRewardIndex(player.PlayerId);
+                player.SetWeapon(indx);
+            }
+            InitialiseScores();
+            RPC_InitialiseScoreOnClients();
+            gameStarted = true;
+        }
+
+        private void InitialiseScores()
+        {
+            var list = new List<int>();
+            var nicknames = new Dictionary<int, string>();
+            foreach (var player in _players)
+            {
+                list.Add(player.PlayerId);
+                nicknames.Add(player.PlayerId, NetworkManager.Instance.GetPlayerNickNameById(player.PlayerId));
+            }
+            ScoreManager.Initialise(list);
+            _gameUI.InitialiseScores(ScoreManager.Score, nicknames);
+        }
+        
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_InitialiseScoreOnClients()
+        {
+            if(Runner.IsServer)
+                return;
+            _players = FindObjectsOfType<Player>().ToList();
+            InitialiseScores();
+        }
+        
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_LoadLevelObjectivesOnClient(string levelPath)
+        {
+            if (Runner.IsServer)
+                return;
+            LevelManager.LoadLevelObjectivesFrom(levelPath);
+            objectivesMap = new Dictionary<string, Objective>();
+            foreach (var objectiveData in LevelManager.Objectives)
+            {
+                objectivesMap.Add(objectiveData.key, new Objective(objectiveData));
+            }
+            InitialiseObjectiveTexts();
+        }
+
+        private void InitialiseObjectiveTexts()
+        {
+            if (objectivesGUIData == null)
+                objectivesGUIData = new Dictionary<string, Objective>();
+            foreach (var kv in objectivesMap)
+            {
+                objectivesGUIData.Add(kv.Key, new Objective(kv.Value.Data));
+            }
+            UpdateGameUI();
+        }
+
+        
+        
+        //-----------------------------------------------------------
+        // Boss Spawn
+        //-----------------------------------------------------------
+        private void SpawnBoss()
+        {
+            RPC_ShowBossSpawnVisual();
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_ShowBossSpawnVisual()
+        {
+            AlterCollector collectible = FindObjectOfType<AlterCollector>();
+            var alterCamObjC = collectible.AlterCamClose;
+            var alterCamObjF = collectible.AlterCamFar;
+            var alterGraphic = collectible.AlterGraphic;
+            Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend = new CinemachineBlendDefinition()
+            {
+                m_Style = CinemachineBlendDefinition.Style.Cut
+            };
+            
+            var wiggler = alterGraphic.GetComponentInChildren<Wiggle>();
+            alterCamObjC.SetActive(true);
+            alterCamObjF.SetActive(false);
+            
+            wiggler.enabled = true;
+            StartCoroutine(BossSpawnCoroutine());
+            AudioManager.Instance.PlaySFX(LevelManager.BossSFXKey);
+        }
+
+        IEnumerator BossSpawnCoroutine()
+        {
+            yield return new WaitForSeconds(3);
+            if (!Runner.IsServer)
+                yield break;
+            SpawnBossInstanceOnServer();
+            yield return new WaitForEndOfFrame();
+            RPC_UpdateMusic();
+            yield return new WaitForSeconds(3);
+            RPC_SpawnExplosionAndHideAlterGraphic();
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_UpdateMusic()
+        {
+            AudioManager.Instance.PlayBackgroundMusic(LevelManager.BossMusic);
+        }
+        
+        private void SpawnBossInstanceOnServer()
+        {
+            if (LevelManager.BossToSpawn.Equals(default))
+            {
+                UpdateGameState(GameState.Win);
+                return;
+            }
+            var pos = Vector3.zero;
+            var rot = Quaternion.identity;
+            var spawner = FindObjectOfType<BossSpawner>();
+            if (spawner != null)
+            {
+                pos = spawner.SpawnPos;
+                rot = spawner.SpawnRotation;
+            }
+            Runner.Spawn(LevelManager.BossToSpawn, pos, rot);
+            RPC_SpawnFX();
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_SpawnFX()
+        {
+            AlterCollector collectible = FindObjectOfType<AlterCollector>();
+            Instantiate(collectible.SpawnEffect, collectible.SpawnFXTRF.position, Quaternion.identity);
+            Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend = new CinemachineBlendDefinition()
+            {
+                m_Style = CinemachineBlendDefinition.Style.EaseInOut,
+                m_Time = 0.5f,
+            };
+            var alterGraphic = collectible.AlterGraphic;
+            var alterCamClose = collectible.AlterCamClose;
+            var alterCamFar = collectible.AlterCamFar;
+            
+            alterCamClose.SetActive(false);
+            alterCamFar.SetActive(true);
+            alterGraphic.gameObject.SetActive(false);
+        }
+        
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_SpawnExplosionAndHideAlterGraphic()
+        {
+            Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend = new CinemachineBlendDefinition()
+            {
+                m_Style = CinemachineBlendDefinition.Style.Cut
+            };
+            AlterCollector collectible = FindObjectOfType<AlterCollector>();
+            collectible.transform.parent.gameObject.SetActive(false);
+        }
+        
+        //-----------------------------------------------------------
+        // Boss Spawn End
+        //-----------------------------------------------------------
+        
+        
+        
+        public void UpdateScore(int player, string enemyKey)
+        {
+            if(LevelManager.ScoreMap.ContainsKey(enemyKey))
+                ScoreManager.UpdateScore(player, LevelManager.ScoreMap[enemyKey]);
+            
+            _gameUI.UpdateScore(player, ScoreManager.Score[player]);
+            if (enemyKey.Equals(BOSS_KEY))
+            {
+                StartCoroutine(DelayedGameWin());
+                return;
+            }
+            if (Runner.IsServer)
+            {
+                RPC_UpdateScoreOnClient(player, enemyKey);
+            }
+        }
+        
+        private IEnumerator DelayedGameWin()
+        {
+            yield return new WaitForSeconds(1);
             UpdateGameState(GameState.Win);
         }
-    }
-    public void SpawnBoss() { }
-    public void RaiseObjective(string key)
-    {
-        if(Runner==null)
-            return;
-        if (!Runner.IsServer) { return; }
-        if (!objectivesMap.ContainsKey(key))
+        
+        public void RPC_UpdateScoreOnClient(int player, string enemyKey)
         {
-            return;
+            if (Runner.IsServer)
+                return;
+            UpdateScore(player, enemyKey);
         }
-        Debug.Log("Objective Raised " + key);
-        var objective = objectivesMap[key];
-        if (objective.operationType == ObjectiveData.OperationType.Add)
+        
+        public void RaiseObjective(string key)
         {
-            objective.value += 1;
+            if (Runner == null)
+                return;
+            if (!Runner.IsServer)
+                return;
+            if (!objectivesMap.ContainsKey(key))
+                return;
+            Debug.Log("Objective Raised!!");
+            var objective = objectivesMap[key];
+            objective.UpdateObjective();
+            objectivesGUIData[key].SetValue(objective.Current);
+            RPC_UpdateObjectiveData(key, objective.Current);
+            if (objective.IsCompleted)
+            {
+                AudioManager.Instance.PlaySFX(SFXConstants.ObjectiveComplete, syncNetwork:true);
+                objectivesMap.Remove(key);
+            }
+            
+            TryUpdateGameState();
+            UpdateGameUI();
         }
-        else
+        
+        private void TryUpdateGameState()
         {
-            objective.value -= 1;
+            if(!gameStarted)
+                return;
+            if(!CurrentGameState.Equals(GameState.ActiveLevel))
+                return;
+            if (bossDefeated)
+                return;
+            if (objectivesMap.Count <= 0)
+            {
+                UpdateGameState(GameState.SpawnBoss);
+            }
         }
-        if (objective.value == objective.targetValue)
+        
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_UpdateObjectiveData(string key, int value)
         {
-            objectivesMap.Remove(key);
+            if (Runner.IsServer)
+                return;
+            objectivesGUIData[key].SetValue(value);
+            UpdateGameUI();
         }
-      
-    }
 
-    //so main logic is as such, when an enemy dies, it will update the objective. if it matches, then the objective is updated. once objective is met, it is removed from list. Once list is empty, all objectives have been met and we can spawn the boss. Once boss is defeated, triggers gamestate change and level ends.
+        private void UpdateGameUI()
+        {
+            if (_gameUI == null)
+                return;
+            _gameUI.UpdateLevelObjectives(objectivesGUIData);
+        }
+        
+        private void OnGameWon()
+        {
+            _timer.StopTimer();
+            gameStarted = false;
+            _gameUI.ShowGameTimer(false);
+            LevelManager.LevelComplete(true, _timeLeft);
+            _rewardManager.Calculate(ScoreManager.Score, rewardsMap);
+            ResetManager();
+            _gameUI.ShowWinGameUI(true, true);
+            RPC_ShowWinScreenOnClients();
+        }
+        
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_ShowWinScreenOnClients()
+        {
+            if(Runner.IsServer)
+                return;
+            ResetManager();
+            _gameUI.ShowWinGameUI(true, false);
+        }
+        
+        private void LoadNextLevel()
+        {
+            if(!Runner.IsServer)
+                return;
+            if (_currentLevel < maxLevels)
+            {
+                ResetManager();
+                _currentLevel+=1;
+                UpdateGameState(GameState.ActiveLevel);
+                _gameUI.ShowWinGameUI(false, false);
+                RPC_HideWinScreenOnClients();
+            }
+            else
+            {
+                //TODO: Show Final Screen
+                Debug.Log("Game Actually Over!!");
+            }
+        }
+        
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_HideWinScreenOnClients()
+        {
+            if(Runner.IsServer)
+                return;
+            _gameUI.ShowWinGameUI(false, false);
+        }
+        
+        private void OnGameLost()
+        {
+            Debug.Log("Game Lost");
+            _timer.StopTimer();
+            gameStarted = false;
+            _gameUI.ShowGameTimer(false);
+            LevelManager.LevelComplete(false, _timeLeft);
+            RPC_ShowLoseScreenOnClients();
+            _gameUI.ShowLostGameUI(true);
+            ResetManager();
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_ShowLoseScreenOnClients()
+        {
+            if(Runner.IsServer)
+                return;
+            _gameUI.ShowLostGameUI(true);
+            ResetManager();
+        }
+        
+        //so main logic is as such, when an enemy dies,
+        //it will update the objective. if it matches,
+        //then the objective is updated. once objective is met,
+        //it is removed from list. Once list is empty,
+        //all objectives have been met and we can spawn the boss.
+        //Once boss is defeated, triggers gamestate change and level ends.
+    }
 }
