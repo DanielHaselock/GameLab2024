@@ -437,12 +437,14 @@ namespace GameLoop
         //-----------------------------------------------------------
         private void SpawnBoss()
         {
+            _timer.StopTimer();
             RPC_ShowBossSpawnVisual();
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void RPC_ShowBossSpawnVisual()
         {
+            _gameUI.ShowGameTimer(false);
             AlterCollector collectible = FindObjectOfType<AlterCollector>();
             var alterCamObjC = collectible.AlterCamClose;
             var alterCamObjF = collectible.AlterCamFar;
