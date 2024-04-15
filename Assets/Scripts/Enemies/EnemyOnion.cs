@@ -146,7 +146,7 @@ public class EnemyOnion : Enemy
                 happy = false;
         }
         myState = happy? OnionState.Passive : OnionState.Aggressive;
-        GetComponent<SphereCollider>().radius = 35;
+        GetComponent<SphereCollider>().radius = 20;
     }
 
     IEnumerator WaitAndAttack()
@@ -156,7 +156,7 @@ public class EnemyOnion : Enemy
         navMeshAgent.speed = 0;
         animator.CrossFade("Attack", .1f);
         //attack windup
-        yield return new WaitForSeconds(.35f);
+        yield return new WaitForSeconds(.20f);
         if (stunned)
         {
             attacking = false;
@@ -183,7 +183,7 @@ public class EnemyOnion : Enemy
                 myState = OnionState.Aggressive;
                 if (_targetPlayer != null)
                 navMeshAgent.destination = _targetPlayer.transform.position;
-                GetComponent<SphereCollider>().radius = 15;
+                GetComponent<SphereCollider>().radius = 8;
             }
             foreach (GameObject onion in _seenOnions)
             {
@@ -201,7 +201,7 @@ public class EnemyOnion : Enemy
         //Can't add player to seen players, as that needs to happen on its own time.
         if (player != null)
            navMeshAgent.destination = player.transform.position;
-        GetComponent<SphereCollider>().radius = 15;
+        GetComponent<SphereCollider>().radius = 8;
     }
     protected override void OnTriggerEnter(Collider other)
     {

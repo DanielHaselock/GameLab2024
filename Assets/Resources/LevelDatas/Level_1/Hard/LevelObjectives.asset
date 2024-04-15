@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: LevelObjectives
   m_EditorClassIdentifier: 
   objectives:
-  - {fileID: 11400000, guid: 86d460db8b7014935a8ca37fb347b3cd, type: 2}
-  - {fileID: 11400000, guid: 618f5790ff0384c3c800396c203d8ed8, type: 2}
+  - {fileID: 11400000, guid: f4a6ae8547a51ef46ae8b438bb1ae8a8, type: 2}
+  - {fileID: 11400000, guid: b159d580432b2b444b1a85bcaed86fea, type: 2}
+  - {fileID: 11400000, guid: 109c2582af1f75e4a8860126a8126e8c, type: 2}
