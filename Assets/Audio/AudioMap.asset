@@ -75,7 +75,7 @@ MonoBehaviour:
     - Key: pickup
       Value:
       - {fileID: 8300000, guid: 1efbf0268a33bea4b8a75d2021cefaaa, type: 3}
-    - Key: boss_souvlaki
+    - Key: boss_souvlaki_explosion
       Value:
       - {fileID: 8300000, guid: deec8f33f67d64d4eb17255e6e19c486, type: 3}
     - Key: small_enemy_hit
@@ -102,3 +102,16 @@ MonoBehaviour:
       - {fileID: 8300000, guid: 6069eae554b5e004fb70cdd8fe43a8c0, type: 3}
       - {fileID: 8300000, guid: 95d477a6140bc4d47a233a152de26d96, type: 3}
       - {fileID: 8300000, guid: f6edced07efbe3246a5e78b4c9282565, type: 3}
+    - Key: large_enemy_attack
+      Value:
+      - {fileID: 8300000, guid: 33c625d666bff23438d1f41ee74f1a7e, type: 3}
+    - Key: small_enemy_death
+      Value:
+      - {fileID: 8300000, guid: a16b6cf46fbe84a4bb372d276db0e73a, type: 3}
+    - Key: large_enemy_hit
+      Value:
+      - {fileID: 8300000, guid: d82a21f188327fb4a8cdd227082e8106, type: 3}
+      - {fileID: 8300000, guid: ee1f311fa275df94c9a9b365cc9c1b5b, type: 3}
+      - {fileID: 8300000, guid: ce1e4d998cd1a6e47a741b46354e1e23, type: 3}
+      - {fileID: 8300000, guid: 8957b4caaa43af14e8ec0e0a6b4ea358, type: 3}
+      - {fileID: 8300000, guid: 7b6247ad7e1a2e54d8295dfb6d70a05e, type: 3}

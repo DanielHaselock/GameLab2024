@@ -36,6 +36,9 @@ namespace Audio
         public static string BossSummon = "boss_summon";
         public static string ExplosionBlock = "explosion_block";
         public static string SmallEnemyAttack = "small_enemy_attack";
+        public static string SmallEnemyDeath = "small_enemy_death";
         public static string BurgerAttack = "burger_attack";
+        public static string LargeEnemyHit = "large_enemy_hit";
+        public static string LargeEnemyAttack = "large_enemy_attack";
     }
 }
