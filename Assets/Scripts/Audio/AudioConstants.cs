@@ -1,6 +1,6 @@
 namespace Audio
 {
-    public static class SFXConstants
+    public static class AudioConstants
     {
         //BG Tracks
         public static string PostRound = "post_round";

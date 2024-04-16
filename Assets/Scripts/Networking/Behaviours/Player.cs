@@ -141,7 +141,7 @@ public class Player : NetworkBehaviour
         {
             chargedAttackGraphic.SetActive(true);
             if(_no.HasInputAuthority)
-                AudioManager.Instance.PlaySFX(SFXConstants.PlayerAttackCharge);
+                AudioManager.Instance.PlaySFX(AudioConstants.PlayerAttackCharge);
         }
     }
 
@@ -152,7 +152,7 @@ public class Player : NetworkBehaviour
         {
             jumpImpulse = jumpForce;
             _anim.SetTrigger("Jump", true);
-            AudioManager.Instance.PlaySFX(SFXConstants.Jump);
+            AudioManager.Instance.PlaySFX(AudioConstants.Jump);
         }
         
         
@@ -333,7 +333,7 @@ public class Player : NetworkBehaviour
     IEnumerator InitiateAttack(float attackDelay, bool charged)
     {
         yield return new WaitForSeconds(attackDelay);
-        AudioManager.Instance.PlaySFX3D(SFXConstants.PlayerAttack, transform.position);
+        AudioManager.Instance.PlaySFX3D(AudioConstants.PlayerAttack, transform.position);
         _damager.InitiateAttack(charged);
     }
     
@@ -344,7 +344,7 @@ public class Player : NetworkBehaviour
     
     private void OnHealthDepleted(int damager)
     {
-        AudioManager.Instance.PlaySFX(SFXConstants.Help, syncNetwork:true);
+        AudioManager.Instance.PlaySFX(AudioConstants.Help, syncNetwork:true);
         if (Runner.IsServer)
             RPC_SetDowned(true);
     }

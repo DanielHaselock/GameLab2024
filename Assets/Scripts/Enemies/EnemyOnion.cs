@@ -177,7 +177,7 @@ public class EnemyOnion : Enemy
     public override void OnAttack()
     {
         base.OnAttack();
-        AudioManager.Instance.PlaySFX(SFXConstants.SmallEnemyHit);
+        AudioManager.Instance.PlaySFX(AudioConstants.SmallEnemyHit);
         if (!healthComponent.HealthDepleted)
         {
             if (myState == OnionState.Passive)

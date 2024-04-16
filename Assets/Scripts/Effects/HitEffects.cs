@@ -66,7 +66,7 @@ namespace Effects
                 }
             }
 
-            AudioManager.Instance.PlaySFX3D(SFXConstants.Hit,  transform.position,true, false);
+            AudioManager.Instance.PlaySFX3D(AudioConstants.Hit,  transform.position,true, false);
         }
 
         IEnumerator DoHitMaterialUpdate()

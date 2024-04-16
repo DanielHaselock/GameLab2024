@@ -155,7 +155,7 @@ namespace GameLoop
             this._timeLeft = timeLeft;
             
             if(timeLeft.TotalSeconds <= 10)
-                AudioManager.Instance.PlaySFX(SFXConstants.Clock);
+                AudioManager.Instance.PlaySFX(AudioConstants.Clock);
             
             _gameUI.UpdateTimerText(timeLeft);
             if (gameStarted && timeLeft.TotalSeconds <=0)
@@ -589,7 +589,7 @@ namespace GameLoop
             RPC_UpdateObjectiveData(key, objective.Current);
             if (objective.IsCompleted)
             {
-                AudioManager.Instance.PlaySFX(SFXConstants.ObjectiveComplete, syncNetwork:true);
+                AudioManager.Instance.PlaySFX(AudioConstants.ObjectiveComplete, syncNetwork:true);
                 objectivesMap.Remove(key);
             }
             
@@ -644,7 +644,7 @@ namespace GameLoop
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-            AudioManager.Instance.PlayBackgroundMusic("post_round");
+            AudioManager.Instance.PlayBackgroundMusic(AudioConstants.PostRound);
             if(Runner.IsServer)
                 return;
             ResetManager();
