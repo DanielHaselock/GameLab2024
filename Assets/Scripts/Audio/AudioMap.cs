@@ -15,10 +15,6 @@ namespace Audio
 
         [SerializeField]
         private SerializableDictionary<string, List<AudioClip>> _sfxClips;
-
-        [SerializeField] public string InitialBackgroundMusic;
-        [SerializeField] public string InitialAmbiance;
-        
         public AudioClip GetBackgroundClip(string backgroundName)
         {
             if (!_bgClips.ContainsKey(backgroundName))

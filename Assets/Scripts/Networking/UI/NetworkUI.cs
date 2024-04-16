@@ -82,9 +82,18 @@ namespace Networking.UI
             };
         }
 
-        public void ShowWait(bool show)
+        public void ShowWait(bool show, string msg="")
         {
             waitPanel.SetActive(show);
+            if (waitPanel.activeSelf)
+            {
+                if (string.IsNullOrEmpty(msg))
+                {
+                    msg = "Please wait\nConnecting to server...";
+                }
+                
+                waitPanel.GetComponentInChildren<TMPro.TMP_Text>().text = msg;
+            }
         }
         
         public void ShowLoadingScreen(bool show)

@@ -17,9 +17,17 @@ MonoBehaviour:
     - Key: mainmenu
       Value: {fileID: 8300000, guid: da51e4ca2faa99a4ab3202caa311fdc9, type: 3}
     - Key: boss_souvlaki
-      Value: {fileID: 8300000, guid: 5e293f2caabc28b43bbb83edc8de97cf, type: 3}
+      Value: {fileID: 8300000, guid: 0a5afab42ab671a4d95f60e7695bf7f3, type: 3}
+    - Key: post_round
+      Value: {fileID: 8300000, guid: d4b1f4f6806fcff4dad39d692a191966, type: 3}
+    - Key: later_level
+      Value: {fileID: 8300000, guid: da51e4ca2faa99a4ab3202caa311fdc9, type: 3}
+    - Key: battle_1
+      Value: {fileID: 8300000, guid: 6b0c3836d27785d4bbe308fa2592b935, type: 3}
   _ambianceClips:
-    _items: []
+    _items:
+    - Key: main_atmos
+      Value: {fileID: 8300000, guid: 156e0ba89b1ad61449ae6d80753c4a7a, type: 3}
   _sfxClips:
     _items:
     - Key: click
@@ -71,5 +79,3 @@ MonoBehaviour:
     - Key: boss_souvlaki
       Value:
       - {fileID: 8300000, guid: deec8f33f67d64d4eb17255e6e19c486, type: 3}
-  InitialBackgroundMusic: mainmenu
-  InitialAmbiance: 
