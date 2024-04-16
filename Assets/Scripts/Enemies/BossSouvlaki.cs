@@ -270,7 +270,7 @@ public class BossSouvlaki : Enemy
             //GetComponent<Rigidbody>().velocity =- transform.right * 0.5f * Time.deltaTime;
             //GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(GetComponent<Rigidbody>().velocity, 5);
             GetComponent<Rigidbody>().AddForce(transform.right * -.5f, ForceMode.Impulse);
-            yield return null;
+            yield return new WaitForSeconds(.05f);
         }
 
         rolling = false;
