@@ -19,6 +19,10 @@ public class DamageComponent : NetworkBehaviour
     [SerializeField] private float attackCone = 60;
     [SerializeField] private float knockBackForce = 5;
     [SerializeField] private List<HealthComponent> hittableObjects = new List<HealthComponent>();
+
+    [SerializeField] private bool allowHealOnKill;
+    [SerializeField] private float healMin;
+    [SerializeField] private float healMax;
     
     HealthComponent selfheal;
     private int _damagerId = -1;
@@ -60,6 +64,8 @@ public class DamageComponent : NetworkBehaviour
         else
             other.UpdateHealth(-_damageToDeal, _damagerId, charge);
 
+        TryHeal(other);
+        
         var rb = other.GetComponentInParent<Rigidbody>();
         if (rb != null)
         {
@@ -67,6 +73,18 @@ public class DamageComponent : NetworkBehaviour
             revDir.y = 1;
             rb.AddForce(revDir.normalized*knockBackForce, ForceMode.Impulse);
         }
+    }
+
+    private void TryHeal(HealthComponent other)
+    {
+        if(!allowHealOnKill)
+            return;
+        if (other.Health > 0)
+            return;
+        var perc = (selfheal.MaxHealth - selfheal.Health) / selfheal.MaxHealth; // the closer to death, the more you get.
+        var offeredHealth = Mathf.Lerp(healMin, healMax, perc);
+        selfheal.UpdateHealth((int)offeredHealth, -1, false);
+        selfheal.ShowHealFX();
     }
     
     private bool WithinAttackCone(Transform target)
@@ -117,7 +135,9 @@ public class DamageComponent : NetworkBehaviour
         foreach (var hc in GetAllHealthAroundMe())
         {
             if (hc.transform.tag.Contains(tag))
+            {
                 Attack(hc, charged);
+            }
         }
     }
 
