@@ -33,9 +33,6 @@ namespace GameLoop
         
         [SerializeField] private int maxLevels;
         [SerializeField] private RewardsMap rewardsMap;
-        [Header("Audio")] 
-        [SerializeField] private string bgMusicKey;
-        [SerializeField] private string ambKey;
         
         private ChangeDetector _change;
         private Dictionary<string, Objective> objectivesMap;
@@ -334,8 +331,8 @@ namespace GameLoop
                 return;
             }
             
-            AudioManager.Instance.PlayBackgroundMusic(bgMusicKey);
-            AudioManager.Instance.PlayAmbiance(ambKey);
+            AudioManager.Instance.PlayBackgroundMusic(LevelManager.BGMKey);
+            AudioManager.Instance.PlayAmbiance(LevelManager.AmbianceKey);
             
             var defPos = new List<Vector3> { new Vector3(0, 2, 0), new Vector3(0, 4, 0) };
             var defRot = new List<Quaternion> { Quaternion.identity, Quaternion.identity };

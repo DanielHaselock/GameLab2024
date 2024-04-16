@@ -8,6 +8,8 @@ namespace GameLoop
     [CreateAssetMenu(menuName = "GameLabs/LevelData", fileName = "New Level Data")]
     public class LevelData : ScriptableObject
     {
+        public string BGM;
+        public string Ambiance;
         public LevelObjectives Objectives;
         public ScoringMap ScoringMap;
         public NetworkPrefabRef BossToSpawn;

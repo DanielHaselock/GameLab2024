@@ -14,16 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bgClips:
     _items:
-    - Key: mainmenu
-      Value: {fileID: 8300000, guid: da51e4ca2faa99a4ab3202caa311fdc9, type: 3}
-    - Key: boss_souvlaki
-      Value: {fileID: 8300000, guid: 0a5afab42ab671a4d95f60e7695bf7f3, type: 3}
     - Key: post_round
       Value: {fileID: 8300000, guid: d4b1f4f6806fcff4dad39d692a191966, type: 3}
     - Key: later_level
       Value: {fileID: 8300000, guid: da51e4ca2faa99a4ab3202caa311fdc9, type: 3}
     - Key: battle_1
       Value: {fileID: 8300000, guid: 6b0c3836d27785d4bbe308fa2592b935, type: 3}
+    - Key: boss_souvlaki
+      Value: {fileID: 8300000, guid: 0a5afab42ab671a4d95f60e7695bf7f3, type: 3}
   _ambianceClips:
     _items:
     - Key: main_atmos
