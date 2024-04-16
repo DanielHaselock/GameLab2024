@@ -9,6 +9,7 @@ using UnityEngine;
 using Fusion;
 using Fusion.Addons.Physics;
 using Networking.Behaviours;
+using UnityEditor.Rendering.Universal.ShaderGUI;
 using Utils;
 using UnityEngine.EventSystems;
 
@@ -52,6 +53,9 @@ namespace GameLoop
         public GameState CurrentGameState { get; private set; }
         public static event Action<GameState> OnGameStateChanged;
 
+        [Networked]
+        public bool BossSpawning { get; set; }
+        
         [Networked] public bool gameStarted { get; private set; } = false;
         [Networked] public bool bossDefeated { get; private set; }
         [Networked] public bool IsPaused { get; private set; }
@@ -443,15 +447,36 @@ namespace GameLoop
         //-----------------------------------------------------------
         private void SpawnBoss()
         {
+            BossSpawning = true;
             _timer.StopTimer();
             RPC_ShowBossSpawnVisual();
+            StartCoroutine(TeleportPlayerToArena());
         }
 
+        IEnumerator TeleportPlayerToArena()
+        {
+            yield return new WaitForSeconds(1.5f);
+            var bossBattlePlayerStarts = FindObjectsOfType<PlayerBossFightStartLocator>();
+            foreach (var player in _players)
+            {
+                var loc = bossBattlePlayerStarts[_players.IndexOf(player)];
+                player.MarkForTeleport(loc.SpawnPosition, loc.SpawnRotation);
+            }
+        }
+
+        private void LockArena()
+        {
+            FindObjectOfType<ArenaHandler>().CloseArena();
+        }
+        
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-        private void RPC_ShowBossSpawnVisual()
+        private async void RPC_ShowBossSpawnVisual()
         {
             _gameUI.ShowGameTimer(false);
             _gameUI.HideObjectives(); // no longer needed
+            AudioManager.Instance.PlaySFX(AudioConstants.BossSummon);
+            await Task.Delay(1500);
+            LockArena();
             AlterCollector collectible = FindObjectOfType<AlterCollector>();
             var alterCamObjC = collectible.AlterCamClose;
             var alterCamObjF = collectible.AlterCamFar;
@@ -480,6 +505,7 @@ namespace GameLoop
             RPC_UpdateMusic();
             yield return new WaitForSeconds(3);
             RPC_SpawnExplosionAndHideAlterGraphic();
+            BossSpawning = false;
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

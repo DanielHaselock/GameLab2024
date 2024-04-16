@@ -4572,7 +4572,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiElement: {fileID: 5788112090092369978}
   shakeDuration: 0.25
-  shakeIntensity: 10
+  shakeIntensity: 25
   shakeSpeed: 50
 --- !u!1 &7907553774386702113
 GameObject:

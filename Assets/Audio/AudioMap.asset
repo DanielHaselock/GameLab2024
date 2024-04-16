@@ -129,3 +129,9 @@ MonoBehaviour:
     - Key: boss_roar_long
       Value:
       - {fileID: 8300000, guid: 0df47cfe775c8e14280cf1c8482390b5, type: 3}
+    - Key: souvlaki_roll
+      Value:
+      - {fileID: 8300000, guid: 750ec5d08869a0d4fb56756ec59f3655, type: 3}
+    - Key: enemy_alert
+      Value:
+      - {fileID: 8300000, guid: 08b15936424961e4da3217285c7ce0d9, type: 3}

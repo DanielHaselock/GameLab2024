@@ -67,13 +67,13 @@ public class DamageComponent : NetworkBehaviour
 
         TryHeal(other);
         
-        var rb = other.GetComponentInParent<Rigidbody>();
-        if (rb != null)
-        {
-            var revDir = rb.position - transform.position;
-            revDir.y = 1;
-            rb.AddForce(revDir.normalized*knockBackForce, ForceMode.Impulse);
-        }
+        // var rb = other.GetComponentInParent<Rigidbody>();
+        // if (rb != null)
+        // {
+        //     var revDir = rb.position - transform.position;
+        //     revDir.y = 1;
+        //     rb.AddForce(revDir.normalized*knockBackForce, ForceMode.Impulse);
+        // }
     }
 
     private void TryHeal(HealthComponent other)

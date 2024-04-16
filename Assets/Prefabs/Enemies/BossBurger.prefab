@@ -568,7 +568,7 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   summonTomato: {fileID: 6722423250218177319, guid: 87891455660aaeb41b59b8bb595e162d, type: 3}
   summonBellPepper: {fileID: 5774163994915384625, guid: d32049aab1cffdd4aadd578003867c29, type: 3}
-  breakableWallJail: {fileID: 0}
+  breakableWallJail: {fileID: 7318656285375544877, guid: 2e45c5e0432318a4f9d569bb8f762f56, type: 3}
 --- !u!54 &4812138105980893525
 Rigidbody:
   m_ObjectHideFlags: 0

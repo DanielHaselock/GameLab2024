@@ -158,12 +158,14 @@ public class GameUI : MonoBehaviour
 
     public void ShowLostGameUI(bool show)
     {
+        SetBossHealth(false, 0);
         roundOverUI.gameObject.SetActive(show);
         roundOverUI.ShowEndScreen(false, timerBar.fillAmount);
     }
 
     public void ShowWinGameUI(bool show, bool showNextButton)
     {
+        SetBossHealth(false, 0);
         roundOverUI.gameObject.SetActive(show);
         roundOverUI.ShowEndScreen(true, timerBar.fillAmount);
     }

@@ -25,6 +25,9 @@ namespace Effects
         [SerializeField] 
         private Transform effectSpawnPosition;
         
+        [SerializeField] 
+        private string hitSFX;
+        
         private Dictionary<Renderer, Material> _materialMap;
 
         private Coroutine hitMaterialUpdateRountine;
@@ -66,7 +69,7 @@ namespace Effects
                 }
             }
 
-            AudioManager.Instance.PlaySFX3D(AudioConstants.Hit,  transform.position,true, false);
+            AudioManager.Instance.PlaySFX3D(AudioConstants.HitFeedback,  transform.position,true, false);
         }
 
         IEnumerator DoHitMaterialUpdate()

@@ -600,10 +600,16 @@ namespace Networking.Behaviours
             SceneManager.LoadScene(0);
         }
 
-        [ConsoleCommand("PlayGame", "PlayGame")]
+        [ConsoleCommand("Start game session", "playgame")]
         public static async void PlayGame()
         {
             await Instance.SmartConnect();
+        }
+        
+        [ConsoleCommand("Disconnect from sessions", "disconnect")]
+        public static void Disconnect()
+        {
+            Instance.ResetGame();
         }
     }
 }
