@@ -5,6 +5,7 @@ using Fusion;
 using GameLoop;
 using UnityEngine;
 using UnityEngine.AI;
+using Audio;
 
 public class EnemyPepper : Enemy
 {
@@ -162,6 +163,7 @@ public class EnemyPepper : Enemy
             canAttack = true;
             yield break;
         }
+        AudioManager.Instance.PlaySFX(AudioConstants.SmallEnemyAttack);
         damageComponent.InitiateAttack("Player");
         //attack recovery
         yield return new WaitForSeconds(.17f);
@@ -179,6 +181,7 @@ public class EnemyPepper : Enemy
         {
             if (myState == PepperState.Passive)
             {
+                AudioManager.Instance.PlaySFX(AudioConstants.EnemyAlert);
                 myState = PepperState.Aggressive;
                 if (_targetPlayer != null)
                     navMeshAgent.destination = _targetPlayer.transform.position;

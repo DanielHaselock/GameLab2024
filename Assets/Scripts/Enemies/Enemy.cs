@@ -54,13 +54,31 @@ public class Enemy : NetworkBehaviour
     {
         base.FixedUpdateNetwork();
 
-        if (healthBar == null || healthComponent == null)
+        if (healthBar == null || healthComponent == null || healthComponent.Health == healthComponent.MaxHealth)
             return;
 
-        var closestPlayerDistance = 0;
-        
-        bool showHealthBar = closestPlayerDistance <= 16.0f && healthComponent.Health != healthComponent.MaxHealth;
+        ShowHealthBar();
+    }
+
+    private void ShowHealthBar()
+    {
+        var player = FindObjectsOfType<Player>().First(p => p.HasInputAuthority);
+        var distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+
+        bool showHealthBar = distanceToPlayer <= 10.0f;
         healthBar.SetActive(showHealthBar);
+
+        if (Runner.IsServer)
+            RPC_ShowHealthBarOnClients();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_ShowHealthBarOnClients()
+    {
+        if (Runner.IsServer)
+            return;
+
+        ShowHealthBar();
     }
 
     protected Vector3 GetNextWanderPos()

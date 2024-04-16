@@ -177,6 +177,11 @@ MonoBehaviour:
   _Health: 0
   _CanDeplete: 1
   _HealthDepleted: 0
+  allowTempInvulnerability: 0
+  tempInvulnerabilityDur: 1
+  healfx: {fileID: 0}
+  hitSFXKey: small_enemy_hit
+  deathSFXKey: small_enemy_death
 --- !u!65 &329544838922226680
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -403,6 +408,9 @@ MonoBehaviour:
   attackCone: 120
   knockBackForce: 1
   hittableObjects: []
+  allowHealOnKill: 0
+  healMin: 0
+  healMax: 0
 --- !u!1 &5774163994915384625
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,6 +628,7 @@ MonoBehaviour:
   materialHitEfectDelay: 0.15
   hitGameObjectFx: {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
   effectSpawnPosition: {fileID: 0}
+  hitSFX: 
 --- !u!208 &823263597872956903
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -815,6 +824,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5164202407486825860}
     m_Modifications:
+    - target: {fileID: 2561097794674982321, guid: fe2830081e9ddc64387397668affce4a, type: 3}
+      propertyPath: Flags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2561097794674982321, guid: fe2830081e9ddc64387397668affce4a, type: 3}
+      propertyPath: SortKey
+      value: 423634210
+      objectReference: {fileID: 0}
     - target: {fileID: 4445491004028259252, guid: fe2830081e9ddc64387397668affce4a, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1

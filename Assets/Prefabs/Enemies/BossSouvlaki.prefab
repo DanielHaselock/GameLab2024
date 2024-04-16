@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 1951108527158754640}
   - component: {fileID: 3993077745926694487}
   - component: {fileID: 3967134696014583151}
+  - component: {fileID: 7759755048875047458}
   m_Layer: 0
   m_Name: BossSouvlaki
   m_TagString: Enemy
@@ -191,6 +192,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 1273901292030170203}
   - {fileID: 5299315064500112954}
+  - {fileID: 7759755048875047458}
   - {fileID: 7851169674769095907}
   - {fileID: 5656415004474461004}
   - {fileID: 7867123839221218353}
@@ -232,6 +234,7 @@ MonoBehaviour:
   angularSpeed: 120
   attackRange: 15
   maxNextWanderPosDist: 5
+  healthBar: {fileID: 0}
   summonOnion: {fileID: 2685400961200451971, guid: 3e21a73dfe9f4f04dac740ccc7891353, type: 3}
   summonBellPepper: {fileID: 5774163994915384625, guid: d32049aab1cffdd4aadd578003867c29, type: 3}
   trigger: {fileID: 3967134696014583151}
@@ -340,6 +343,19 @@ CapsuleCollider:
   m_Height: 9
   m_Direction: 1
   m_Center: {x: 0, y: 5.19, z: 0}
+--- !u!114 &7759755048875047458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020198298646044508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e835f8b1e194426ba47d0fad498a8e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _healthComponent: {fileID: 5656415004474461004}
 --- !u!1 &1770572137344230325
 GameObject:
   m_ObjectHideFlags: 0
@@ -392,6 +408,9 @@ MonoBehaviour:
   attackCone: 360
   knockBackForce: 1
   hittableObjects: []
+  allowHealOnKill: 0
+  healMin: 0
+  healMax: 0
 --- !u!1 &2790478241656032104
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,6 +524,9 @@ MonoBehaviour:
   _Health: 0
   _CanDeplete: 1
   _HealthDepleted: 0
+  allowTempInvulnerability: 0
+  tempInvulnerabilityDur: 1
+  healfx: {fileID: 0}
 --- !u!65 &4648341659435230999
 BoxCollider:
   m_ObjectHideFlags: 0

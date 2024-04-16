@@ -13,6 +13,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+using RuntimeDeveloperConsole;
 
 namespace Networking.Behaviours
 {
@@ -141,7 +142,11 @@ namespace Networking.Behaviours
                 if (AvailableSessions.Count <= 0)
                 {
                     NetworkLogger.Log("Decision: Host");
+                    _connectionUI.ShowWait(true, "Launchin new session");
                     CreateNewSession();
+                    if(_networkPropertiesRef.MaxPlayers > 1)
+                        _connectionUI.ShowWait(true, "Waiting for one more player");
+                    
                 }
                 else
                     JoinRandomSession();
@@ -149,6 +154,7 @@ namespace Networking.Behaviours
             else
             {
                 NetworkLogger.Log("Decision: Join Session");
+                _connectionUI.ShowWait(true, "Joining game...");
                 JoinRandomSession();
             }
         }
@@ -592,6 +598,18 @@ namespace Networking.Behaviours
             Destroy(_netSynchedHelper.gameObject);
             Destroy(this.gameObject);
             SceneManager.LoadScene(0);
+        }
+
+        [ConsoleCommand("Start game session", "playgame")]
+        public static async void PlayGame()
+        {
+            await Instance.SmartConnect();
+        }
+        
+        [ConsoleCommand("Disconnect from sessions", "disconnect")]
+        public static void Disconnect()
+        {
+            Instance.ResetGame();
         }
     }
 }

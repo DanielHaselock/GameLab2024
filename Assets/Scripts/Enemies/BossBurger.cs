@@ -5,6 +5,7 @@ using Fusion;
 using GameLoop;
 using UnityEngine;
 using UnityEngine.AI;
+using Audio;
 
 public class BossBurger : Enemy
 {
@@ -20,9 +21,12 @@ public class BossBurger : Enemy
     protected bool idle = true;
     protected bool prevIdle = true;
 
+    float delay = 0;
+
     protected override void Start()
     {
         base.Start();
+        AudioManager.Instance.PlaySFX(AudioConstants.BossSummon);
         canAttack = true;
         //Go crazy        
         lastPosition = transform.position;
@@ -52,6 +56,10 @@ public class BossBurger : Enemy
             return;
 
         if (dead)
+            return;
+
+        delay += Time.deltaTime;
+        if (delay < 3)
             return;
 
         //UpdateMoveAndRotation(Runner.DeltaTime);
@@ -157,6 +165,7 @@ public class BossBurger : Enemy
         animator.CrossFade("Attack", .1f);
         //attack windup
         yield return new WaitForSeconds(.35f);
+        AudioManager.Instance.PlaySFX(AudioConstants.BurgerAttack);
         if (stunned)
         {
             attacking = false;
@@ -181,6 +190,7 @@ public class BossBurger : Enemy
         animator.CrossFade("AttackLong", .1f);
         //attack windup
         yield return new WaitForSeconds(.8f);
+        AudioManager.Instance.PlaySFX(AudioConstants.BurgerAttack);
         if (stunned)
         {
             attacking = false;
@@ -207,6 +217,7 @@ public class BossBurger : Enemy
         animator.CrossFade("Roar", .1f);
         //attack windup
         yield return new WaitForSeconds(.8f);
+        AudioManager.Instance.PlaySFX(AudioConstants.BossRoarLong);
         if (stunned)
         {
             attacking = false;
@@ -247,20 +258,34 @@ public class BossBurger : Enemy
         animator.CrossFade("Jump", .1f);
         //attack windup
         yield return new WaitForSeconds(.8f);
+        AudioManager.Instance.PlaySFX(AudioConstants.ExplosionBlock);
         if (stunned)
         {
             attacking = false;
             canAttack = true;
             yield break;
         }
-
+        List<NetworkObject> cages = new List<NetworkObject>();
+        foreach (GameObject player in _seenPlayers)
+        {
+            NetworkObject b = Runner.Spawn(breakableWallJail, new Vector3(player.transform.position.x, -2.65f, player.transform.position.z));
+            cages.Add(b);
+        }
         //attack recovery
         yield return new WaitForSeconds(.17f);
         animator.CrossFade("Idle", .5f);
         attacking = false;
         navMeshAgent.speed = speed;
         //attack delay
-        yield return new WaitForSeconds(4f);
+        for (int i = 1; i < 28; i++)
+        {
+            foreach (NetworkObject b in cages)
+            {
+                b.transform.position = new Vector3(b.transform.position.x, b.transform.position.y + .175f, b.transform.position.z);
+            }
+            yield return new WaitForSeconds(.0257f);
+        }
+        yield return new WaitForSeconds(3f);
         canAttack = true;
     }
     protected override void OnTriggerEnter(Collider other)

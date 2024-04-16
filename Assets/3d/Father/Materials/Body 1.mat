@@ -14,6 +14,7 @@ Material:
   m_ValidKeywords:
   - DR_OUTLINE_ON
   - _ALPHATEST_ON
+  - _BASEMAP_PREMULTIPLY
   - _CELPRIMARYMODE_SINGLE
   - _DETAILMAPBLENDINGMODE_MULTIPLY
   - _GRADIENTSPACE_WORLD
@@ -59,7 +60,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 1
-    - _BaseMapPremultiply: 0
+    - _BaseMapPremultiply: 1
     - _Blend: 0
     - _CameraDistanceImpact: 0
     - _CelExtraEnabled: 0
@@ -91,7 +92,7 @@ Material:
     - _OutlineEnabled: 1
     - _OutlineScale: 1
     - _OutlineSpace: 0
-    - _OutlineWidth: 3
+    - _OutlineWidth: 1
     - _OverrideLightmapDir: 0
     - _QueueOffset: 50
     - _RimEnabled: 0

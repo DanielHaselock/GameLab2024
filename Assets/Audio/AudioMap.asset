@@ -14,28 +14,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bgClips:
     _items:
-    - Key: mainmenu
+    - Key: post_round
+      Value: {fileID: 8300000, guid: d4b1f4f6806fcff4dad39d692a191966, type: 3}
+    - Key: later_level
       Value: {fileID: 8300000, guid: da51e4ca2faa99a4ab3202caa311fdc9, type: 3}
+    - Key: battle_1
+      Value: {fileID: 8300000, guid: 6b0c3836d27785d4bbe308fa2592b935, type: 3}
     - Key: boss_souvlaki
-      Value: {fileID: 8300000, guid: 5e293f2caabc28b43bbb83edc8de97cf, type: 3}
+      Value: {fileID: 8300000, guid: 0a5afab42ab671a4d95f60e7695bf7f3, type: 3}
   _ambianceClips:
-    _items: []
+    _items:
+    - Key: main_atmos
+      Value: {fileID: 8300000, guid: 156e0ba89b1ad61449ae6d80753c4a7a, type: 3}
   _sfxClips:
     _items:
     - Key: click
       Value:
       - {fileID: 8300000, guid: 5e9dfd5b22acf164284114b12847fcbb, type: 3}
+      - {fileID: 8300000, guid: 0d073abe3bb688c48b1c61524f0299b3, type: 3}
     - Key: type
       Value:
       - {fileID: 8300000, guid: 6bb0d86f26e165c4f8426cb4ace0296b, type: 3}
     - Key: attack
       Value:
-      - {fileID: 8300000, guid: 311155ea99cee7448b15c08d51868cc7, type: 3}
-      - {fileID: 8300000, guid: f59e7678fcc43c64db1e804013b733cf, type: 3}
-      - {fileID: 8300000, guid: 025c1113ed77a004a9812bbe0ae7c07c, type: 3}
+      - {fileID: 8300000, guid: 2cff8835acc7937469a9332ad652b060, type: 3}
+      - {fileID: 8300000, guid: 850061bac7c1ed14fbfaf19924be656b, type: 3}
+      - {fileID: 8300000, guid: 81b9cac36d850d241a7172523e14b5ac, type: 3}
     - Key: jump
       Value:
-      - {fileID: 8300000, guid: 5d219b455bbbcd44a887b4cf95fdc9e7, type: 3}
+      - {fileID: 8300000, guid: 28789c2a2861bf047bbb70a800012eec, type: 3}
     - Key: help
       Value:
       - {fileID: 8300000, guid: 71119fcc6654247b585303b1ad23a1ce, type: 3}
@@ -68,8 +75,63 @@ MonoBehaviour:
     - Key: pickup
       Value:
       - {fileID: 8300000, guid: 1efbf0268a33bea4b8a75d2021cefaaa, type: 3}
-    - Key: boss_souvlaki
+    - Key: boss_souvlaki_explosion
       Value:
       - {fileID: 8300000, guid: deec8f33f67d64d4eb17255e6e19c486, type: 3}
-  InitialBackgroundMusic: mainmenu
-  InitialAmbiance: 
+    - Key: small_enemy_hit
+      Value:
+      - {fileID: 8300000, guid: 5d32410b2d6548443847f877839e3026, type: 3}
+      - {fileID: 8300000, guid: 5fc745d2de79e4e45b1edfac6cdce711, type: 3}
+      - {fileID: 8300000, guid: d90ccf2a619a6d8419a5b210d3ccd888, type: 3}
+      - {fileID: 8300000, guid: ef390cd6a47bbff4ab5869e6d3e2ba83, type: 3}
+    - Key: boss_summon
+      Value:
+      - {fileID: 8300000, guid: 7477be3a6e06031498d43e8c07d9d258, type: 3}
+    - Key: explosion_block
+      Value:
+      - {fileID: 8300000, guid: b0aa2d2740318ab44aae2fca73a349df, type: 3}
+    - Key: small_enemy_attack
+      Value:
+      - {fileID: 8300000, guid: 4cbeac3b08078e84e915fa579e3cc1a1, type: 3}
+      - {fileID: 8300000, guid: b17d1172ca343bb478f74435086eea68, type: 3}
+      - {fileID: 8300000, guid: 8e083ca190421484cbd0d84b3bc83a26, type: 3}
+      - {fileID: 8300000, guid: 8ddaa65293384894da43596c108b93b4, type: 3}
+      - {fileID: 8300000, guid: 788ac6bb10cefaa4e828fe63957fc05b, type: 3}
+    - Key: burger_chomps
+      Value:
+      - {fileID: 8300000, guid: 6069eae554b5e004fb70cdd8fe43a8c0, type: 3}
+      - {fileID: 8300000, guid: 95d477a6140bc4d47a233a152de26d96, type: 3}
+      - {fileID: 8300000, guid: f6edced07efbe3246a5e78b4c9282565, type: 3}
+    - Key: large_enemy_attack
+      Value:
+      - {fileID: 8300000, guid: 33c625d666bff23438d1f41ee74f1a7e, type: 3}
+    - Key: small_enemy_death
+      Value:
+      - {fileID: 8300000, guid: a16b6cf46fbe84a4bb372d276db0e73a, type: 3}
+    - Key: large_enemy_hit
+      Value:
+      - {fileID: 8300000, guid: d82a21f188327fb4a8cdd227082e8106, type: 3}
+      - {fileID: 8300000, guid: ee1f311fa275df94c9a9b365cc9c1b5b, type: 3}
+      - {fileID: 8300000, guid: ce1e4d998cd1a6e47a741b46354e1e23, type: 3}
+      - {fileID: 8300000, guid: 8957b4caaa43af14e8ec0e0a6b4ea358, type: 3}
+      - {fileID: 8300000, guid: 7b6247ad7e1a2e54d8295dfb6d70a05e, type: 3}
+    - Key: large_enemy_death
+      Value:
+      - {fileID: 8300000, guid: ee4307b90747ac04b8f406a0c67270fe, type: 3}
+      - {fileID: 8300000, guid: 86cfc369a39c9b64e9a681b544a425dd, type: 3}
+      - {fileID: 8300000, guid: 6be9c166a519df447955ffd36b4972a0, type: 3}
+      - {fileID: 8300000, guid: 15fe4c13c2ad74e4093831bc98c9058f, type: 3}
+      - {fileID: 8300000, guid: 122a3e4636e164146920a72eae1fc1d7, type: 3}
+    - Key: boss_roar
+      Value:
+      - {fileID: 8300000, guid: 6c4c14cb94442f44dbfe8d72dae29efe, type: 3}
+      - {fileID: 8300000, guid: c56ef6643e72bd5428560c4de86cac5d, type: 3}
+    - Key: boss_roar_long
+      Value:
+      - {fileID: 8300000, guid: 0df47cfe775c8e14280cf1c8482390b5, type: 3}
+    - Key: souvlaki_roll
+      Value:
+      - {fileID: 8300000, guid: 750ec5d08869a0d4fb56756ec59f3655, type: 3}
+    - Key: enemy_alert
+      Value:
+      - {fileID: 8300000, guid: 08b15936424961e4da3217285c7ce0d9, type: 3}

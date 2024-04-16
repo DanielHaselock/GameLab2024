@@ -3,6 +3,7 @@ using System.Collections;
 using Audio;
 using Fusion;
 using Fusion.Addons.SimpleKCC;
+using GameLoop;
 using Interactables;
 using Networking.Behaviours;
 using Networking.Data;
@@ -24,9 +25,10 @@ public class Player : NetworkBehaviour
     [SerializeField] private float attackChargeDur = 1f;
     [SerializeField] private GameObject chargedAttackGraphic;
     [SerializeField] private SpatialAudioController spatialAudioController;
+    [SerializeField] private GameObject cameraShake;
     
     private NetworkObject _no;
-    private CharacterController _stdController;
+    private Rigidbody _rb;
     private SimpleKCC _controller;
     private NetworkMecanimAnimator _anim;
     private HandlePickup _pickupHandler;
@@ -40,7 +42,11 @@ public class Player : NetworkBehaviour
     private Coroutine _stunRoutine;
     private Tick _initial;
     private float _nextAttackTime = 0;
-
+    
+    private bool _teleport { get; set; }
+    private Vector3 _teleportPos;
+    private Quaternion _teleportRot;
+    
     private bool _charging { get; set; }
     [Networked] private float _charge { get; set; }
 
@@ -55,6 +61,7 @@ public class Player : NetworkBehaviour
     
     private void Awake()
     {
+        _rb = GetComponent<Rigidbody>();
         _controller = GetComponent<SimpleKCC>();
         _reviver = GetComponentInChildren<PlayerReviver>();
         _damager = GetComponentInChildren<DamageComponent>();
@@ -113,8 +120,15 @@ public class Player : NetworkBehaviour
 
             if (_myPickupable.IsPickedUp)
                 return;
+
+            TryTeleporting();
             
-            Move(_health.HealthDepleted?Vector3.zero:data.MoveDirection, data.Jump);
+            var moveVec = _health.HealthDepleted || GameManager.instance.BossSpawning
+                ? Vector3.zero
+                : data.MoveDirection;
+            var jump = !_health.HealthDepleted && !GameManager.instance.BossSpawning && data.Jump;
+            
+            Move(moveVec, jump);
             if(_health.HealthDepleted)
                 return;
         
@@ -122,6 +136,9 @@ public class Player : NetworkBehaviour
                 return;
         
             if(Stunned)
+                return;
+            
+            if(GameManager.instance.BossSpawning)
                 return;
             
             HandleInteract(data);
@@ -141,7 +158,7 @@ public class Player : NetworkBehaviour
         {
             chargedAttackGraphic.SetActive(true);
             if(_no.HasInputAuthority)
-                AudioManager.Instance.PlaySFX(SFXConstants.PlayerAttackCharge);
+                AudioManager.Instance.PlaySFX(AudioConstants.PlayerAttackCharge);
         }
     }
 
@@ -152,7 +169,7 @@ public class Player : NetworkBehaviour
         {
             jumpImpulse = jumpForce;
             _anim.SetTrigger("Jump", true);
-            AudioManager.Instance.PlaySFX(SFXConstants.Jump);
+            AudioManager.Instance.PlaySFX(AudioConstants.Jump);
         }
         
         
@@ -300,7 +317,9 @@ public class Player : NetworkBehaviour
                 bool charged = _charge >= 1;
                 StartCoroutine(InitiateAttack(0.15f, charged));
                 if (charged)
+                {
                     Debug.Log($"Charged Attack {_charge}");
+                }
                 else
                     Debug.Log($"Attack {_charge}");
                
@@ -310,6 +329,12 @@ public class Player : NetworkBehaviour
         }
     }
 
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    private void RPC_LocalCameraShake()
+    {
+        Instantiate(cameraShake);
+    }
+    
     private void RegularAttack()
     {
         if(Time.time < _nextAttackTime)
@@ -333,8 +358,16 @@ public class Player : NetworkBehaviour
     IEnumerator InitiateAttack(float attackDelay, bool charged)
     {
         yield return new WaitForSeconds(attackDelay);
-        AudioManager.Instance.PlaySFX3D(SFXConstants.PlayerAttack, transform.position);
+        if(charged)
+            RPC_LocalCameraShake();
+        RPC_WeaponSwingSFX();
         _damager.InitiateAttack(charged);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    private void RPC_WeaponSwingSFX()
+    {
+        AudioManager.Instance.PlaySFX3D(AudioConstants.PlayerAttack, transform.position);
     }
     
     private void HandleRevive(PlayerInputData data, float deltaTime)
@@ -344,7 +377,7 @@ public class Player : NetworkBehaviour
     
     private void OnHealthDepleted(int damager)
     {
-        AudioManager.Instance.PlaySFX(SFXConstants.Help, syncNetwork:true);
+        AudioManager.Instance.PlaySFX(AudioConstants.Help, syncNetwork:true);
         if (Runner.IsServer)
             RPC_SetDowned(true);
     }
@@ -387,5 +420,24 @@ public class Player : NetworkBehaviour
             else
                 weaponLoc.GetChild(i).gameObject.SetActive(false);
         }
+    }
+
+    public void MarkForTeleport(Vector3 pos, Quaternion rot)
+    {
+        if(!Runner.IsServer)
+            return;
+        _teleportPos = pos;
+        _teleportRot = rot;
+        _teleport = true;
+    }
+
+    private void TryTeleporting()
+    {
+        if(!_teleport)
+            return;
+        
+        _controller.SetPosition(_teleportPos);
+        _controller.SetLookRotation(_teleportRot);
+        _teleport = false;
     }
 }

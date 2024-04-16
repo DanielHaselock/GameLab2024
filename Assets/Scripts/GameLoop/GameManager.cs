@@ -9,8 +9,7 @@ using UnityEngine;
 using Fusion;
 using Fusion.Addons.Physics;
 using Networking.Behaviours;
-using Networking.Data;
-using UnityEngine.AI;
+using UnityEditor.Rendering.Universal.ShaderGUI;
 using Utils;
 using UnityEngine.EventSystems;
 
@@ -35,7 +34,7 @@ namespace GameLoop
         
         [SerializeField] private int maxLevels;
         [SerializeField] private RewardsMap rewardsMap;
-
+        
         private ChangeDetector _change;
         private Dictionary<string, Objective> objectivesMap;
         private Dictionary<string, Objective> objectivesGUIData;
@@ -54,6 +53,9 @@ namespace GameLoop
         public GameState CurrentGameState { get; private set; }
         public static event Action<GameState> OnGameStateChanged;
 
+        [Networked]
+        public bool BossSpawning { get; set; }
+        
         [Networked] public bool gameStarted { get; private set; } = false;
         [Networked] public bool bossDefeated { get; private set; }
         [Networked] public bool IsPaused { get; private set; }
@@ -67,7 +69,7 @@ namespace GameLoop
                 DontDestroyOnLoad(this.gameObject);
             }
         }
-
+        
         private void OnDestroy()
         {
             if(_gameUI == null)
@@ -116,9 +118,6 @@ namespace GameLoop
             
             if (EventSystem.current == null)
                 Instantiate(Resources.Load("EventSystem"));
-
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Confined;
         }
         
         private void Update()
@@ -157,8 +156,11 @@ namespace GameLoop
         
         private void TimerTick(TimeSpan timeLeft)
         {
-            AudioManager.Instance.PlaySFX(SFXConstants.Clock);
             this._timeLeft = timeLeft;
+            
+            if(timeLeft.TotalSeconds <= 10)
+                AudioManager.Instance.PlaySFX(AudioConstants.Clock);
+            
             _gameUI.UpdateTimerText(timeLeft);
             if (gameStarted && timeLeft.TotalSeconds <=0)
             {
@@ -316,6 +318,7 @@ namespace GameLoop
             }
             IsPausable = true;
             LevelManager.LoadLevel(_currentLevel);
+            _gameUI.SetBossHealth(false, 0);
             bool result = await NetworkManager.Instance.LoadSceneNetworked(LevelManager.LevelSceneIndx, false);
             if (!result)
             {
@@ -331,6 +334,9 @@ namespace GameLoop
                 UpdateGameState(GameState.Cutscene);
                 return;
             }
+            
+            AudioManager.Instance.PlayBackgroundMusic(LevelManager.BGMKey);
+            AudioManager.Instance.PlayAmbiance(LevelManager.AmbianceKey);
             
             var defPos = new List<Vector3> { new Vector3(0, 2, 0), new Vector3(0, 4, 0) };
             var defRot = new List<Quaternion> { Quaternion.identity, Quaternion.identity };
@@ -408,6 +414,10 @@ namespace GameLoop
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void RPC_LoadLevelObjectivesOnClient(string levelPath)
         {
+            // hacky but it will do
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Confined;
+            
             if (Runner.IsServer)
                 return;
             LevelManager.LoadLevelObjectivesFrom(levelPath);
@@ -437,14 +447,36 @@ namespace GameLoop
         //-----------------------------------------------------------
         private void SpawnBoss()
         {
+            BossSpawning = true;
             _timer.StopTimer();
             RPC_ShowBossSpawnVisual();
+            StartCoroutine(TeleportPlayerToArena());
         }
 
+        IEnumerator TeleportPlayerToArena()
+        {
+            yield return new WaitForSeconds(1.5f);
+            var bossBattlePlayerStarts = FindObjectsOfType<PlayerBossFightStartLocator>();
+            foreach (var player in _players)
+            {
+                var loc = bossBattlePlayerStarts[_players.IndexOf(player)];
+                player.MarkForTeleport(loc.SpawnPosition, loc.SpawnRotation);
+            }
+        }
+
+        private void LockArena()
+        {
+            FindObjectOfType<ArenaHandler>().CloseArena();
+        }
+        
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-        private void RPC_ShowBossSpawnVisual()
+        private async void RPC_ShowBossSpawnVisual()
         {
             _gameUI.ShowGameTimer(false);
+            _gameUI.HideObjectives(); // no longer needed
+            AudioManager.Instance.PlaySFX(AudioConstants.BossSummon);
+            await Task.Delay(1500);
+            LockArena();
             AlterCollector collectible = FindObjectOfType<AlterCollector>();
             var alterCamObjC = collectible.AlterCamClose;
             var alterCamObjF = collectible.AlterCamFar;
@@ -473,6 +505,7 @@ namespace GameLoop
             RPC_UpdateMusic();
             yield return new WaitForSeconds(3);
             RPC_SpawnExplosionAndHideAlterGraphic();
+            BossSpawning = false;
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -540,8 +573,12 @@ namespace GameLoop
         {
             if(LevelManager.ScoreMap.ContainsKey(enemyKey))
                 ScoreManager.UpdateScore(player, LevelManager.ScoreMap[enemyKey]);
-            
-            _gameUI.UpdateScore(player, ScoreManager.Score[player]);
+
+            if (ScoreManager.Score.ContainsKey(player))
+            {
+                _gameUI.UpdateScore(player, ScoreManager.Score[player]);
+            }
+
             if (enemyKey.Equals(BOSS_KEY))
             {
                 StartCoroutine(DelayedGameWin());
@@ -552,18 +589,19 @@ namespace GameLoop
                 RPC_UpdateScoreOnClient(player, enemyKey);
             }
         }
-        
-        private IEnumerator DelayedGameWin()
-        {
-            yield return new WaitForSeconds(1);
-            UpdateGameState(GameState.Win);
-        }
-        
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         public void RPC_UpdateScoreOnClient(int player, string enemyKey)
         {
             if (Runner.IsServer)
                 return;
             UpdateScore(player, enemyKey);
+        }
+
+        private IEnumerator DelayedGameWin()
+        {
+            yield return new WaitForSeconds(1);
+            UpdateGameState(GameState.Win);
         }
         
         public void RaiseObjective(string key)
@@ -581,7 +619,7 @@ namespace GameLoop
             RPC_UpdateObjectiveData(key, objective.Current);
             if (objective.IsCompleted)
             {
-                AudioManager.Instance.PlaySFX(SFXConstants.ObjectiveComplete, syncNetwork:true);
+                AudioManager.Instance.PlaySFX(AudioConstants.ObjectiveComplete, syncNetwork:true);
                 objectivesMap.Remove(key);
             }
             
@@ -634,6 +672,7 @@ namespace GameLoop
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void RPC_ShowWinScreenOnClients()
         {
+            AudioManager.Instance.PlayBackgroundMusic(AudioConstants.PostRound);
             if(Runner.IsServer)
                 return;
             ResetManager();
@@ -682,6 +721,7 @@ namespace GameLoop
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void RPC_ShowLoseScreenOnClients()
         {
+            AudioManager.Instance.PlayBackgroundMusic("post_round");
             if(Runner.IsServer)
                 return;
             _gameUI.ShowLostGameUI(true);

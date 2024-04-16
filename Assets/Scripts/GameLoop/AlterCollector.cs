@@ -91,7 +91,7 @@ namespace GameLoop
             if(collectionEffectFx != null)
                 Instantiate(collectionEffectFx, effectPos.position, Quaternion.identity);
             
-            AudioManager.Instance.PlaySFX3D(SFXConstants.ItemCollect, transform.position);
+            AudioManager.Instance.PlaySFX3D(AudioConstants.ItemCollect, transform.position);
         }
         
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -100,7 +100,7 @@ namespace GameLoop
             if(rejectionEffectFx != null)
                 Instantiate(rejectionEffectFx, effectPos.position, Quaternion.identity);
             
-            AudioManager.Instance.PlaySFX3D(SFXConstants.ItemReject, transform.position);
+            AudioManager.Instance.PlaySFX3D(AudioConstants.ItemReject, transform.position);
         }
     }
 }

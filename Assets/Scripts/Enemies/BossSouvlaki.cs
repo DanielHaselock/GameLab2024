@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
+using Audio;
 
 public class BossSouvlaki : Enemy
 {
@@ -26,10 +27,12 @@ public class BossSouvlaki : Enemy
     protected bool rolling = false;
 
     float yPos = 0;
+    float delay = 0;
 
     protected override void Start()
     {
         base.Start();
+        AudioManager.Instance.PlaySFX(AudioConstants.BossSummon);
         trigger.radius = 35;
         yPos = transform.position.y;
         canAttack = true;
@@ -61,6 +64,10 @@ public class BossSouvlaki : Enemy
             return;
 
         if (dead)
+            return;
+
+        delay += Time.deltaTime;
+        if (delay < 3)
             return;
 
         //UpdateMoveAndRotation(Runner.DeltaTime);
@@ -179,6 +186,7 @@ public class BossSouvlaki : Enemy
         animator.CrossFade("Roar", .1f);
         //attack windup
         yield return new WaitForSeconds(.8f);
+        AudioManager.Instance.PlaySFX(AudioConstants.BossRoar);
         if (stunned)
         {
             attacking = false;
@@ -222,6 +230,7 @@ public class BossSouvlaki : Enemy
         animator.CrossFade("Spin", .1f);
         //attack windup
         yield return new WaitForSeconds(.7f);
+        AudioManager.Instance.PlaySFX(AudioConstants.SouvlakiRoll);
         rolling = true;
         trigger.radius = 2;
         //activate spin collider or something
@@ -251,15 +260,16 @@ public class BossSouvlaki : Enemy
         animator.CrossFade("Roll", .1f);
         //attack windup
         yield return new WaitForSeconds(.7f);
-        
+        AudioManager.Instance.PlaySFX(AudioConstants.SouvlakiRoll);
         rolling = true;
         trigger.radius = 2;
         float startTime = Time.time;
         float duration = 1.8333f;
         while (Time.time - startTime < duration)
         {
+            //GetComponent<Rigidbody>().velocity =- transform.right * 0.5f * Time.deltaTime;
+            //GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(GetComponent<Rigidbody>().velocity, 5);
             GetComponent<Rigidbody>().AddForce(transform.right * -.5f, ForceMode.Impulse);
-
             yield return null;
         }
 

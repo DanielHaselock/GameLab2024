@@ -457,6 +457,7 @@ GameObject:
   - component: {fileID: 276837870307869614}
   - component: {fileID: 7177194335350411509}
   - component: {fileID: 5007713269538502031}
+  - component: {fileID: 4336122058451616903}
   m_Layer: 0
   m_Name: BossBurger
   m_TagString: Untagged
@@ -522,6 +523,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 7891551040775919647}
   - {fileID: 2189133987729863562}
+  - {fileID: 4336122058451616903}
   - {fileID: 6403633045778146428}
   - {fileID: 3231984066589431462}
   - {fileID: 3913620337605042185}
@@ -563,9 +565,10 @@ MonoBehaviour:
   angularSpeed: 120
   attackRange: 8
   maxNextWanderPosDist: 5
+  healthBar: {fileID: 0}
   summonTomato: {fileID: 6722423250218177319, guid: 87891455660aaeb41b59b8bb595e162d, type: 3}
   summonBellPepper: {fileID: 5774163994915384625, guid: d32049aab1cffdd4aadd578003867c29, type: 3}
-  breakableWallJail: {fileID: 0}
+  breakableWallJail: {fileID: 7318656285375544877, guid: 2e45c5e0432318a4f9d569bb8f762f56, type: 3}
 --- !u!54 &4812138105980893525
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -670,6 +673,19 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 3.53
   m_Center: {x: 0, y: 3.73, z: 0}
+--- !u!114 &4336122058451616903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7238786831675120389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e835f8b1e194426ba47d0fad498a8e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _healthComponent: {fileID: 3913620337605042185}
 --- !u!1 &7969002106444649214
 GameObject:
   m_ObjectHideFlags: 0
@@ -719,6 +735,9 @@ MonoBehaviour:
   _Health: 0
   _CanDeplete: 1
   _HealthDepleted: 0
+  allowTempInvulnerability: 0
+  tempInvulnerabilityDur: 1
+  healfx: {fileID: 0}
 --- !u!65 &3084714974406768471
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -824,6 +843,9 @@ MonoBehaviour:
   attackCone: 160
   knockBackForce: 1
   hittableObjects: []
+  allowHealOnKill: 0
+  healMin: 0
+  healMax: 0
 --- !u!1 &9023766925104491734
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using Audio;
 using Effects;
 using Fusion;
 using UnityEngine;
@@ -16,6 +18,14 @@ public class HealthComponent : NetworkBehaviour
     [Networked] public bool CanDeplete { get; private set; } = true;
     [Networked] public bool HealthDepleted { get; private set; }
 
+    [SerializeField] private bool allowTempInvulnerability = false;
+    [SerializeField] private float tempInvulnerabilityDur = 1f;
+    [SerializeField] private ParticleSystem healfx;
+
+    [Header("Audio")]
+    [SerializeField] private string hitSFXKey;
+    [SerializeField] private string deathSFXKey;
+    
     public bool IsInitialised  { get; private set; }
     private ChangeDetector _change;
 
@@ -27,6 +37,10 @@ public class HealthComponent : NetworkBehaviour
     
     public float MaxHealth => maxHealth;
 
+    private bool _isInvulnerable = false;
+
+    private Coroutine _healFXRoutine;
+    
     private void Start()
     {
         _hitEffects = GetComponentInParent<HitEffects>();
@@ -39,9 +53,12 @@ public class HealthComponent : NetworkBehaviour
         
         if (_myLocalHealth > Health)
         {
-            if(_hitEffects != null)
+            if (_hitEffects != null)
+            {
                 _hitEffects.OnHit();
-            
+                AudioManager.Instance.PlaySFX3D(hitSFXKey, transform.position);
+            }
+
             _myLocalHealth = Health;
         }
     }
@@ -68,14 +85,23 @@ public class HealthComponent : NetworkBehaviour
             return;
         if(!IsInitialised)
             return;
+        
+        if(_isInvulnerable)
+            return;
+        
         var curr = Health;
         if (Value < 0)
         {
             Debug.Log("Ow!!"); 
             OnDamaged?.Invoke(damager, charged);
+            if (allowTempInvulnerability)
+            {
+                StartCoroutine(BeInvulnerableRoutine());
+            }
         }
 
         Health += Value;
+        Health = Mathf.Clamp(Health, 0, MaxHealth);
         if (Health <= 0)
         {
             CanDeplete = false;
@@ -83,6 +109,13 @@ public class HealthComponent : NetworkBehaviour
         }
 
         RPC_SpawnEffects(Value);
+    }
+
+    IEnumerator BeInvulnerableRoutine()
+    {
+        _isInvulnerable = true;
+        yield return new WaitForSeconds(tempInvulnerabilityDur);
+        _isInvulnerable = false;
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -135,5 +168,51 @@ public class HealthComponent : NetworkBehaviour
             return;
         HealthDepleted = true;
         OnHealthDepleted?.Invoke(damager);
+        RPC_PlayDeathSFX();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayDeathSFX()
+    {
+        AudioManager.Instance.PlaySFX3D(deathSFXKey, transform.position);
+    }
+
+    public void ShowHealFX()
+    {
+        RPC_PlayHealFX();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayHealFX()
+    {
+        if (_healFXRoutine != null)
+            StopCoroutine(_healFXRoutine);
+
+        _healFXRoutine = StartCoroutine(HealFxRoutine());
+    }
+
+    IEnumerator HealFxRoutine()
+    {
+        var emission = healfx.emission;
+        float curr = emission.rateOverTime.constant;
+        var t = 0f;
+        if (curr < 10)
+        {
+            while (t <= 1)
+            {
+                t += Time.deltaTime / 0.25f;
+                emission.rateOverTime = (int)Mathf.Lerp(curr, 10, t);
+                yield return new WaitForEndOfFrame();
+            }
+        }
+        yield return new WaitForSeconds(0.5f);
+        t = 0;
+        while (t <= 1)
+        {
+            t += Time.deltaTime / 0.25f;
+            emission.rateOverTime = (int)Mathf.Lerp(10, 0, t);
+            yield return new WaitForEndOfFrame();
+        }
+        Debug.Log("Heal");
     }
 }

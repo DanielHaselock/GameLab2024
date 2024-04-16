@@ -5,6 +5,7 @@ using Fusion;
 using GameLoop;
 using UnityEngine;
 using UnityEngine.AI;
+using Audio;
 
 public class EnemyTomato : Enemy
 {
@@ -147,6 +148,7 @@ public class EnemyTomato : Enemy
             canAttack = true;
             yield break;
         }
+        AudioManager.Instance.PlaySFX(AudioConstants.LargeEnemyAttack);
         damageComponent.InitiateAttack("Player");
         //attack recovery
         yield return new WaitForSeconds(.17f);

@@ -32,6 +32,9 @@ public static class LevelManager
     public static int LevelSceneIndx => _data == null ? 1 : _data.SceneIndx;
     public static int LevelTime => _data == null ? 180 : _data.LevelTimeInSeconds;
     public static Sprite ScoreUISprite => _data == null ? null : _data.ScoreUISprite;
+    
+    public static string BGMKey => _data == null ? "" : _data.BGM;
+    public static string AmbianceKey => _data == null ? "" : _data.Ambiance;
 
     public static bool ContainsObjective(string key)
     {

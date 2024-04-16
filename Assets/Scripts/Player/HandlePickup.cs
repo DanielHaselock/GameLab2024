@@ -68,7 +68,7 @@ public class HandlePickup : NetworkBehaviour
             _pickupManager.addItem(ItemsAvailable[i], () =>
             {
                 RPC_UpdateAnim(true);
-                RPC_PlaySFX(SFXConstants.Pickup);
+                RPC_PlaySFX(AudioConstants.Pickup);
             });
             ItemsAvailable.RemoveAt(i);
         }
@@ -79,7 +79,7 @@ public class HandlePickup : NetworkBehaviour
         _pickupManager.RemoveLatestItem(false,() =>
         {
             RPC_UpdateAnim(false);
-            RPC_PlaySFX(SFXConstants.Drop);
+            RPC_PlaySFX(AudioConstants.Drop);
         });
     }
 
@@ -88,7 +88,7 @@ public class HandlePickup : NetworkBehaviour
         _pickupManager.RemoveLatestItem(true, () =>
         {
             RPC_UpdateAnim(false);
-            RPC_PlaySFX(SFXConstants.Throw);
+            RPC_PlaySFX(AudioConstants.Throw);
         });
     }
 
