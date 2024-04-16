@@ -77,3 +77,8 @@ MonoBehaviour:
     - Key: boss_souvlaki
       Value:
       - {fileID: 8300000, guid: deec8f33f67d64d4eb17255e6e19c486, type: 3}
+    - Key: small_enemy_hit
+      Value:
+      - {fileID: 8300000, guid: 5d32410b2d6548443847f877839e3026, type: 3}
+  InitialBackgroundMusic: 
+  InitialAmbiance: 
