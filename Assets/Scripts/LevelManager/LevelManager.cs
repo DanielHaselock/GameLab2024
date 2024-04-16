@@ -35,6 +35,7 @@ public static class LevelManager
     
     public static string BGMKey => _data == null ? "" : _data.BGM;
     public static string AmbianceKey => _data == null ? "" : _data.Ambiance;
+    public static RewardsMap RewardsMap => _data == null ? null : _data.Rewards;
 
     public static bool ContainsObjective(string key)
     {

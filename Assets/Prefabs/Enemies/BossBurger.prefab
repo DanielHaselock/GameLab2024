@@ -636,6 +636,7 @@ MonoBehaviour:
   materialHitEfectDelay: 0.15
   hitGameObjectFx: {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
   effectSpawnPosition: {fileID: 0}
+  hitSFX: 
 --- !u!208 &7177194335350411509
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -738,6 +739,8 @@ MonoBehaviour:
   allowTempInvulnerability: 0
   tempInvulnerabilityDur: 1
   healfx: {fileID: 0}
+  hitSFXKey: 
+  deathSFXKey: 
 --- !u!65 &3084714974406768471
 BoxCollider:
   m_ObjectHideFlags: 0
