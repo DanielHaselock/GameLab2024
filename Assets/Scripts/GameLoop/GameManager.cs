@@ -466,7 +466,7 @@ namespace GameLoop
 
         private void LockArena()
         {
-            //todo 
+            FindObjectOfType<ArenaHandler>().CloseArena();
         }
         
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
