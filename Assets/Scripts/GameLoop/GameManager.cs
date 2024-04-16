@@ -668,8 +668,6 @@ namespace GameLoop
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void RPC_ShowWinScreenOnClients()
         {
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
             AudioManager.Instance.PlayBackgroundMusic(AudioConstants.PostRound);
             if(Runner.IsServer)
                 return;
@@ -719,8 +717,6 @@ namespace GameLoop
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void RPC_ShowLoseScreenOnClients()
         {
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
             AudioManager.Instance.PlayBackgroundMusic("post_round");
             if(Runner.IsServer)
                 return;

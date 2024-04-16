@@ -101,6 +101,7 @@ public class HealthComponent : NetworkBehaviour
         }
 
         Health += Value;
+        Health = Mathf.Clamp(Health, 0, MaxHealth);
         if (Health <= 0)
         {
             CanDeplete = false;
