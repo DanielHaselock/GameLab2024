@@ -42,5 +42,7 @@ namespace Audio
         public static string LargeEnemyDeath = "large_enemy_death";
         public static string BossRoar = "boss_roar";
         public static string BossRoarLong = "boss_roar_long";
+        public static string SouvlakiRoll = "souvlaki_roll";
+        public static string EnemyAlert = "enemy_alert";
     }
 }

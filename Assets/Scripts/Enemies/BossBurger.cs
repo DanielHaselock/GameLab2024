@@ -259,7 +259,11 @@ public class BossBurger : Enemy
             canAttack = true;
             yield break;
         }
-
+        List<GameObject> cages = new List<GameObject>();
+        foreach (GameObject player in _seenPlayers)
+        {
+            Runner.Spawn(breakableWallJail, new Vector3(player.transform.position.x, -1.5f, player.transform.position.z));
+        }
         //attack recovery
         yield return new WaitForSeconds(.17f);
         animator.CrossFade("Idle", .5f);
