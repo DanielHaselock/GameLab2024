@@ -26,6 +26,7 @@ public class GameUI : MonoBehaviour
     [SerializeField] private GameObject scoreText;
 
     [SerializeField] private RoundOverUI roundOverUI;
+    [SerializeField] private Image upgradesImage;
 
     [SerializeField] private VideoPlayer cutscenePlayer;
     [SerializeField] private GameObject cutSceneObj;
@@ -165,12 +166,13 @@ public class GameUI : MonoBehaviour
         roundOverUI.ShowEndScreen(false, timerBar.fillAmount);
     }
 
-    public void ShowWinGameUI(bool show, bool showNextButton)
+    public void ShowWinGameUI(bool show, bool showNextButton, RewardData upgradeGiven=null)
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         SetBossHealth(false, 0);
         roundOverUI.gameObject.SetActive(show);
+        upgradesImage.sprite = upgradeGiven == null? null : upgradeGiven.Ico;
         roundOverUI.ShowEndScreen(true, timerBar.fillAmount);
     }
 

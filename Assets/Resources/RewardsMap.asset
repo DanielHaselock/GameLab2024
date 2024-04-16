@@ -15,7 +15,17 @@ MonoBehaviour:
   Rewards:
   - Name: Pan
     WeaponIndex: 0
-  - Name: Silver Pan
-    WeaponIndex: 0
-  - Name: Gold Pan
-    WeaponIndex: 0
+    MinScoreNeeded: 0
+    Ico: {fileID: 0}
+  - Name: Fork
+    WeaponIndex: 1
+    MinScoreNeeded: 15
+    Ico: {fileID: 0}
+  - Name: Rolling Pin
+    WeaponIndex: 2
+    MinScoreNeeded: 30
+    Ico: {fileID: 0}
+  - Name: Spatula
+    WeaponIndex: 3
+    MinScoreNeeded: 50
+    Ico: {fileID: 0}
