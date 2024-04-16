@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Fusion;
+using System;
 using System.Collections;
 using UnityEngine;
 
 namespace GameLoop
 {
-    public class BossHealthDisplay : MonoBehaviour
+    public class BossHealthDisplay : NetworkBehaviour
     {
         [SerializeField] private HealthComponent _healthComponent;
 
         private GameUI _gameUI;
         private float _current;
         private bool _isDead;
-        private IEnumerator Start()
+        private IEnumerator Instantiate()
         {
             yield return new WaitForSeconds(1.5f);
             yield return new WaitUntil(() => _healthComponent.IsInitialised);
@@ -19,11 +20,18 @@ namespace GameLoop
             _current = _healthComponent.Health;
         }
 
-        private void Update()
+        public override void Spawned()
         {
+            StartCoroutine(Instantiate());
+        }
+
+        public override void FixedUpdateNetwork()
+        {
+            base.FixedUpdateNetwork();
+
             if (_healthComponent != null && _gameUI != null)
             {
-                _gameUI.SetBossHealth(true, _healthComponent.Health / _healthComponent.MaxHealth);
+                RPC_UpdateHealth(true, _healthComponent.Health / _healthComponent.MaxHealth);
             }
 
             if (_current > _healthComponent.Health)
@@ -36,7 +44,13 @@ namespace GameLoop
                 StartCoroutine(Hide());
             }
         }
-        
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_UpdateHealth(bool show, float val)
+        {
+            _gameUI.SetBossHealth(false, 0);
+        }
+
         IEnumerator Hide()
         {
             yield return new WaitForSeconds(0.25f);

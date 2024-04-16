@@ -573,8 +573,12 @@ namespace GameLoop
         {
             if(LevelManager.ScoreMap.ContainsKey(enemyKey))
                 ScoreManager.UpdateScore(player, LevelManager.ScoreMap[enemyKey]);
-            
-            _gameUI.UpdateScore(player, ScoreManager.Score[player]);
+
+            if (ScoreManager.Score.ContainsKey(player))
+            {
+                _gameUI.UpdateScore(player, ScoreManager.Score[player]);
+            }
+
             if (enemyKey.Equals(BOSS_KEY))
             {
                 StartCoroutine(DelayedGameWin());
@@ -585,12 +589,6 @@ namespace GameLoop
                 RPC_UpdateScoreOnClient(player, enemyKey);
             }
         }
-        
-        private IEnumerator DelayedGameWin()
-        {
-            yield return new WaitForSeconds(1);
-            UpdateGameState(GameState.Win);
-        }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         public void RPC_UpdateScoreOnClient(int player, string enemyKey)
@@ -598,6 +596,12 @@ namespace GameLoop
             if (Runner.IsServer)
                 return;
             UpdateScore(player, enemyKey);
+        }
+
+        private IEnumerator DelayedGameWin()
+        {
+            yield return new WaitForSeconds(1);
+            UpdateGameState(GameState.Win);
         }
         
         public void RaiseObjective(string key)

@@ -37,6 +37,7 @@ public class GameUI : MonoBehaviour
     private List<TMP_Text> _allObjectivesTexts;
     private Dictionary<int, TMP_Text> _scoreTexts;
     private Dictionary<int, string> _nicknameMap;
+    private int _thisPlayerId;
 
     public Action OnCutsceneCompleted;
 
@@ -119,13 +120,13 @@ public class GameUI : MonoBehaviour
         _nicknameMap = nameMap;
         _scoreTexts = new Dictionary<int, TMP_Text>();
         var players = FindObjectsOfType<Player>().ToList();
-        int playerId = -1;
+        _thisPlayerId = -1;
 
         foreach (var player in players)
         {
             if (player.HasInputAuthority)
             {
-                playerId = player.PlayerId;
+                _thisPlayerId = player.PlayerId;
                 break;
             }
         }
@@ -133,7 +134,7 @@ public class GameUI : MonoBehaviour
         foreach (var kv in scoreMap)
         {
             TMP_Text text = null;
-            if (kv.Key == playerId)
+            if (kv.Key == _thisPlayerId)
             {
                 var go = Instantiate(scoreText, scoreTextParent);
                 go.SetActive(true);
@@ -195,27 +196,14 @@ public class GameUI : MonoBehaviour
 
     public string GetCurrentPlayerScore()
     {
-        var players = FindObjectsOfType<Player>().ToList();
-        int playerId = -1;
-        foreach (var player in players)
-        {
-            if (player.HasInputAuthority)
-            {
-                playerId = player.PlayerId;
-                break;
-            }
-        }
-
-        if (playerId == -1)
-            return null;
-
-        return _scoreTexts.GetValueOrDefault(playerId).text;
+        return _scoreTexts.GetValueOrDefault(_thisPlayerId).text;
     }
 
     public void SetBossHealth(bool show, float val)
     {
         bossHealthbar.SetActive(show);
         bossHPFill.fillAmount = val;
+        objectivesParent.gameObject.SetActive(false);
     }
 
     public void ShakeBossHealthBar()
