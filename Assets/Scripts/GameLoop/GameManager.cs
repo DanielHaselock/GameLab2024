@@ -33,7 +33,6 @@ namespace GameLoop
         public static GameManager instance;
         
         [SerializeField] private int maxLevels;
-        [SerializeField] private RewardsMap rewardsMap;
         
         private ChangeDetector _change;
         private Dictionary<string, Objective> objectivesMap;
@@ -44,7 +43,6 @@ namespace GameLoop
         private NetworkTimer _timer;
         private List<Player> _players;
         private List<NetworkObject> _enemies;
-        private RewardManager _rewardManager;
 
         private bool cutscenePlayed = false;
         private int _cutscenesCompleted = 0;
@@ -60,6 +58,8 @@ namespace GameLoop
         [Networked] public bool bossDefeated { get; private set; }
         [Networked] public bool IsPaused { get; private set; }
         [Networked] public bool IsPausable { get; private set; }
+
+        [Networked, Capacity(10)] private NetworkDictionary<int, int> playerRewardMap => default;
 
         void Awake()
         {
@@ -114,7 +114,6 @@ namespace GameLoop
             _gameUI.RegisterLoadToMainMenu(LoadMainMenu);
             _gameUI.RegisterLoadNextLevel(LoadNextLevel);
             _gameUI.OnCutsceneCompleted += OnCutsceneCompleted;
-            _rewardManager = new RewardManager();
             
             if (EventSystem.current == null)
                 Instantiate(Resources.Load("EventSystem"));
@@ -381,7 +380,7 @@ namespace GameLoop
             _players = FindObjectsOfType<Player>().ToList();
             foreach (var player in _players)
             {
-                int indx = _rewardManager.GetRewardIndex(player.PlayerId);
+                int indx = RewardManager.GetRewardIndex(player.PlayerId);
                 player.SetWeapon(indx);
             }
             InitialiseScores();
@@ -662,11 +661,16 @@ namespace GameLoop
             _timer.StopTimer();
             gameStarted = false;
             _gameUI.ShowGameTimer(false);
-            LevelManager.LevelComplete(true, _timeLeft);
-            _rewardManager.Calculate(ScoreManager.Score, rewardsMap);
+            RewardManager.Calculate(ScoreManager.Score, LevelManager.RewardsMap);
+            foreach (var player in _players)
+            {
+                var reward = RewardManager.GetRewardDataForPlayer(player.PlayerId);
+                playerRewardMap.Set(player.PlayerId, reward == null ? 0 : LevelManager.RewardsMap.Rewards.IndexOf(reward));
+            }
             ResetManager();
-            _gameUI.ShowWinGameUI(true, true);
+            _gameUI.ShowWinGameUI(true, true, LevelManager.RewardsMap.Rewards[NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId]);
             RPC_ShowWinScreenOnClients();
+            LevelManager.LevelComplete(true, _timeLeft);
         }
         
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -676,7 +680,7 @@ namespace GameLoop
             if(Runner.IsServer)
                 return;
             ResetManager();
-            _gameUI.ShowWinGameUI(true, false);
+            _gameUI.ShowWinGameUI(true, false, LevelManager.RewardsMap.Rewards[NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId]);
         }
         
         private void LoadNextLevel()
@@ -688,7 +692,7 @@ namespace GameLoop
                 ResetManager();
                 _currentLevel+=1;
                 UpdateGameState(GameState.ActiveLevel);
-                _gameUI.ShowWinGameUI(false, false);
+                _gameUI.ShowWinGameUI(false, false, null);
                 RPC_HideWinScreenOnClients();
             }
             else

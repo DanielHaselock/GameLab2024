@@ -6,6 +6,7 @@ using Accessibility;
 using Fusion;
 using Fusion.Addons.Physics;
 using Fusion.Sockets;
+using GameLoop;
 using Networking.Data;
 using Networking.UI;
 using Utils;
@@ -119,6 +120,7 @@ namespace Networking.Behaviours
         
         public async Task SmartConnect(float decisionDelayTime = 1f)
         {
+            RewardManager.Cleanup();
             _connectionUI.ShowWait(true);
             if (!_connectedToLobby)
             {
