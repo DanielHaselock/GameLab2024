@@ -31,17 +31,18 @@ MonoBehaviour:
     - Key: click
       Value:
       - {fileID: 8300000, guid: 5e9dfd5b22acf164284114b12847fcbb, type: 3}
+      - {fileID: 8300000, guid: 0d073abe3bb688c48b1c61524f0299b3, type: 3}
     - Key: type
       Value:
       - {fileID: 8300000, guid: 6bb0d86f26e165c4f8426cb4ace0296b, type: 3}
     - Key: attack
       Value:
-      - {fileID: 8300000, guid: 311155ea99cee7448b15c08d51868cc7, type: 3}
-      - {fileID: 8300000, guid: f59e7678fcc43c64db1e804013b733cf, type: 3}
-      - {fileID: 8300000, guid: 025c1113ed77a004a9812bbe0ae7c07c, type: 3}
+      - {fileID: 8300000, guid: 2cff8835acc7937469a9332ad652b060, type: 3}
+      - {fileID: 8300000, guid: 850061bac7c1ed14fbfaf19924be656b, type: 3}
+      - {fileID: 8300000, guid: 81b9cac36d850d241a7172523e14b5ac, type: 3}
     - Key: jump
       Value:
-      - {fileID: 8300000, guid: 5d219b455bbbcd44a887b4cf95fdc9e7, type: 3}
+      - {fileID: 8300000, guid: 28789c2a2861bf047bbb70a800012eec, type: 3}
     - Key: help
       Value:
       - {fileID: 8300000, guid: 71119fcc6654247b585303b1ad23a1ce, type: 3}
@@ -80,5 +81,24 @@ MonoBehaviour:
     - Key: small_enemy_hit
       Value:
       - {fileID: 8300000, guid: 5d32410b2d6548443847f877839e3026, type: 3}
-  InitialBackgroundMusic: 
-  InitialAmbiance: 
+      - {fileID: 8300000, guid: 5fc745d2de79e4e45b1edfac6cdce711, type: 3}
+      - {fileID: 8300000, guid: d90ccf2a619a6d8419a5b210d3ccd888, type: 3}
+      - {fileID: 8300000, guid: ef390cd6a47bbff4ab5869e6d3e2ba83, type: 3}
+    - Key: boss_summon
+      Value:
+      - {fileID: 8300000, guid: 7477be3a6e06031498d43e8c07d9d258, type: 3}
+    - Key: explosion_block
+      Value:
+      - {fileID: 8300000, guid: b0aa2d2740318ab44aae2fca73a349df, type: 3}
+    - Key: small_enemy_attack
+      Value:
+      - {fileID: 8300000, guid: 4cbeac3b08078e84e915fa579e3cc1a1, type: 3}
+      - {fileID: 8300000, guid: b17d1172ca343bb478f74435086eea68, type: 3}
+      - {fileID: 8300000, guid: 8e083ca190421484cbd0d84b3bc83a26, type: 3}
+      - {fileID: 8300000, guid: 8ddaa65293384894da43596c108b93b4, type: 3}
+      - {fileID: 8300000, guid: 788ac6bb10cefaa4e828fe63957fc05b, type: 3}
+    - Key: burger_chomps
+      Value:
+      - {fileID: 8300000, guid: 6069eae554b5e004fb70cdd8fe43a8c0, type: 3}
+      - {fileID: 8300000, guid: 95d477a6140bc4d47a233a152de26d96, type: 3}
+      - {fileID: 8300000, guid: f6edced07efbe3246a5e78b4c9282565, type: 3}
