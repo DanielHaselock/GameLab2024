@@ -12,7 +12,7 @@ namespace GameLoop
         private GameUI _gameUI;
         private float _current;
         private bool _isDead;
-        private IEnumerator Start()
+        private IEnumerator Instantiate()
         {
             yield return new WaitForSeconds(1.5f);
             yield return new WaitUntil(() => _healthComponent.IsInitialised);
@@ -44,7 +44,13 @@ namespace GameLoop
                 StartCoroutine(Hide());
             }
         }
-        
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_UpdateHealth(bool show, float val)
+        {
+            _gameUI.SetBossHealth(false, 0);
+        }
+
         IEnumerator Hide()
         {
             yield return new WaitForSeconds(0.25f);
