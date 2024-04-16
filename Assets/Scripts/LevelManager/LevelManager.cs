@@ -27,9 +27,11 @@ public static class LevelManager
     public static NetworkPrefabRef BossToSpawn => _data == null ? default : _data.BossToSpawn;
     public static string BossSFXKey => _data == null ? "" : _data.BossSFXKey;
     public static string BossMusic => _data == null ? "" : _data.BossMusicKey;
+    public static bool AllowChargedAttack => _data != null && _data.AllowChargedAttacks;
 
     public static int LevelSceneIndx => _data == null ? 1 : _data.SceneIndx;
     public static int LevelTime => _data == null ? 180 : _data.LevelTimeInSeconds;
+    public static Sprite ScoreUISprite => _data == null ? null : _data.ScoreUISprite;
 
     public static bool ContainsObjective(string key)
     {

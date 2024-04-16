@@ -13,6 +13,7 @@ namespace Networking.Data
         public bool StartChargeAttack;
         public bool ActionChargeAttack;
         public bool Throw;
+        public bool Sprint;
        [Networked] public bool Interact { get => default; set { } }
         public bool Drop;
 

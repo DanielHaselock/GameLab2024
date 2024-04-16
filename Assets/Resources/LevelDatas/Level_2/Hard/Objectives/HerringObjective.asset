@@ -16,4 +16,5 @@ MonoBehaviour:
   key: herring
   value: 0
   targetValue: 5
+  objectiveUISprite: {fileID: 21300000, guid: 709cadeb7bb708f448074a0074702de1, type: 3}
   operationType: 0

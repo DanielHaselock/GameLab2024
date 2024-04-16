@@ -16,4 +16,5 @@ MonoBehaviour:
   key: feta
   value: 0
   targetValue: 3
+  objectiveUISprite: {fileID: 21300000, guid: 26e58a31d8fcff845869e0c878089a9d, type: 3}
   operationType: 0

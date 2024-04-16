@@ -13,6 +13,8 @@ namespace GameLoop
         public NetworkPrefabRef BossToSpawn;
         public string BossSFXKey = "";
         public string BossMusicKey = "";
+        public bool AllowChargedAttacks = false;
+        public Sprite ScoreUISprite;
         [FormerlySerializedAs("sceneIndx")] public int SceneIndx=2;
         [FormerlySerializedAs("levelTimeInSeconds")] public int LevelTimeInSeconds=180;
     }

@@ -6,6 +6,7 @@ using Fusion.Addons.SimpleKCC;
 using Interactables;
 using Networking.Behaviours;
 using Networking.Data;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Utils;
@@ -14,6 +15,7 @@ public class Player : NetworkBehaviour
 {
     [SerializeField] private TMPro.TMP_Text nicknameText;
     [SerializeField] private float moveSpeed=6.83f;
+    [SerializeField] private float sprintSpeed = 13.66f;
     [SerializeField] private float lookSpeed=720;
     [SerializeField] private float gravity=-9.81f;
     [SerializeField] private float jumpForce = 15;
@@ -43,10 +45,13 @@ public class Player : NetworkBehaviour
     [Networked] private float _charge { get; set; }
 
     [Networked] private bool Stunned { get; set; } = false;
+    [Networked] private bool Sprinting { get; set; } = false;
 
     public bool PlayerDowned => _health.HealthDepleted;
     
     public int PlayerId { get; private set; }
+
+    private bool _canCharge;
     
     private void Awake()
     {
@@ -60,6 +65,11 @@ public class Player : NetworkBehaviour
         _myPickupable = GetComponent<PlayerPickupable>();
         _health.OnHealthDepleted += OnHealthDepleted;
         _health.OnDamaged += AnimateHit;
+    }
+
+    private void Start()
+    {
+        _canCharge = LevelManager.AllowChargedAttack;
     }
 
     private void AnimateHit(int damager, bool charged)
@@ -99,7 +109,9 @@ public class Player : NetworkBehaviour
         base.FixedUpdateNetwork();
         if (GetInput(out PlayerInputData data))
         {
-            if(_myPickupable.IsPickedUp)
+            Sprinting = data.Sprint;
+
+            if (_myPickupable.IsPickedUp)
                 return;
             
             Move(_health.HealthDepleted?Vector3.zero:data.MoveDirection, data.Jump);
@@ -160,7 +172,7 @@ public class Player : NetworkBehaviour
             spatialAudioController.StopFootStep();
         }
         
-        _controller.Move(moveDir * moveSpeed, jumpImpulse);
+        _controller.Move(moveDir * (Sprinting? sprintSpeed : moveSpeed), jumpImpulse);
         _anim.Animator.SetFloat("Move", moveDir.normalized.magnitude);
     }
 
@@ -235,6 +247,7 @@ public class Player : NetworkBehaviour
     }
 
     private bool _chargeAnimTriggered;
+    private bool _chargeClicked = false;
     private void HandleChargedAttack(PlayerInputData data)
     {
         if(Time.time < _nextAttackTime)
@@ -242,6 +255,17 @@ public class Player : NetworkBehaviour
         
         if (data.ChargeAttack)
         {
+            if (!_canCharge)
+            {
+                if (!_chargeClicked)
+                {
+                    _chargeClicked = true;
+                    RegularAttack();
+                }
+
+                return;
+            }
+            
             if (_charging && _charge > 0.15f && !_chargeAnimTriggered)
             {
                 _chargeAnimTriggered = true;
@@ -254,8 +278,12 @@ public class Player : NetworkBehaviour
             _charge = Mathf.Clamp01(_charge);
         }
 
-        if (!data.ChargeAttack && _charging)
+        if (!data.ChargeAttack)
         {
+            _chargeClicked = false;
+            if(!_charging)
+                return;
+            
             if(_charge > 0.15f){
                 _anim.Animator.SetBool("ChargeAttack", false);
             }
@@ -282,6 +310,26 @@ public class Player : NetworkBehaviour
         }
     }
 
+    private void RegularAttack()
+    {
+        if(Time.time < _nextAttackTime)
+            return;
+        
+        _charging = false;
+        _chargeAnimTriggered = false;
+        _charge = 0;
+        
+        _anim.SetTrigger("Attack", true);
+        _anim.Animator.SetTrigger("Attack");
+        
+        if (Runner.IsServer)
+        {
+            StartCoroutine(InitiateAttack(0.15f, false));
+            Debug.Log($"Attack {_charge}");
+        }
+        _nextAttackTime = Time.time + attackDelay;
+    }
+    
     IEnumerator InitiateAttack(float attackDelay, bool charged)
     {
         yield return new WaitForSeconds(attackDelay);

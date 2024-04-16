@@ -27,6 +27,9 @@ namespace RuntimeDeveloperConsole {
         private Button closeButton;
         [SerializeField] 
         EventTrigger topbarEventTrigger;
+
+        private CursorLockMode _currentState;
+        private bool _cursorHidden;
         
         public bool IsOpen => panelParent.gameObject.activeSelf;
 
@@ -63,10 +66,22 @@ namespace RuntimeDeveloperConsole {
         public void ToggleWindow()
         {
             panelParent.gameObject.SetActive(!IsOpen);
-            if(IsOpen)
+            if (IsOpen)
+            {
+                _currentState = Cursor.lockState;
+                _cursorHidden = Cursor.visible;
+
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
                 inputfield.ActivateInputField();
+            }
             else
+            {
+                Cursor.lockState = _currentState;
+                Cursor.visible = _cursorHidden;
                 inputfield.DeactivateInputField();
+            }
+
             inputfield.text = string.Empty;
         }
 

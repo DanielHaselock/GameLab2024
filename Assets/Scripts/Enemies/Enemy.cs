@@ -6,6 +6,7 @@ using Fusion;
 using Fusion.Addons.Physics;
 using Networking.Data;
 using UnityEngine.AI;
+using System.Linq;
 
 [RequireComponent(typeof(NetworkRigidbody3D))]
 public class Enemy : NetworkBehaviour
@@ -32,6 +33,7 @@ public class Enemy : NetworkBehaviour
     [SerializeField] protected float angularSpeed=120;
     [SerializeField] protected float attackRange=3;
     [SerializeField] protected float maxNextWanderPosDist=5;
+    [SerializeField] protected GameObject healthBar;
     
     protected bool dead = false;
     protected bool stunned = false;
@@ -46,6 +48,19 @@ public class Enemy : NetworkBehaviour
     private void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+    }
+
+    public override void FixedUpdateNetwork()
+    {
+        base.FixedUpdateNetwork();
+
+        if (healthBar == null || healthComponent == null)
+            return;
+
+        var closestPlayerDistance = 0;
+        
+        bool showHealthBar = closestPlayerDistance <= 16.0f && healthComponent.Health != healthComponent.MaxHealth;
+        healthBar.SetActive(showHealthBar);
     }
 
     protected Vector3 GetNextWanderPos()

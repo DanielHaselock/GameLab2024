@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Audio;
+using Fusion;
 using GameLoop;
 using Networking.Behaviours;
 using TMPro;
@@ -25,8 +26,6 @@ public class GameUI : MonoBehaviour
     [SerializeField] private GameObject scoreText;
 
     [SerializeField] private RoundOverUI roundOverUI;
-    [SerializeField] private Button loseMainMenuBttn;
-    [SerializeField] private Button winNextLevelBttn;
 
     [SerializeField] private VideoPlayer cutscenePlayer;
     [SerializeField] private GameObject cutSceneObj;
@@ -35,42 +34,26 @@ public class GameUI : MonoBehaviour
     private Dictionary<int, TMP_Text> _scoreTexts;
     private Dictionary<int, string> _nicknameMap;
 
-    private Action OnMainMenuRequested;
-    private Action OnNextLevelClicked;
-
     public Action OnCutsceneCompleted;
 
     public void RegisterLoadToMainMenu(Action action)
     {
-        OnMainMenuRequested += action;
-    }
-    
-    public void DeRegisterLoadToMainMenu(Action action)
-    {
-        OnMainMenuRequested -= action;
-    }
-    
-    public void RegisterLoadNextLevel(Action action)
-    {
-        OnNextLevelClicked += action;
-    }
-    
-    public void DeRegisterLoadNextLevel(Action action)
-    {
-        OnNextLevelClicked -= action;
+        roundOverUI.RegisterLoadToMainMenu(action);
     }
 
-    private void Start()
+    public void DeRegisterLoadToMainMenu(Action action)
     {
-        loseMainMenuBttn.onClick.AddListener(() =>
-        {
-            OnMainMenuRequested?.Invoke();
-        });
-        
-        winNextLevelBttn.onClick.AddListener(() =>
-        {
-            OnNextLevelClicked?.Invoke();
-        });
+        roundOverUI.DeRegisterLoadToMainMenu(action);
+    }
+
+    public void RegisterLoadNextLevel(Action action)
+    {
+        roundOverUI.RegisterLoadNextLevel(action);
+    }
+
+    public void DeRegisterLoadNextLevel(Action action)
+    {
+        roundOverUI.DeRegisterLoadNextLevel(action);
     }
 
     public void UpdateLevelObjectives(Dictionary<string, Objective> map)
@@ -79,25 +62,32 @@ public class GameUI : MonoBehaviour
         {
             _allObjectivesTexts = new List<TMP_Text>();
         }
-
+        
         foreach (var objectiveText in _allObjectivesTexts)
         {
-            Destroy(objectiveText.gameObject.transform.parent.gameObject);
+            Destroy(objectiveText.transform.parent.gameObject);
         }
         _allObjectivesTexts.Clear();
         
         foreach (var data in map)
         {
             var go = Instantiate(objectiveBody, objectivesParent.transform);
-            go.gameObject.SetActive(true);
-            var str = $"{data.Value.Current.ToString()}/{data.Value.Target.ToString()}";
             var txt = go.GetComponentInChildren<TMP_Text>();
+            var img = go.transform.Find("Image").GetComponent<Image>();
+
+            var str = $"{data.Value.Current}/{data.Value.Target}";
             _allObjectivesTexts.Add(txt);
             txt.text = str;
+
+            img.sprite = data.Value.Data.objectiveUISprite;
+
             if (data.Value.IsCompleted)
             {
                 txt.text = $"<s>{txt.text}</s>";
+                img.color = new Color(0.5f, 0.5f, 0.5f);
             }
+
+            go.gameObject.SetActive(true);
         }
     }
 
@@ -119,13 +109,13 @@ public class GameUI : MonoBehaviour
         _nicknameMap = nameMap;
         _scoreTexts = new Dictionary<int, TMP_Text>();
         var players = FindObjectsOfType<Player>().ToList();
-        string playerNickname = null;
+        int playerId = -1;
 
         foreach (var player in players)
         {
             if (player.HasInputAuthority)
             {
-                playerNickname = NetworkManager.Instance.GetPlayerNickNameById(player.PlayerId);
+                playerId = player.PlayerId;
                 break;
             }
         }
@@ -133,7 +123,7 @@ public class GameUI : MonoBehaviour
         foreach (var kv in scoreMap)
         {
             TMP_Text text = null;
-            if (nameMap[kv.Key].Equals(playerNickname))
+            if (kv.Key == playerId)
             {
                 var go = Instantiate(scoreText, scoreTextParent);
                 go.SetActive(true);
@@ -142,6 +132,10 @@ public class GameUI : MonoBehaviour
             }
             _scoreTexts.Add(kv.Key, text);
         }
+
+        var image = scoreTextParent.GetComponent<Image>();
+        image.sprite = LevelManager.ScoreUISprite;
+        image.SetNativeSize();
     }
 
     public void UpdateScore(int id, int score)
@@ -159,7 +153,6 @@ public class GameUI : MonoBehaviour
 
     public void ShowWinGameUI(bool show, bool showNextButton)
     {
-        winNextLevelBttn.gameObject.SetActive(showNextButton);
         roundOverUI.gameObject.SetActive(show);
         roundOverUI.ShowEndScreen(true, timerBar.fillAmount);
     }

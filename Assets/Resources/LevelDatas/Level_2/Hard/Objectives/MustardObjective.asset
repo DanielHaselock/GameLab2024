@@ -16,4 +16,5 @@ MonoBehaviour:
   key: mustard
   value: 0
   targetValue: 1
+  objectiveUISprite: {fileID: 21300000, guid: 64ed28adf3242b84cbd31857afb70a76, type: 3}
   operationType: 0

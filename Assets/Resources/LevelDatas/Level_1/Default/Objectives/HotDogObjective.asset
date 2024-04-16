@@ -16,4 +16,5 @@ MonoBehaviour:
   key: hotdog
   value: 0
   targetValue: 1
+  objectiveUISprite: {fileID: 21300000, guid: 6336cebe7523a2b4fb7d32affcaea108, type: 3}
   operationType: 0

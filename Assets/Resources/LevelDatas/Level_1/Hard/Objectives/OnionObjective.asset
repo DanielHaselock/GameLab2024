@@ -16,4 +16,5 @@ MonoBehaviour:
   key: onion
   value: 0
   targetValue: 4
+  objectiveUISprite: {fileID: 21300000, guid: 544c2588029e4054bb2860a3dc14c09c, type: 3}
   operationType: 0

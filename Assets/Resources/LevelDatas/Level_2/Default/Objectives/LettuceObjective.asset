@@ -16,4 +16,5 @@ MonoBehaviour:
   key: lettuce
   value: 0
   targetValue: 1
+  objectiveUISprite: {fileID: 21300000, guid: 7d29a56119fd87748889921ee3563985, type: 3}
   operationType: 0

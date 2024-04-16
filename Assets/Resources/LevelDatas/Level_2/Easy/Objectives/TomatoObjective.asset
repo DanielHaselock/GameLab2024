@@ -16,4 +16,5 @@ MonoBehaviour:
   key: tomato
   value: 0
   targetValue: 1
+  objectiveUISprite: {fileID: 21300000, guid: 59b0a60f3643f574e86715632d6d6ada, type: 3}
   operationType: 0
