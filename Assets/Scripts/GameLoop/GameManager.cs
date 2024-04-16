@@ -568,7 +568,8 @@ namespace GameLoop
             yield return new WaitForSeconds(1);
             UpdateGameState(GameState.Win);
         }
-        
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         public void RPC_UpdateScoreOnClient(int player, string enemyKey)
         {
             if (Runner.IsServer)
