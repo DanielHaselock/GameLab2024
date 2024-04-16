@@ -18,7 +18,7 @@ MonoBehaviour:
   ScoringMap: {fileID: 11400000, guid: 72380e7950345024986ebf915325694d, type: 2}
   BossToSpawn:
     RawGuidValue: 2f6bbf4e5b51e294e8fefd1c23ad13c1
-  BossSFXKey: boss_souvlaki
+  BossSFXKey: boss_souvlaki_explosion
   BossMusicKey: boss_souvlaki
   AllowChargedAttacks: 0
   ScoreUISprite: {fileID: 21300000, guid: 3870826bcb6761b44a7b58a649221b0d, type: 3}
