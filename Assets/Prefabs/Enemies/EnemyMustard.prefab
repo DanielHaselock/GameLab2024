@@ -785,6 +785,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6439078427858740560}
     m_Modifications:
+    - target: {fileID: 2561097794674982321, guid: fe2830081e9ddc64387397668affce4a, type: 3}
+      propertyPath: SortKey
+      value: 1230253739
+      objectReference: {fileID: 0}
     - target: {fileID: 4445491004028259252, guid: fe2830081e9ddc64387397668affce4a, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
