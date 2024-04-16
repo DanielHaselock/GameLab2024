@@ -149,7 +149,7 @@ namespace Audio
             {
                 if (NetworkManager.Instance == null)
                 {
-                    PlaySFXLocal(sfxName, random);
+                    PlaySFXLocal3D(sfxName, random, position);
                     return;
                 }
                 
@@ -161,7 +161,7 @@ namespace Audio
             }
             else
             {
-                PlaySFXLocal(sfxName, random);
+                PlaySFXLocal3D(sfxName, random, position);
             }
         }
         
@@ -209,10 +209,9 @@ namespace Audio
                 return;
             var sfx = new GameObject($"SFX_{clip.name}").AddComponent<AudioSource>();
             sfx.transform.position = position;
-            sfx.maxDistance = 4;
-            sfx.minDistance = 2;
+            sfx.maxDistance = 10;
+            sfx.minDistance = 1;
             sfx.spatialBlend = 1;
-            sfx.spatialize = true;
             sfx.transform.parent = transform;
             sfx.outputAudioMixerGroup = _sfxSpatialMixerGroup;
             sfx.PlayOneShot(clip);
