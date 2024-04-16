@@ -61,25 +61,32 @@ public class GameUI : MonoBehaviour
         {
             _allObjectivesTexts = new List<TMP_Text>();
         }
-
+        
         foreach (var objectiveText in _allObjectivesTexts)
         {
-            Destroy(objectiveText.gameObject.transform.parent.gameObject);
+            Destroy(objectiveText.transform.parent.gameObject);
         }
         _allObjectivesTexts.Clear();
         
         foreach (var data in map)
         {
             var go = Instantiate(objectiveBody, objectivesParent.transform);
-            go.gameObject.SetActive(true);
-            var str = $"{data.Value.Current.ToString()}/{data.Value.Target.ToString()}";
             var txt = go.GetComponentInChildren<TMP_Text>();
+            var img = go.transform.Find("Image").GetComponent<Image>();
+
+            var str = $"{data.Value.Current}/{data.Value.Target}";
             _allObjectivesTexts.Add(txt);
             txt.text = str;
+
+            img.sprite = data.Value.Data.objectiveUISprite;
+
             if (data.Value.IsCompleted)
             {
                 txt.text = $"<s>{txt.text}</s>";
+                img.color = new Color(0.5f, 0.5f, 0.5f);
             }
+
+            go.gameObject.SetActive(true);
         }
     }
 
@@ -124,6 +131,10 @@ public class GameUI : MonoBehaviour
             }
             _scoreTexts.Add(kv.Key, text);
         }
+
+        var image = scoreTextParent.GetComponent<Image>();
+        image.sprite = LevelManager.ScoreUISprite;
+        image.SetNativeSize();
     }
 
     public void UpdateScore(int id, int score)

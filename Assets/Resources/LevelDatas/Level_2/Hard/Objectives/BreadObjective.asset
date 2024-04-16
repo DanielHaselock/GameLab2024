@@ -16,4 +16,5 @@ MonoBehaviour:
   key: bread
   value: 0
   targetValue: 2
+  objectiveUISprite: {fileID: 21300000, guid: 786766e2333dbe84381bc84bb3ef95bb, type: 3}
   operationType: 0

@@ -16,4 +16,5 @@ MonoBehaviour:
   key: bellpepper
   value: 0
   targetValue: 3
+  objectiveUISprite: {fileID: 21300000, guid: 7e03fdf6c971a5c48bec9775c715566f, type: 3}
   operationType: 0

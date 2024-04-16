@@ -19,5 +19,6 @@ MonoBehaviour:
   BossSFXKey: boss_souvlaki
   BossMusicKey: boss_souvlaki
   AllowChargedAttacks: 0
+  ScoreUISprite: {fileID: 21300000, guid: 3870826bcb6761b44a7b58a649221b0d, type: 3}
   SceneIndx: 1
   LevelTimeInSeconds: 360

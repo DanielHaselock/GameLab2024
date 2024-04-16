@@ -9,6 +9,7 @@ public class ObjectiveData : ScriptableObject
     public string key;
     public int value;
     public int targetValue;
+    public Sprite objectiveUISprite;
     public enum OperationType {Add, Sub};
     public OperationType operationType;
 }
