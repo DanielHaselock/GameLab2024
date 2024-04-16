@@ -83,13 +83,16 @@ namespace Audio
             _ambianceSource.outputAudioMixerGroup = _mixer.FindMatchingGroups("Ambiance")[0];
 
             _sfxMixerGroup = _mixer.FindMatchingGroups("SFX")[0];
-
-            PlayBackgroundMusic(_map.InitialBackgroundMusic);
-            PlaySFX(_map.InitialAmbiance);
         }
         
         public void PlayBackgroundMusic(string bgName)
         {
+            if (string.IsNullOrEmpty(bgName))
+            {
+                _bgSource.Stop();
+                return;
+            }
+            
             var clip = _map.GetBackgroundClip(bgName);
             if (clip == null)
                 return;
@@ -101,6 +104,12 @@ namespace Audio
         
         public void PlayAmbiance(string ambName)
         {
+            if (string.IsNullOrEmpty(ambName))
+            {
+                _ambianceSource.Stop();
+                return;
+            }
+            
             var clip = _map.GetAmbianceClip(ambName);
             if (clip == null)
                 return;

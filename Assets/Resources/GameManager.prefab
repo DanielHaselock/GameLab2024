@@ -48,10 +48,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c19d0d672b71494faeb901aaab7aaad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelSceneIndex: 1
-  totalRoundTimeInSeconds: 1000
   maxLevels: 2
   rewardsMap: {fileID: 11400000, guid: 26eb20f16101e6a4da450bfbbe877c91, type: 2}
+  bgMusicKey: later_level
+  ambKey: 
   _gameStarted: 0
   _bossDefeated: 0
   _IsPaused: 0

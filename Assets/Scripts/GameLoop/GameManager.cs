@@ -9,8 +9,6 @@ using UnityEngine;
 using Fusion;
 using Fusion.Addons.Physics;
 using Networking.Behaviours;
-using Networking.Data;
-using UnityEngine.AI;
 using Utils;
 using UnityEngine.EventSystems;
 
@@ -35,7 +33,10 @@ namespace GameLoop
         
         [SerializeField] private int maxLevels;
         [SerializeField] private RewardsMap rewardsMap;
-
+        [Header("Audio")] 
+        [SerializeField] private string bgMusicKey;
+        [SerializeField] private string ambKey;
+        
         private ChangeDetector _change;
         private Dictionary<string, Objective> objectivesMap;
         private Dictionary<string, Objective> objectivesGUIData;
@@ -67,7 +68,7 @@ namespace GameLoop
                 DontDestroyOnLoad(this.gameObject);
             }
         }
-
+        
         private void OnDestroy()
         {
             if(_gameUI == null)
@@ -116,9 +117,6 @@ namespace GameLoop
             
             if (EventSystem.current == null)
                 Instantiate(Resources.Load("EventSystem"));
-
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Confined;
         }
         
         private void Update()
@@ -157,8 +155,11 @@ namespace GameLoop
         
         private void TimerTick(TimeSpan timeLeft)
         {
-            AudioManager.Instance.PlaySFX(SFXConstants.Clock);
             this._timeLeft = timeLeft;
+            
+            if(timeLeft.TotalSeconds <= 10)
+                AudioManager.Instance.PlaySFX(SFXConstants.Clock);
+            
             _gameUI.UpdateTimerText(timeLeft);
             if (gameStarted && timeLeft.TotalSeconds <=0)
             {
@@ -316,6 +317,7 @@ namespace GameLoop
             }
             IsPausable = true;
             LevelManager.LoadLevel(_currentLevel);
+            _gameUI.SetBossHealth(false, 0);
             bool result = await NetworkManager.Instance.LoadSceneNetworked(LevelManager.LevelSceneIndx, false);
             if (!result)
             {
@@ -331,6 +333,9 @@ namespace GameLoop
                 UpdateGameState(GameState.Cutscene);
                 return;
             }
+            
+            AudioManager.Instance.PlayBackgroundMusic(bgMusicKey);
+            AudioManager.Instance.PlayAmbiance(ambKey);
             
             var defPos = new List<Vector3> { new Vector3(0, 2, 0), new Vector3(0, 4, 0) };
             var defRot = new List<Quaternion> { Quaternion.identity, Quaternion.identity };
@@ -408,6 +413,10 @@ namespace GameLoop
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void RPC_LoadLevelObjectivesOnClient(string levelPath)
         {
+            // hacky but it will do
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Confined;
+            
             if (Runner.IsServer)
                 return;
             LevelManager.LoadLevelObjectivesFrom(levelPath);
@@ -445,6 +454,7 @@ namespace GameLoop
         private void RPC_ShowBossSpawnVisual()
         {
             _gameUI.ShowGameTimer(false);
+            _gameUI.HideObjectives(); // no longer needed
             AlterCollector collectible = FindObjectOfType<AlterCollector>();
             var alterCamObjC = collectible.AlterCamClose;
             var alterCamObjF = collectible.AlterCamFar;
@@ -634,6 +644,9 @@ namespace GameLoop
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void RPC_ShowWinScreenOnClients()
         {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            AudioManager.Instance.PlayBackgroundMusic("post_round");
             if(Runner.IsServer)
                 return;
             ResetManager();
@@ -682,6 +695,9 @@ namespace GameLoop
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void RPC_ShowLoseScreenOnClients()
         {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            AudioManager.Instance.PlayBackgroundMusic("post_round");
             if(Runner.IsServer)
                 return;
             _gameUI.ShowLostGameUI(true);

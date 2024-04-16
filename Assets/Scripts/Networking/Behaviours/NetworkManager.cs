@@ -141,7 +141,11 @@ namespace Networking.Behaviours
                 if (AvailableSessions.Count <= 0)
                 {
                     NetworkLogger.Log("Decision: Host");
+                    _connectionUI.ShowWait(true, "Launchin new session");
                     CreateNewSession();
+                    if(_networkPropertiesRef.MaxPlayers > 1)
+                        _connectionUI.ShowWait(true, "Waiting for one more player");
+                    
                 }
                 else
                     JoinRandomSession();
@@ -149,6 +153,7 @@ namespace Networking.Behaviours
             else
             {
                 NetworkLogger.Log("Decision: Join Session");
+                _connectionUI.ShowWait(true, "Joining game...");
                 JoinRandomSession();
             }
         }

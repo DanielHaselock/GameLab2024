@@ -91,7 +91,7 @@ Material:
     - _OutlineEnabled: 1
     - _OutlineScale: 1
     - _OutlineSpace: 0
-    - _OutlineWidth: 3
+    - _OutlineWidth: 1
     - _OverrideLightmapDir: 0
     - _QueueOffset: 50
     - _RimEnabled: 0

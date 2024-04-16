@@ -29,6 +29,10 @@ public class GameUI : MonoBehaviour
 
     [SerializeField] private VideoPlayer cutscenePlayer;
     [SerializeField] private GameObject cutSceneObj;
+
+    [SerializeField] private GameObject bossHealthbar;
+    [SerializeField] private Image bossHPFill;
+    [SerializeField] private UIElementShaker bossHPShaker;
     
     private List<TMP_Text> _allObjectivesTexts;
     private Dictionary<int, TMP_Text> _scoreTexts;
@@ -56,6 +60,12 @@ public class GameUI : MonoBehaviour
         roundOverUI.DeRegisterLoadNextLevel(action);
     }
 
+    public void HideObjectives()
+    {
+        _allObjectivesTexts.Clear();
+        objectivesParent.gameObject.SetActive(false);
+    }
+    
     public void UpdateLevelObjectives(Dictionary<string, Objective> map)
     {
         if (_allObjectivesTexts == null)
@@ -207,5 +217,16 @@ public class GameUI : MonoBehaviour
             return null;
 
         return _scoreTexts.GetValueOrDefault(i).text;
+    }
+
+    public void SetBossHealth(bool show, float val)
+    {
+        bossHealthbar.SetActive(show);
+        bossHPFill.fillAmount = val;
+    }
+
+    public void ShakeBossHealthBar()
+    {
+        bossHPShaker.Shake();
     }
 }
