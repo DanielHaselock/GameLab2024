@@ -523,7 +523,6 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 7891551040775919647}
   - {fileID: 2189133987729863562}
-  - {fileID: 4336122058451616903}
   - {fileID: 6403633045778146428}
   - {fileID: 3231984066589431462}
   - {fileID: 3913620337605042185}
@@ -733,7 +732,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 200
-  _Health: 0
   _CanDeplete: 1
   _HealthDepleted: 0
   allowTempInvulnerability: 0

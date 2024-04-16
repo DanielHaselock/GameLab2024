@@ -9,7 +9,6 @@ using UnityEngine;
 using Fusion;
 using Fusion.Addons.Physics;
 using Networking.Behaviours;
-using UnityEditor.Rendering.Universal.ShaderGUI;
 using Utils;
 using UnityEngine.EventSystems;
 
@@ -667,10 +666,12 @@ namespace GameLoop
                 var reward = RewardManager.GetRewardDataForPlayer(player.PlayerId);
                 playerRewardMap.Set(player.PlayerId, reward == null ? 0 : LevelManager.RewardsMap.Rewards.IndexOf(reward));
             }
-            ResetManager();
-            _gameUI.ShowWinGameUI(true, true, LevelManager.RewardsMap.Rewards[NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId]);
+            var myId = NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId;
+            _gameUI.ShowWinGameUI(true, true, LevelManager.RewardsMap.Rewards[myId]);
             RPC_ShowWinScreenOnClients();
             LevelManager.LevelComplete(true, _timeLeft);
+            if(_players.Count < 2)
+                ResetManager();
         }
         
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -679,8 +680,15 @@ namespace GameLoop
             AudioManager.Instance.PlayBackgroundMusic(AudioConstants.PostRound);
             if(Runner.IsServer)
                 return;
+            var myId = NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId;
+            _gameUI.ShowWinGameUI(true, false, LevelManager.RewardsMap.Rewards[myId]);
+            RPC_SafeToReset();
+        }
+
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        private void RPC_SafeToReset()
+        {
             ResetManager();
-            _gameUI.ShowWinGameUI(true, false, LevelManager.RewardsMap.Rewards[NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId]);
         }
         
         private void LoadNextLevel()
@@ -719,7 +727,9 @@ namespace GameLoop
             LevelManager.LevelComplete(false, _timeLeft);
             RPC_ShowLoseScreenOnClients();
             _gameUI.ShowLostGameUI(true);
-            ResetManager();
+            
+            if(_players.Count < 2)
+                ResetManager();
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -729,7 +739,7 @@ namespace GameLoop
             if(Runner.IsServer)
                 return;
             _gameUI.ShowLostGameUI(true);
-            ResetManager();
+            RPC_SafeToReset();
         }
         
         //so main logic is as such, when an enemy dies,

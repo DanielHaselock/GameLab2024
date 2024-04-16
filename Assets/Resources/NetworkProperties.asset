@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9df731ee934edab6969427f6812fe9, type: 3}
   m_Name: NetworkProperties
   m_EditorClassIdentifier: 
-  MaxPlayers: 2
+  MaxPlayers: 1
   ShowCutscene: 0
   PlayerPrefabs:
   - RawGuidValue: 84bb177b727c34779a356fe8958bbf63
