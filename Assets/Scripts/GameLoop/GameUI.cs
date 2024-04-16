@@ -203,7 +203,6 @@ public class GameUI : MonoBehaviour
     {
         bossHealthbar.SetActive(show);
         bossHPFill.fillAmount = val;
-        objectivesParent.gameObject.SetActive(false);
     }
 
     public void ShakeBossHealthBar()

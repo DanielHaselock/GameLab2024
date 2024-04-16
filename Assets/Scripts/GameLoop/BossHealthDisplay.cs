@@ -37,8 +37,8 @@ namespace GameLoop
             if (_current > _healthComponent.Health)
             {
                 _current = _healthComponent.Health;
-                _gameUI.ShakeBossHealthBar();
-                if(_isDead)
+                RPC_ShakeBar();
+                if (_isDead)
                     return;
                 _isDead = true;
                 StartCoroutine(Hide());
@@ -48,13 +48,19 @@ namespace GameLoop
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void RPC_UpdateHealth(bool show, float val)
         {
-            _gameUI.SetBossHealth(false, 0);
+            _gameUI.SetBossHealth(show, val);
+        }
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_ShakeBar()
+        {
+            _gameUI.ShakeBossHealthBar();
         }
 
         IEnumerator Hide()
         {
             yield return new WaitForSeconds(0.25f);
-            _gameUI.SetBossHealth(false, 0);
+            RPC_UpdateHealth(false, 0);
         }
     }
 }
