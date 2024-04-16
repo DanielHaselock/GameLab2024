@@ -43,6 +43,7 @@ namespace Audio
         private AudioSource _bgSource;
         private AudioSource _ambianceSource;
         private AudioMixerGroup _sfxMixerGroup;
+        private AudioMixerGroup _sfxSpatialMixerGroup;
 
         private HashSet<string> _sfxMemory;
 
@@ -83,6 +84,7 @@ namespace Audio
             _ambianceSource.outputAudioMixerGroup = _mixer.FindMatchingGroups("Ambiance")[0];
 
             _sfxMixerGroup = _mixer.FindMatchingGroups("SFX")[0];
+            _sfxSpatialMixerGroup = _mixer.FindMatchingGroups("SpatialSFX")[0];
         }
         
         public void PlayBackgroundMusic(string bgName)
@@ -209,9 +211,10 @@ namespace Audio
             sfx.transform.position = position;
             sfx.maxDistance = 4;
             sfx.minDistance = 2;
+            sfx.spatialBlend = 1;
             sfx.spatialize = true;
             sfx.transform.parent = transform;
-            sfx.outputAudioMixerGroup = _sfxMixerGroup;
+            sfx.outputAudioMixerGroup = _sfxSpatialMixerGroup;
             sfx.PlayOneShot(clip);
             StartCoroutine(RemoveKeyDelayed(sfxName, 0.25f));
             Destroy(sfx.gameObject, clip.length);
