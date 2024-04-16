@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Audio;
 using Fusion;
 using Networking.Behaviours;
 using UnityEngine;
@@ -31,6 +32,7 @@ public class BreakableWall : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_BreakWall()
     {
+        AudioManager.Instance.PlaySFX3D(AudioConstants.ExplosionBlock, transform.position);
         StartCoroutine(BreakWalls());
         var localPlayer = NetworkManager.Instance.GetLocalPlayer().gameObject;
         var dist = Vector3.Distance(localPlayer.transform.position, transform.position);
