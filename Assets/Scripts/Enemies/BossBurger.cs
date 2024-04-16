@@ -5,6 +5,7 @@ using Fusion;
 using GameLoop;
 using UnityEngine;
 using UnityEngine.AI;
+using Audio;
 
 public class BossBurger : Enemy
 {
@@ -25,6 +26,7 @@ public class BossBurger : Enemy
     protected override void Start()
     {
         base.Start();
+        AudioManager.Instance.PlaySFX(AudioConstants.BossSummon);
         canAttack = true;
         //Go crazy        
         lastPosition = transform.position;
@@ -163,6 +165,7 @@ public class BossBurger : Enemy
         animator.CrossFade("Attack", .1f);
         //attack windup
         yield return new WaitForSeconds(.35f);
+        AudioManager.Instance.PlaySFX(AudioConstants.BurgerAttack);
         if (stunned)
         {
             attacking = false;
@@ -187,6 +190,7 @@ public class BossBurger : Enemy
         animator.CrossFade("AttackLong", .1f);
         //attack windup
         yield return new WaitForSeconds(.8f);
+        AudioManager.Instance.PlaySFX(AudioConstants.BurgerAttack);
         if (stunned)
         {
             attacking = false;
@@ -213,6 +217,7 @@ public class BossBurger : Enemy
         animator.CrossFade("Roar", .1f);
         //attack windup
         yield return new WaitForSeconds(.8f);
+        AudioManager.Instance.PlaySFX(AudioConstants.BossRoarLong);
         if (stunned)
         {
             attacking = false;
@@ -253,6 +258,7 @@ public class BossBurger : Enemy
         animator.CrossFade("Jump", .1f);
         //attack windup
         yield return new WaitForSeconds(.8f);
+        AudioManager.Instance.PlaySFX(AudioConstants.ExplosionBlock);
         if (stunned)
         {
             attacking = false;

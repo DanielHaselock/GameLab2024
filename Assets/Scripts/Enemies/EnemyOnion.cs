@@ -164,6 +164,7 @@ public class EnemyOnion : Enemy
             canAttack = true;
             yield break;
         }
+        AudioManager.Instance.PlaySFX(AudioConstants.SmallEnemyAttack);
         damageComponent.InitiateAttack("Player");
         //attack recovery
         yield return new WaitForSeconds(.17f);
@@ -182,6 +183,7 @@ public class EnemyOnion : Enemy
         {
             if (myState == OnionState.Passive)
             {
+                AudioManager.Instance.PlaySFX(AudioConstants.EnemyAlert);
                 myState = OnionState.Aggressive;
                 if (_targetPlayer != null)
                 navMeshAgent.destination = _targetPlayer.transform.position;
@@ -200,6 +202,7 @@ public class EnemyOnion : Enemy
     public void Alert(GameObject player)
     {
         myState = OnionState.Aggressive;
+        AudioManager.Instance.PlaySFX(AudioConstants.EnemyAlert);
         //Can't add player to seen players, as that needs to happen on its own time.
         if (player != null)
            navMeshAgent.destination = player.transform.position;

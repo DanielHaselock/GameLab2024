@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
+using Audio;
 
 public class BossSouvlaki : Enemy
 {
@@ -31,6 +32,7 @@ public class BossSouvlaki : Enemy
     protected override void Start()
     {
         base.Start();
+        AudioManager.Instance.PlaySFX(AudioConstants.BossSummon);
         trigger.radius = 35;
         yPos = transform.position.y;
         canAttack = true;
@@ -184,6 +186,7 @@ public class BossSouvlaki : Enemy
         animator.CrossFade("Roar", .1f);
         //attack windup
         yield return new WaitForSeconds(.8f);
+        AudioManager.Instance.PlaySFX(AudioConstants.BossRoar);
         if (stunned)
         {
             attacking = false;
@@ -227,6 +230,7 @@ public class BossSouvlaki : Enemy
         animator.CrossFade("Spin", .1f);
         //attack windup
         yield return new WaitForSeconds(.7f);
+        AudioManager.Instance.PlaySFX(AudioConstants.SouvlakiRoll);
         rolling = true;
         trigger.radius = 2;
         //activate spin collider or something
@@ -256,7 +260,7 @@ public class BossSouvlaki : Enemy
         animator.CrossFade("Roll", .1f);
         //attack windup
         yield return new WaitForSeconds(.7f);
-        
+        AudioManager.Instance.PlaySFX(AudioConstants.SouvlakiRoll);
         rolling = true;
         trigger.radius = 2;
         float startTime = Time.time;
