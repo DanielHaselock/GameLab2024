@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Audio;
+using Fusion;
 using GameLoop;
 using Networking.Behaviours;
 using TMPro;
@@ -108,13 +109,13 @@ public class GameUI : MonoBehaviour
         _nicknameMap = nameMap;
         _scoreTexts = new Dictionary<int, TMP_Text>();
         var players = FindObjectsOfType<Player>().ToList();
-        string playerNickname = null;
+        int playerId = -1;
 
         foreach (var player in players)
         {
             if (player.HasInputAuthority)
             {
-                playerNickname = NetworkManager.Instance.GetPlayerNickNameById(player.PlayerId);
+                playerId = player.PlayerId;
                 break;
             }
         }
@@ -122,7 +123,7 @@ public class GameUI : MonoBehaviour
         foreach (var kv in scoreMap)
         {
             TMP_Text text = null;
-            if (nameMap[kv.Key].Equals(playerNickname))
+            if (kv.Key == playerId)
             {
                 var go = Instantiate(scoreText, scoreTextParent);
                 go.SetActive(true);
