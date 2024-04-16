@@ -9,7 +9,6 @@ using UnityEngine;
 using Fusion;
 using Fusion.Addons.Physics;
 using Networking.Behaviours;
-using UnityEditor.Rendering.Universal.ShaderGUI;
 using Utils;
 using UnityEngine.EventSystems;
 
