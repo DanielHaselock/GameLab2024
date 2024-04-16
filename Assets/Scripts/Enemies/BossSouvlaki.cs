@@ -258,10 +258,12 @@ public class BossSouvlaki : Enemy
         float duration = 1.8333f;
         while (Time.time - startTime < duration)
         {
-            GetComponent<Rigidbody>().AddForce(transform.right * -.5f, ForceMode.Impulse);
-
+            GetComponent<Rigidbody>().velocity =- transform.right * 0.5f * Time.deltaTime;
+            GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(GetComponent<Rigidbody>().velocity, 5);
             yield return null;
         }
+        if (Vector3.Distance(transform.transform.position, new Vector3(3.5f, 0, 40)) > 22)
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
 
         rolling = false;
         trigger.radius = 35;

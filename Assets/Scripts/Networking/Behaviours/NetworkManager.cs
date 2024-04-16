@@ -13,6 +13,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+using RuntimeDeveloperConsole;
 
 namespace Networking.Behaviours
 {
@@ -597,6 +598,12 @@ namespace Networking.Behaviours
             Destroy(_netSynchedHelper.gameObject);
             Destroy(this.gameObject);
             SceneManager.LoadScene(0);
+        }
+
+        [ConsoleCommand("PlayGame", "PlayGame")]
+        public static async void PlayGame()
+        {
+            await Instance.SmartConnect();
         }
     }
 }

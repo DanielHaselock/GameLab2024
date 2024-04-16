@@ -14,5 +14,6 @@ namespace Audio
         public static string ItemReject = "item_reject";
         public static string Clock = "clock";
         public static string ObjectiveComplete = "objective_complete";
+        public static string SmallEnemyHit = "small_enemy_hit";
     }
 }

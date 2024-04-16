@@ -5,6 +5,7 @@ using Fusion;
 using GameLoop;
 using UnityEngine;
 using UnityEngine.AI;
+using Audio;
 
 public class EnemyOnion : Enemy
 {
@@ -176,6 +177,7 @@ public class EnemyOnion : Enemy
     public override void OnAttack()
     {
         base.OnAttack();
+        AudioManager.Instance.PlaySFX(SFXConstants.SmallEnemyHit);
         if (!healthComponent.HealthDepleted)
         {
             if (myState == OnionState.Passive)
