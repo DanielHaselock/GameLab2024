@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Audio;
@@ -83,7 +84,13 @@ public class DamageComponent : NetworkBehaviour
             return;
         var perc = (selfheal.MaxHealth - selfheal.Health) / selfheal.MaxHealth; // the closer to death, the more you get.
         var offeredHealth = Mathf.Lerp(healMin, healMax, perc);
-        selfheal.UpdateHealth((int)offeredHealth, -1, false);
+        StartCoroutine(DelayedHeal((int)offeredHealth));
+    }
+
+    IEnumerator DelayedHeal(int health)
+    {
+        yield return new WaitForSeconds(0.25f);
+        selfheal.UpdateHealth(health, -1, false);
         selfheal.ShowHealFX();
     }
     
