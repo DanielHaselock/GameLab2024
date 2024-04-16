@@ -115,3 +115,10 @@ MonoBehaviour:
       - {fileID: 8300000, guid: ce1e4d998cd1a6e47a741b46354e1e23, type: 3}
       - {fileID: 8300000, guid: 8957b4caaa43af14e8ec0e0a6b4ea358, type: 3}
       - {fileID: 8300000, guid: 7b6247ad7e1a2e54d8295dfb6d70a05e, type: 3}
+    - Key: large_enemy_death
+      Value:
+      - {fileID: 8300000, guid: ee4307b90747ac04b8f406a0c67270fe, type: 3}
+      - {fileID: 8300000, guid: 86cfc369a39c9b64e9a681b544a425dd, type: 3}
+      - {fileID: 8300000, guid: 6be9c166a519df447955ffd36b4972a0, type: 3}
+      - {fileID: 8300000, guid: 15fe4c13c2ad74e4093831bc98c9058f, type: 3}
+      - {fileID: 8300000, guid: 122a3e4636e164146920a72eae1fc1d7, type: 3}

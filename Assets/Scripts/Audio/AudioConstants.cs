@@ -40,5 +40,6 @@ namespace Audio
         public static string BurgerAttack = "burger_attack";
         public static string LargeEnemyHit = "large_enemy_hit";
         public static string LargeEnemyAttack = "large_enemy_attack";
+        public static string LargeEnemyDeath = "large_enemy_death";
     }
 }
