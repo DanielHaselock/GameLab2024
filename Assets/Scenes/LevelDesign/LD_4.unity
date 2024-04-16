@@ -33294,67 +33294,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4089867009530516, guid: 097013ceeb8052648be3891c0984df9a, type: 3}
   m_PrefabInstance: {fileID: 1497916444}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1499111335
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 326783254865584815, guid: 2f6bbf4e5b51e294e8fefd1c23ad13c1, type: 3}
-      propertyPath: SortKey
-      value: 2410804378
-      objectReference: {fileID: 0}
-    - target: {fileID: 1020198298646044508, guid: 2f6bbf4e5b51e294e8fefd1c23ad13c1, type: 3}
-      propertyPath: m_Name
-      value: BossSouvlaki
-      objectReference: {fileID: 0}
-    - target: {fileID: 1788953181964604855, guid: 2f6bbf4e5b51e294e8fefd1c23ad13c1, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 3.203439
-      objectReference: {fileID: 0}
-    - target: {fileID: 1788953181964604855, guid: 2f6bbf4e5b51e294e8fefd1c23ad13c1, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 1788953181964604855, guid: 2f6bbf4e5b51e294e8fefd1c23ad13c1, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 55.613464
-      objectReference: {fileID: 0}
-    - target: {fileID: 1788953181964604855, guid: 2f6bbf4e5b51e294e8fefd1c23ad13c1, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1788953181964604855, guid: 2f6bbf4e5b51e294e8fefd1c23ad13c1, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1788953181964604855, guid: 2f6bbf4e5b51e294e8fefd1c23ad13c1, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1788953181964604855, guid: 2f6bbf4e5b51e294e8fefd1c23ad13c1, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1788953181964604855, guid: 2f6bbf4e5b51e294e8fefd1c23ad13c1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1788953181964604855, guid: 2f6bbf4e5b51e294e8fefd1c23ad13c1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1788953181964604855, guid: 2f6bbf4e5b51e294e8fefd1c23ad13c1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 2f6bbf4e5b51e294e8fefd1c23ad13c1, type: 3}
 --- !u!1 &1506460383
 GameObject:
   m_ObjectHideFlags: 3
@@ -33603,7 +33542,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 1457513097}
+  m_Mesh: {fileID: 1663494332}
 --- !u!33 &1523383832
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -47153,6 +47092,5 @@ SceneRoots:
   - {fileID: 451387883}
   - {fileID: 639433114}
   - {fileID: 585120268}
-  - {fileID: 1499111335}
   - {fileID: 1106555211}
   - {fileID: 1336770211}

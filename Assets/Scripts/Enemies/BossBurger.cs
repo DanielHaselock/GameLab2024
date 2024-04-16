@@ -259,10 +259,11 @@ public class BossBurger : Enemy
             canAttack = true;
             yield break;
         }
-        List<GameObject> cages = new List<GameObject>();
+        List<NetworkObject> cages = new List<NetworkObject>();
         foreach (GameObject player in _seenPlayers)
         {
-            Runner.Spawn(breakableWallJail, new Vector3(player.transform.position.x, -1.5f, player.transform.position.z));
+            NetworkObject b = Runner.Spawn(breakableWallJail, new Vector3(player.transform.position.x, -2.65f, player.transform.position.z));
+            cages.Add(b);
         }
         //attack recovery
         yield return new WaitForSeconds(.17f);
@@ -270,7 +271,15 @@ public class BossBurger : Enemy
         attacking = false;
         navMeshAgent.speed = speed;
         //attack delay
-        yield return new WaitForSeconds(4f);
+        for (int i = 1; i < 28; i++)
+        {
+            foreach (NetworkObject b in cages)
+            {
+                b.transform.position = new Vector3(b.transform.position.x, b.transform.position.y + .175f, b.transform.position.z);
+            }
+            yield return new WaitForSeconds(.0257f);
+        }
+        yield return new WaitForSeconds(3f);
         canAttack = true;
     }
     protected override void OnTriggerEnter(Collider other)
