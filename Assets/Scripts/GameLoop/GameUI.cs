@@ -180,32 +180,19 @@ public class GameUI : MonoBehaviour
     public string GetCurrentPlayerScore()
     {
         var players = FindObjectsOfType<Player>().ToList();
-        string playerNickname = null;
+        int playerId = -1;
         foreach (var player in players)
         {
             if (player.HasInputAuthority)
             {
-                playerNickname = NetworkManager.Instance.GetPlayerNickNameById(player.PlayerId);
+                playerId = player.PlayerId;
                 break;
             }
         }
 
-        if (playerNickname == null)
+        if (playerId == -1)
             return null;
 
-        int i = -1;
-        foreach (var name in _nicknameMap)
-        {
-            if (name.Value == playerNickname)
-            {
-                i = name.Key;
-                break;
-            }
-        }
-
-        if (i == -1)
-            return null;
-
-        return _scoreTexts.GetValueOrDefault(i).text;
+        return _scoreTexts.GetValueOrDefault(playerId).text;
     }
 }
