@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Audio;
 using Effects;
 using Fusion;
 using UnityEngine;
@@ -20,6 +21,11 @@ public class HealthComponent : NetworkBehaviour
     [SerializeField] private bool allowTempInvulnerability = false;
     [SerializeField] private float tempInvulnerabilityDur = 1f;
     [SerializeField] private ParticleSystem healfx;
+
+    [Header("Audio")]
+    [SerializeField] private string hitSFXKey;
+    [SerializeField] private string deathSFXKey;
+    
     public bool IsInitialised  { get; private set; }
     private ChangeDetector _change;
 
@@ -47,9 +53,12 @@ public class HealthComponent : NetworkBehaviour
         
         if (_myLocalHealth > Health)
         {
-            if(_hitEffects != null)
+            if (_hitEffects != null)
+            {
                 _hitEffects.OnHit();
-            
+                AudioManager.Instance.PlaySFX3D(hitSFXKey, transform.position);
+            }
+
             _myLocalHealth = Health;
         }
     }
@@ -158,6 +167,13 @@ public class HealthComponent : NetworkBehaviour
             return;
         HealthDepleted = true;
         OnHealthDepleted?.Invoke(damager);
+        RPC_PlayDeathSFX();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayDeathSFX()
+    {
+        AudioManager.Instance.PlaySFX3D(deathSFXKey, transform.position);
     }
 
     public void ShowHealFX()

@@ -17,14 +17,14 @@ namespace Audio
         public static string PlayerAttack = "attack";
         public static string Jump = "jump";
         public static string Help = "help";
-        public static string Hit = "hit";
+        public static string HitFeedback = "hit";
         //Clock
         public static string Clock = "clock";
         //Item Objective
         public static string ItemCollect = "item_collect";
         public static string ItemReject = "item_reject";
         public static string ObjectiveComplete = "objective_complete";
-        //Item Player
+        //Item Player 
         public static string PlayerAttackCharge = "charge";
         public static string Drop = "drop";
         public static string Throw = "throw";

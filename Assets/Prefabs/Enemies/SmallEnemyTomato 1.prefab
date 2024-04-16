@@ -52,6 +52,8 @@ MonoBehaviour:
   allowTempInvulnerability: 0
   tempInvulnerabilityDur: 1
   healfx: {fileID: 0}
+  hitSFXKey: small_enemy_hit
+  deathSFXKey: small_enemy_death
 --- !u!65 &2457316198531660737
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -562,6 +564,7 @@ MonoBehaviour:
   materialHitEfectDelay: 0.15
   hitGameObjectFx: {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
   effectSpawnPosition: {fileID: 0}
+  hitSFX: 
 --- !u!208 &5207710927767791205
 NavMeshObstacle:
   m_ObjectHideFlags: 0
