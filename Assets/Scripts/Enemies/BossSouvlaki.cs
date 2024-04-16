@@ -26,6 +26,7 @@ public class BossSouvlaki : Enemy
     protected bool rolling = false;
 
     float yPos = 0;
+    float delay = 0;
 
     protected override void Start()
     {
@@ -61,6 +62,10 @@ public class BossSouvlaki : Enemy
             return;
 
         if (dead)
+            return;
+
+        delay += Time.deltaTime;
+        if (delay < 3)
             return;
 
         //UpdateMoveAndRotation(Runner.DeltaTime);

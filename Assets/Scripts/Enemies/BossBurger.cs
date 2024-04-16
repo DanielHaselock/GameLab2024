@@ -20,6 +20,8 @@ public class BossBurger : Enemy
     protected bool idle = true;
     protected bool prevIdle = true;
 
+    float delay = 0;
+
     protected override void Start()
     {
         base.Start();
@@ -52,6 +54,10 @@ public class BossBurger : Enemy
             return;
 
         if (dead)
+            return;
+
+        delay += Time.deltaTime;
+        if (delay < 3)
             return;
 
         //UpdateMoveAndRotation(Runner.DeltaTime);
