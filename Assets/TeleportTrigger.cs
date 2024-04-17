@@ -1,14 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 
-public class TeleportTrigger : MonoBehaviour
+public class TeleportTrigger : NetworkBehaviour
 {
+    [SerializeField] private Transform teleportLoc; 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals("Player"))
+        if (other.tag.ToLower().Equals("player") && Runner.IsServer)
         {
-            other.transform.position = new Vector3(43, -24.7f, -69.5f);
+            var player = other.GetComponent<Player>();
+            if(player == null)
+                return;
+            
+            player.MarkForTeleport(teleportLoc.position,teleportLoc.rotation);
         }
     }
 }

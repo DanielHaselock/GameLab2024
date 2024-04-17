@@ -40,6 +40,9 @@ namespace Accessibility
             switch (entityType)
             {
                 case AssistEntityType.Player:
+                    if (this == null)
+                        return null;
+                    
                     var no = GetComponentInParent<NetworkObject>();
                     if (no == null)
                         return null;

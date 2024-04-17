@@ -16,10 +16,12 @@ namespace GameLoop
         public void Pause()
         {
             PauseMenuUI.SetActive(true);
+            SettingsMenuUI.SetActive(false);
         }
         public void Resume()
         {
             GameManager.instance.Pause(false);
+            SettingsMenuUI.SetActive(false);
             PauseMenuUI.SetActive(false);
         }
         public void Settings()
