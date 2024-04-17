@@ -38,7 +38,7 @@ public class BossSouvlaki : Enemy
         canAttack = true;
         //Go crazy        
         lastPosition = transform.position;
-        animator.CrossFade("Rise", .25f);
+        SynchedCrossFade("Rise", .25f);
         healthComponent.OnDamaged += OnAttacked;
         healthComponent.OnHealthDepleted += KillMyself;
 
@@ -137,7 +137,7 @@ public class BossSouvlaki : Enemy
             {
                 if (idle)
                 {
-                    animator.CrossFade("Idle", .25f);
+                    SynchedCrossFade("Idle", .25f);
                 }
                 else
                 {
@@ -183,7 +183,7 @@ public class BossSouvlaki : Enemy
         canAttack = false;
         attacking = true;
         navMeshAgent.speed = 0;
-        animator.CrossFade("Roar", .1f);
+        SynchedCrossFade("Roar", .1f);
         //attack windup
         yield return new WaitForSeconds(.8f);
         AudioManager.Instance.PlaySFX(AudioConstants.BossRoar);
@@ -214,7 +214,7 @@ public class BossSouvlaki : Enemy
         }
         //attack recovery
         yield return new WaitForSeconds(.17f);
-        animator.CrossFade("Idle", .5f);
+        SynchedCrossFade("Idle", .5f);
         attacking = false;
         navMeshAgent.speed = speed;
         //attack delay
@@ -227,7 +227,7 @@ public class BossSouvlaki : Enemy
         canAttack = false;
         attacking = true;
         navMeshAgent.speed = 0;
-        animator.CrossFade("Spin", .1f);
+        SynchedCrossFade("Spin", .1f);
         //attack windup
         yield return new WaitForSeconds(.7f);
         AudioManager.Instance.PlaySFX(AudioConstants.SouvlakiRoll);
@@ -243,7 +243,7 @@ public class BossSouvlaki : Enemy
         //attack recovery
         yield return new WaitForSeconds(.8f);
         //reactivate health collider so cant be hit
-        animator.CrossFade("Idle", .5f);
+        SynchedCrossFade("Idle", .5f);
         attacking = false;
         navMeshAgent.speed = speed;
         //attack delay
@@ -257,7 +257,7 @@ public class BossSouvlaki : Enemy
         canAttack = false;
         attacking = true;
         navMeshAgent.speed = 0;
-        animator.CrossFade("Roll", .1f);
+        SynchedCrossFade("Roll", .1f);
         //attack windup
         yield return new WaitForSeconds(.7f);
         AudioManager.Instance.PlaySFX(AudioConstants.SouvlakiRoll);
@@ -269,8 +269,8 @@ public class BossSouvlaki : Enemy
         {
             //GetComponent<Rigidbody>().velocity =- transform.right * 0.5f * Time.deltaTime;
             //GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(GetComponent<Rigidbody>().velocity, 5);
-            GetComponent<Rigidbody>().AddForce(transform.right * -.5f, ForceMode.Impulse);
-            yield return new WaitForSeconds(.05f);
+            GetComponent<Rigidbody>().AddForce(transform.right * -75f * Time.deltaTime, ForceMode.Impulse);
+            yield return null;
         }
 
         rolling = false;
@@ -281,7 +281,7 @@ public class BossSouvlaki : Enemy
         //attack recovery
         yield return new WaitForSeconds(.75f);
         //reactivate health collider so cant be hit
-        animator.CrossFade("Idle", .5f);
+        SynchedCrossFade("Idle", .5f);
         attacking = false;
         navMeshAgent.speed = speed;
         //attack delay
@@ -293,8 +293,9 @@ public class BossSouvlaki : Enemy
         base.OnTriggerEnter(other);
         if (rolling && other.tag.Equals("Player"))
         {
-            
-            damageComponent.InitiateAttack("Player");
+
+            other.GetComponentInChildren<HealthComponent>().UpdateHealth(-3, -1, false);
+            //damageComponent.InitiateAttack("Player");
         }
     }
     protected override void OnTriggerExit(Collider other)
@@ -306,7 +307,7 @@ public class BossSouvlaki : Enemy
     {
         if (Runner.IsServer)
         {
-            animator.CrossFade("Die", .1f);
+            SynchedCrossFade("Die", .1f);
             await Task.Delay(1500);
             GameManager.instance.UpdateScore(0, "boss");
             Runner.Despawn(GetComponent<NetworkObject>());

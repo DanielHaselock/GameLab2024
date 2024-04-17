@@ -186,6 +186,7 @@ public class Enemy : NetworkBehaviour
     {
         if (Runner.IsServer)
             RPC_PlayAnim(clipName, fade);
+        Debug.Log("rpc anim");
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

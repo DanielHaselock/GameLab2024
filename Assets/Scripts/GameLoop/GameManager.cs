@@ -332,10 +332,7 @@ namespace GameLoop
                 UpdateGameState(GameState.Cutscene);
                 return;
             }
-            
-            AudioManager.Instance.PlayBackgroundMusic(LevelManager.BGMKey);
-            AudioManager.Instance.PlayAmbiance(LevelManager.AmbianceKey);
-            
+ 
             var defPos = new List<Vector3> { new Vector3(0, 2, 0), new Vector3(0, 4, 0) };
             var defRot = new List<Quaternion> { Quaternion.identity, Quaternion.identity };
             var spawnPositions = new List<Vector3>();
@@ -384,9 +381,17 @@ namespace GameLoop
             }
             InitialiseScores();
             RPC_InitialiseScoreOnClients();
+            RPC_PlayLevelAudio();
             gameStarted = true;
         }
 
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_PlayLevelAudio()
+        {
+            AudioManager.Instance.PlayBackgroundMusic(LevelManager.BGMKey);
+            AudioManager.Instance.PlayAmbiance(LevelManager.AmbianceKey);
+        }
+        
         private void InitialiseScores()
         {
             var list = new List<int>();
@@ -439,12 +444,16 @@ namespace GameLoop
         }
 
         
-        
         //-----------------------------------------------------------
         // Boss Spawn
         //-----------------------------------------------------------
         private void SpawnBoss()
         {
+            foreach(var enemy in _enemies)
+            {
+                Runner.Despawn(enemy);
+            }
+            
             BossSpawning = true;
             _timer.StopTimer();
             RPC_ShowBossSpawnVisual();
@@ -686,6 +695,7 @@ namespace GameLoop
             var myId = NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId;
             _gameUI.ShowWinGameUI(true, false, RewardManager.GetRewardDataForPlayer(myId));
             RPC_SafeToReset();
+            ResetManager();
         }
 
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
@@ -742,7 +752,9 @@ namespace GameLoop
             if(Runner.IsServer)
                 return;
             _gameUI.ShowLostGameUI(true);
+            
             RPC_SafeToReset();
+            ResetManager();
         }
         
         //so main logic is as such, when an enemy dies,

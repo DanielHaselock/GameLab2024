@@ -25,7 +25,7 @@ public class EnemyLettuce : Enemy
         canAttack = true;
         //Go crazy        
         lastPosition = transform.position;
-        animator.CrossFade("Idle", .25f);
+        SynchedCrossFade("Idle", .25f);
         healthComponent.OnDamaged += OnAttacked;
         healthComponent.OnHealthDepleted += KillMyself;
     }
@@ -73,11 +73,11 @@ public class EnemyLettuce : Enemy
             {
                 if (idle)
                 {
-                    animator.CrossFade("Idle", .25f);
+                    SynchedCrossFade("Idle", .25f);
                 }
                 else
                 {
-                    animator.CrossFade("Run", .25f);
+                    SynchedCrossFade("Run", .25f);
                 }
             }
             prevIdle = idle;

@@ -187,7 +187,9 @@ public class GameUI : MonoBehaviour
 
     public string GetCurrentPlayerScore()
     {
-        return _scoreTexts.GetValueOrDefault(NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId).text;
+        Debug.Log(_scoreTexts);
+        var txt = _scoreTexts.GetValueOrDefault(NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId);
+        return txt == null? "" : txt.text;
     }
 
     public void SetBossHealth(bool show, float val)

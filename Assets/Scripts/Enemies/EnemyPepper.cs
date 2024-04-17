@@ -33,7 +33,7 @@ public class EnemyPepper : Enemy
         canAttack = true;
         //Go crazy        
         lastPosition = transform.position;
-        animator.CrossFade("Idle", .25f);
+        SynchedCrossFade("Idle", .25f);
         healthComponent.OnDamaged += OnAttacked;
         healthComponent.OnHealthDepleted += KillMyself;
     }
@@ -98,11 +98,11 @@ public class EnemyPepper : Enemy
             {
                 if (idle)
                 {
-                    animator.CrossFade("Idle", .25f);
+                    SynchedCrossFade("Idle", .25f);
                 }
                 else
                 {
-                    animator.CrossFade("Run", .25f);
+                    SynchedCrossFade("Run", .25f);
                 }
             }
             prevIdle = idle;
@@ -154,7 +154,7 @@ public class EnemyPepper : Enemy
         canAttack = false;
         attacking = true;
         navMeshAgent.speed = 0;
-        animator.CrossFade("Attack", .1f);
+        SynchedCrossFade("Attack", .1f);
         //attack windup
         yield return new WaitForSeconds(.35f);
         if (stunned)
@@ -167,7 +167,7 @@ public class EnemyPepper : Enemy
         damageComponent.InitiateAttack("Player");
         //attack recovery
         yield return new WaitForSeconds(.17f);
-        animator.CrossFade("Idle", .5f);
+        SynchedCrossFade("Idle", .5f);
         attacking = false;
         navMeshAgent.speed = speed;
         //attack delay
