@@ -305,6 +305,7 @@ MonoBehaviour:
   chargedAttackGraphic: {fileID: 1488382842413509509}
   spatialAudioController: {fileID: 2086452730604564396}
   cameraShake: {fileID: 7136269876404729323, guid: de5c94f9659fb4cd4827b463eaf19ccb, type: 3}
+  cameraShakeMinor: {fileID: 3115302637286027216, guid: 5beb39827cd964147b004d18adf0f935, type: 3}
 --- !u!114 &4957056992829801187
 MonoBehaviour:
   m_ObjectHideFlags: 0

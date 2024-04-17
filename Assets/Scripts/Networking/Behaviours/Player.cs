@@ -26,6 +26,7 @@ public class Player : NetworkBehaviour
     [SerializeField] private GameObject chargedAttackGraphic;
     [SerializeField] private SpatialAudioController spatialAudioController;
     [SerializeField] private GameObject cameraShake;
+    [SerializeField] private GameObject cameraShakeMinor;
     
     private NetworkObject _no;
     private Rigidbody _rb;
@@ -335,6 +336,12 @@ public class Player : NetworkBehaviour
         Instantiate(cameraShake);
     }
     
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    private void RPC_LocalCameraShakeMinor()
+    {
+        Instantiate(cameraShakeMinor);
+    }
+    
     private void RegularAttack()
     {
         if(Time.time < _nextAttackTime)
@@ -360,6 +367,11 @@ public class Player : NetworkBehaviour
         yield return new WaitForSeconds(attackDelay);
         if(charged)
             RPC_LocalCameraShake();
+        else
+        {
+            RPC_LocalCameraShakeMinor();
+        }
+        
         RPC_WeaponSwingSFX();
         _damager.InitiateAttack(charged);
     }
