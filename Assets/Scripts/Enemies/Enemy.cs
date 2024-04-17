@@ -182,4 +182,16 @@ public class Enemy : NetworkBehaviour
             navMeshAgent.speed = speed;
         }
     }
+
+    public void SynchedCrossFade(string clipName, float fade)
+    {
+        if (Runner.IsServer)
+            RPC_PlayAnim(clipName, fade);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_PlayAnim(string name, float fade)
+    {
+        animator.CrossFade(name, fade);
+    }
 }
