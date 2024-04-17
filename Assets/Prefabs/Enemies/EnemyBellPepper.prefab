@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 6668038017544168534}
   - component: {fileID: 8366570587995654518}
   - component: {fileID: 329544838922226680}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: HealthComponent
   m_TagString: Health
   m_Icon: {fileID: 0}
@@ -174,7 +174,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 20
-  _Health: 0
   _CanDeplete: 1
   _HealthDepleted: 0
   allowTempInvulnerability: 0
@@ -366,7 +365,7 @@ GameObject:
   m_Component:
   - component: {fileID: 553115932247747387}
   - component: {fileID: 1341394360863067952}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: AttackComponent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -563,7 +562,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0

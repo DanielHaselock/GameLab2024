@@ -449,6 +449,7 @@ MonoBehaviour:
   titleText: {fileID: 4364020301916102959}
   timeLeftBar: {fileID: 4697949656960403386}
   scoreText: {fileID: 3289147778310071129}
+  difficultyBar: {fileID: 8051551300301016185}
   loseMainMenuBttn: {fileID: 3611826293693578499}
   winNextLevelBttn: {fileID: 5892158410568267363}
 --- !u!1 &848063160686137269

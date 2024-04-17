@@ -9,18 +9,18 @@ using UnityEngine;
 
 public static class LevelManager
 {
-    private enum LevelDifficulty
+    public enum LevelDifficulty
     {
         Default,
         Easy,
         Hard
     }
-    
+
     private static int currentLevel = 0;
     private static LevelDifficulty difficulty;
     private static LevelData _data;
     private static string LevelDataPathDefault => $"LevelDatas/Level_{currentLevel.ToString()}/{difficulty.ToString()}/LevelData";
-    
+
     public static string LevelDataPath => $"LevelDatas/Level_{currentLevel.ToString()}/{difficulty.ToString()}/LevelData";
     public static Dictionary<string, int> ScoreMap { get; private set; }
     public static List<ObjectiveData> Objectives { get; private set; }
@@ -32,10 +32,11 @@ public static class LevelManager
     public static int LevelSceneIndx => _data == null ? 1 : _data.SceneIndx;
     public static int LevelTime => _data == null ? 180 : _data.LevelTimeInSeconds;
     public static Sprite ScoreUISprite => _data == null ? null : _data.ScoreUISprite;
-    
+
     public static string BGMKey => _data == null ? "" : _data.BGM;
     public static string AmbianceKey => _data == null ? "" : _data.Ambiance;
     public static RewardsMap RewardsMap => _data == null ? null : _data.Rewards;
+    public static LevelDifficulty Difficulty => difficulty;
 
     public static bool ContainsObjective(string key)
     {

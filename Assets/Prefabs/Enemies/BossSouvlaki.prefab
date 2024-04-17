@@ -366,7 +366,7 @@ GameObject:
   m_Component:
   - component: {fileID: 292656871032061175}
   - component: {fileID: 7867123839221218353}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: AttackComponent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -486,7 +486,7 @@ GameObject:
   - component: {fileID: 4452274688762280448}
   - component: {fileID: 5656415004474461004}
   - component: {fileID: 4648341659435230999}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: HealthComponent
   m_TagString: Health
   m_Icon: {fileID: 0}
