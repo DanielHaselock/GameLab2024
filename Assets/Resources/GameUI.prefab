@@ -4190,19 +4190,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1546895128404549055}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2286424481907981267}
-        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
-        m_MethodName: Resume
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
+      m_Calls: []
 --- !u!1 &6815808662070883953
 GameObject:
   m_ObjectHideFlags: 0
@@ -4323,19 +4311,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4955115797473184229}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2286424481907981267}
-        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
-        m_MethodName: Resume
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
+      m_Calls: []
 --- !u!1 &7045801552117511051
 GameObject:
   m_ObjectHideFlags: 0
@@ -5850,17 +5826,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1360017cfa6165f4a96dbcf638ea8c96, type: 3}
---- !u!114 &2286424481907981267 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8756850114011499831, guid: 1360017cfa6165f4a96dbcf638ea8c96, type: 3}
-  m_PrefabInstance: {fileID: 7367209748365522660}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3050769409671565206}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 537995926533d7040b0ac27db94b0e06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3050769409671565206 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5506517676581009778, guid: 1360017cfa6165f4a96dbcf638ea8c96, type: 3}

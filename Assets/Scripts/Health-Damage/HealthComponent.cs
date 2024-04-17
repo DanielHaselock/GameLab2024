@@ -64,9 +64,8 @@ public class HealthComponent : NetworkBehaviour
                 _hitEffects.OnHit();
                 AudioManager.Instance.PlaySFX3D(hitSFXKey, transform.position);
             }
-
-            _myLocalHealth = HealtNetSynched;
         }
+        _myLocalHealth = HealtNetSynched;
     }
 
     public void SetHealthDepleteStatus(bool canDeplete)
