@@ -63,6 +63,14 @@ public class GameUI : MonoBehaviour
 
     public void HideObjectives()
     {
+        Debug.Log("Hide Called");
+        foreach (var objectiveText in _allObjectivesTexts)
+        {
+            Destroy(objectiveText.transform.parent.gameObject);
+        }
+
+        _scoreTexts.Clear();
+        
         _allObjectivesTexts.Clear();
         objectivesParent.gameObject.SetActive(false);
     }
@@ -79,10 +87,12 @@ public class GameUI : MonoBehaviour
             Destroy(objectiveText.transform.parent.gameObject);
         }
         _allObjectivesTexts.Clear();
-        
+        objectivesParent.gameObject.SetActive(true);
         foreach (var data in map)
         {
+            Debug.Log($"DATA {data.Key}");
             var go = Instantiate(objectiveBody, objectivesParent.transform);
+            go.gameObject.SetActive(true);
             var txt = go.GetComponentInChildren<TMP_Text>();
             var img = go.transform.Find("Image").GetComponent<Image>();
 
@@ -97,8 +107,6 @@ public class GameUI : MonoBehaviour
                 txt.text = $"<s>{txt.text}</s>";
                 img.color = new Color(0.5f, 0.5f, 0.5f);
             }
-
-            go.gameObject.SetActive(true);
         }
     }
 
@@ -118,9 +126,17 @@ public class GameUI : MonoBehaviour
     public void InitialiseScores(Dictionary<int,int> scoreMap, Dictionary<int, string> nameMap)
     {
         _nicknameMap = nameMap;
-        _scoreTexts = new Dictionary<int, TMP_Text>();
+        if (_scoreTexts == null)
+            _scoreTexts = new Dictionary<int, TMP_Text>();
+ 
         var playerId = NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId;
 
+        _scoreTexts.Clear();
+        for (int i = 1; i < scoreTextParent.childCount; i++)
+        {
+            Destroy(scoreTextParent.GetChild(i).gameObject);
+        }
+        
         foreach (var kv in scoreMap)
         {
             TMP_Text text = null;
@@ -134,11 +150,21 @@ public class GameUI : MonoBehaviour
             _scoreTexts.Add(kv.Key, text);
         }
 
+        StartCoroutine(RebuildThisStupidLayout());
+        
         var image = scoreTextParent.GetComponent<Image>();
         image.sprite = LevelManager.ScoreUISprite;
-        image.SetNativeSize();
+        image.preserveAspect = true;
     }
 
+    IEnumerator RebuildThisStupidLayout()
+    {
+        //I swear if this doesn't solve it X_X
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(scoreTextParent.GetComponent<RectTransform>());
+    }
+    
     public void UpdateScore(int id, int score)
     {
         if(_scoreTexts == null || _scoreTexts[id] == null)
@@ -148,8 +174,12 @@ public class GameUI : MonoBehaviour
 
     public void ShowLostGameUI(bool show)
     {
+        if(show)
+            HideObjectives();
+        
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        
         SetBossHealth(false, 0);
         roundOverUI.gameObject.SetActive(show);
         roundOverUI.ShowEndScreen(false, timerBar.fillAmount, false);
@@ -157,13 +187,16 @@ public class GameUI : MonoBehaviour
 
     public void ShowWinGameUI(bool show, bool showNextButton, RewardData upgradeGiven=null)
     {
+        if(show)
+            HideObjectives();
+        
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        
         SetBossHealth(false, 0);
         roundOverUI.gameObject.SetActive(show);
         upgradesImage.sprite = upgradeGiven == null ? null : upgradeGiven.Ico;
-        roundOverUI.ShowEndScreen(true, timerBar.fillAmount,showNextButton);
-        
+        roundOverUI.ShowEndScreen(show, timerBar.fillAmount,showNextButton);
     }
 
     public void PlayCutscene()
