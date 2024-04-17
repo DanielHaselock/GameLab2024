@@ -48,9 +48,9 @@ AvatarMask:
   - m_Path: nurbsCircle1/pasted__Hips/pasted__RightLeg/Right_Collar_Leg
     m_Weight: 1
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__LeftShoulder
     m_Weight: 1
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__LeftShoulder/Left_Collar
@@ -64,7 +64,7 @@ AvatarMask:
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__LeftShoulder/pasted__LeftElbow/pasted__LeftWrist/pasted__LeftHand
     m_Weight: 1
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__Neck
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__Neck/pasted__Head
     m_Weight: 1
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__Neck/pasted__Head/Face
