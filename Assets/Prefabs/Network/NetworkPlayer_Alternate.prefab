@@ -12310,7 +12310,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3624177571805167114, guid: c342c6952a482c2449c59e6be8198c86, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3624177571805167114, guid: c342c6952a482c2449c59e6be8198c86, type: 3}
       propertyPath: m_TagString
@@ -12474,6 +12474,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AttackComponent
       objectReference: {fileID: 0}
+    - target: {fileID: 4282719531813118832, guid: ec9bb1ff1bcbee64e8a0a982e20d7f8b, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 4400514041295403409, guid: ec9bb1ff1bcbee64e8a0a982e20d7f8b, type: 3}
       propertyPath: healMax
       value: 15
@@ -12500,7 +12504,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4400514041295403409, guid: ec9bb1ff1bcbee64e8a0a982e20d7f8b, type: 3}
       propertyPath: _layerMask.m_Bits
-      value: 128
+      value: 1152
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

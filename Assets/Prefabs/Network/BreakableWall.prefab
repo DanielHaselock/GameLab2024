@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8216861812508023691}
   - component: {fileID: 5238851731313495730}
   - component: {fileID: 2889270192788104805}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,9 +46,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 1
-  _Health: 1
   _CanDeplete: 1
   _HealthDepleted: 0
+  allowTempInvulnerability: 0
+  tempInvulnerabilityDur: 1
+  healfx: {fileID: 0}
+  hitSFXKey: 
+  deathSFXKey: 
 --- !u!65 &2889270192788104805
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -68,7 +72,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 9.84, y: 7.5200458, z: 1.58}
+  m_Size: {x: 9.84, y: 7.5200458, z: 3.39}
   m_Center: {x: 0, y: 3.2600224, z: 0}
 --- !u!1 &6465239827523456515
 GameObject:
@@ -98,7 +102,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.4508, y: 1.4508, z: 1.4508}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3094497452984419849}
