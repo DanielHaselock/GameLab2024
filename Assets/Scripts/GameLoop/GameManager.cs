@@ -449,6 +449,11 @@ namespace GameLoop
         //-----------------------------------------------------------
         private void SpawnBoss()
         {
+            foreach(var enemy in _enemies)
+            {
+                Runner.Despawn(enemy);
+            }
+            
             BossSpawning = true;
             _timer.StopTimer();
             RPC_ShowBossSpawnVisual();
