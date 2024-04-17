@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 6946015316406704476}
   - component: {fileID: 8697236693306330020}
   - component: {fileID: 6403633045778146428}
+  - component: {fileID: 3918360653211906791}
   m_Layer: 0
   m_Name: Graohics
   m_TagString: Untagged
@@ -138,6 +139,20 @@ MonoBehaviour:
   SyncSettings: 79
   StateHashes: 000000002b1a167c79406955a1609f62d8aa0cc478578c3e2a0df3170d286c404e865f43e8ac05e0db1f20d7dede26c18c8459e828a981077af3fe2e37b935014e73a6a720e23b685928a8ce
   TriggerHashes: 00000000
+--- !u!114 &3918360653211906791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3939546813921228840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d86f11f4405af445595a83cb4750b641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entityType: 1
+  asset: {fileID: 11400000, guid: e11f400d08de546ffbca8e8f9b8ca273, type: 2}
 --- !u!1 &4081777106574758009
 GameObject:
   m_ObjectHideFlags: 0
