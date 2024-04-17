@@ -97,7 +97,6 @@ public class HealthComponent : NetworkBehaviour
         var curr = HealtNetSynched;
         if (Value < 0)
         {
-            Debug.Log("Ow!!"); 
             OnDamaged?.Invoke(damager, charged);
             if (allowTempInvulnerability)
             {

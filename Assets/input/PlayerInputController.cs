@@ -111,7 +111,7 @@ public class PlayerInputController : MonoBehaviour
 
     public void Pause(InputAction.CallbackContext context)
     {
-       if(context.started)
+       if(context.performed)
         {
             OnPause.Raise(this, true);
         }

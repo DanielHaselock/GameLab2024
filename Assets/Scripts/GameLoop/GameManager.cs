@@ -224,7 +224,22 @@ namespace GameLoop
         {
             RPC_LoadMainMenuOnClient();
         }
-
+        
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_LoadMainMenuOnClient()
+        {
+            if(Runner.IsServer)
+                return;
+            RPC_SafeDisconnect();
+            NetworkManager.Instance.ResetGame();
+        }
+        
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        private void RPC_SafeDisconnect()
+        {
+            NetworkManager.Instance.ResetGame();
+        }
+        
         private void PlayCutscene()
         {
             if (!Runner.IsServer)
@@ -274,29 +289,33 @@ namespace GameLoop
             _gameUI.HideCutscenePlayer();
         }
         
-        [Rpc(RpcSources.All, RpcTargets.All)]
-        private void RPC_LoadMainMenuOnClient()
-        {
-            NetworkManager.Instance.ResetGame();
-        }
-        
         private void DoPause(bool pause)
         {
             if (!IsPausable)
             {
                 return;
             }
-
+            
+            StartCoroutine(TempPauseBlocker());
             IsPaused = pause;
             Cursor.visible = pause;
             Cursor.lockState = pause?CursorLockMode.None : CursorLockMode.Locked;
+        }
+
+        IEnumerator TempPauseBlocker()
+        {
+            IsPausable = false;
+            yield return new WaitForSeconds(0.15f);
+            IsPausable = true;
         }
 
         public void Pause(bool pause)
         {
             Debug.Log($"Pause {pause}");
             if (Runner.IsServer)
+            {
                 DoPause(pause);
+            }
             else
                 RPC_Pause(pause);
         }
@@ -304,8 +323,7 @@ namespace GameLoop
         [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
         private void RPC_Pause(bool pause)
         {
-            if(Runner.IsServer)
-                DoPause(pause);
+            DoPause(pause);
         }
         
         private async void StartLevel()
@@ -702,7 +720,7 @@ namespace GameLoop
             LevelManager.LevelComplete(true, (float)_timeLeft.TotalSeconds);
             RewardManager.Calculate(ScoreManager.Score, LevelManager.RewardsMap);
             var myId = NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId;
-            _gameUI.ShowWinGameUI(true, _currentLevel < maxLevels, RewardManager.GetRewardDataForPlayer(myId));
+            _gameUI.ShowWinGameUI(true, false, RewardManager.GetRewardDataForPlayer(myId));
             RPC_SafeToReset();
             ResetManager();
         }

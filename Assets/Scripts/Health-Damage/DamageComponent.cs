@@ -59,7 +59,6 @@ public class DamageComponent : NetworkBehaviour
         if(!WithinAttackCone(other.transform))
             return;
         
-        Debug.Log($"Dealing Damage {_damageToDeal}");
         if(charge)
             other.UpdateHealth(-_chargedamageToDeal, _damagerId, charge);
         else

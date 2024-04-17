@@ -11,7 +11,8 @@ public class BreakableWall : NetworkBehaviour
     [SerializeField] private GameObject wall;
     [SerializeField] private GameObject brokenWall;
     [SerializeField] private GameObject cameraShake;
-    
+
+    [Networked] private bool isBroken { get; set; }
     private HealthComponent _health;
     
     private void Start()
@@ -24,14 +25,19 @@ public class BreakableWall : NetworkBehaviour
     {
         if(!Runner.IsServer)
             return;
+        Debug.Log("Destroy Wall!");
         if(!charged)
             return;
+        if(isBroken)
+            return;
+        isBroken = true;
         RPC_BreakWall();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_BreakWall()
     {
+        Debug.Log("Wall breaking");
         AudioManager.Instance.PlaySFX3D(AudioConstants.ExplosionBlock, transform.position);
         StartCoroutine(BreakWalls());
         var localPlayer = NetworkManager.Instance.GetLocalPlayer().gameObject;
@@ -44,6 +50,7 @@ public class BreakableWall : NetworkBehaviour
 
     IEnumerator BreakWalls()
     {
+        Debug.Log("Wall breaking");
         wall.SetActive(false);
         brokenWall.SetActive(true);
         yield return new WaitForSeconds(3);
