@@ -6,7 +6,6 @@ public class returnClicked : MonoBehaviour
 {
     public GameObject returnObj;
     public GameObject startGameButton;
-    public GameObject nameField;
     returnMovement returnMove;
     public GameObject fade;
 
@@ -23,6 +22,5 @@ public class returnClicked : MonoBehaviour
         fade.SetActive(true);
         gameObject.SetActive(false);
         startGameButton.SetActive(false);
-        nameField.SetActive(false);
     }
 }
