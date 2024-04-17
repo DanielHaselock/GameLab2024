@@ -5372,12 +5372,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 1
-  _Health: 1
   _CanDeplete: 1
   _HealthDepleted: 0
   allowTempInvulnerability: 0
   tempInvulnerabilityDur: 1
   healfx: {fileID: 0}
+  hitSFXKey: 
+  deathSFXKey: 
 --- !u!65 &7656346204240542305
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -59386,12 +59387,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 1
-  _Health: 1
   _CanDeplete: 1
   _HealthDepleted: 0
   allowTempInvulnerability: 0
   tempInvulnerabilityDur: 1
   healfx: {fileID: 0}
+  hitSFXKey: 
+  deathSFXKey: 
 --- !u!65 &983178893677857164
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -70278,12 +70280,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 1
-  _Health: 1
   _CanDeplete: 1
   _HealthDepleted: 0
   allowTempInvulnerability: 0
   tempInvulnerabilityDur: 1
   healfx: {fileID: 0}
+  hitSFXKey: 
+  deathSFXKey: 
 --- !u!65 &3502881918912454975
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -75576,12 +75579,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 1
-  _Health: 1
   _CanDeplete: 1
   _HealthDepleted: 0
   allowTempInvulnerability: 0
   tempInvulnerabilityDur: 1
   healfx: {fileID: 0}
+  hitSFXKey: 
+  deathSFXKey: 
 --- !u!65 &5148857154706663852
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -80583,6 +80587,7 @@ GameObject:
   m_Component:
   - component: {fileID: 242540057902800495}
   - component: {fileID: 3320449562650113089}
+  - component: {fileID: -159816270199278949}
   m_Layer: 0
   m_Name: BreakableCage
   m_TagString: Untagged
@@ -80630,7 +80635,24 @@ MonoBehaviour:
   - {fileID: 654840227939774122}
   - {fileID: 5030361980158972451}
   - {fileID: 4030877273427838566}
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: -159816270199278949}
+--- !u!114 &-159816270199278949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7318656285375544877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &7344966193122274825
 GameObject:
   m_ObjectHideFlags: 0
