@@ -30,7 +30,7 @@ public class BossBurger : Enemy
         canAttack = true;
         //Go crazy        
         lastPosition = transform.position;
-        animator.CrossFade("Rise", .25f);
+        SynchedCrossFade("Rise", .25f);
         healthComponent.OnDamaged += OnAttacked;
         healthComponent.OnHealthDepleted += KillMyself;
 
@@ -117,11 +117,11 @@ public class BossBurger : Enemy
             {
                 if (idle)
                 {
-                    animator.CrossFade("Idle", .25f);
+                    SynchedCrossFade("Idle", .25f);
                 }
                 else
                 {
-                    animator.CrossFade("Run", .25f);
+                    SynchedCrossFade("Run", .25f);
                 }
             }
             prevIdle = idle;
@@ -162,7 +162,7 @@ public class BossBurger : Enemy
         canAttack = false;
         attacking = true;
         navMeshAgent.speed = 0;
-        animator.CrossFade("Attack", .1f);
+        SynchedCrossFade("Attack", .1f);
         //attack windup
         yield return new WaitForSeconds(.35f);
         AudioManager.Instance.PlaySFX(AudioConstants.BurgerAttack);
@@ -175,7 +175,7 @@ public class BossBurger : Enemy
         damageComponent.InitiateAttack("Player");
         //attack recovery
         yield return new WaitForSeconds(.17f);
-        animator.CrossFade("Idle", .5f);
+        SynchedCrossFade("Idle", .5f);
         attacking = false;
         navMeshAgent.speed = speed;
         //attack delay
@@ -187,7 +187,7 @@ public class BossBurger : Enemy
         canAttack = false;
         attacking = true;
         navMeshAgent.speed = 0;
-        animator.CrossFade("AttackLong", .1f);
+        SynchedCrossFade("AttackLong", .1f);
         //attack windup
         yield return new WaitForSeconds(.8f);
         AudioManager.Instance.PlaySFX(AudioConstants.BurgerAttack);
@@ -202,7 +202,7 @@ public class BossBurger : Enemy
         damageComponent.DefaultAttackDamage = 2;
         //attack recovery
         yield return new WaitForSeconds(.25f);
-        animator.CrossFade("Idle", .5f);
+        SynchedCrossFade("Idle", .5f);
         attacking = false;
         navMeshAgent.speed = speed;
         //attack delay
@@ -214,7 +214,7 @@ public class BossBurger : Enemy
         canAttack = false;
         attacking = true;
         navMeshAgent.speed = 0;
-        animator.CrossFade("Roar", .1f);
+        SynchedCrossFade("Roar", .1f);
         //attack windup
         yield return new WaitForSeconds(.8f);
         AudioManager.Instance.PlaySFX(AudioConstants.BossRoarLong);
@@ -243,7 +243,7 @@ public class BossBurger : Enemy
         }
         //attack recovery
         yield return new WaitForSeconds(.17f);
-        animator.CrossFade("Idle", .5f);
+        SynchedCrossFade("Idle", .5f);
         attacking = false;
         navMeshAgent.speed = speed;
         //attack delay
@@ -255,7 +255,7 @@ public class BossBurger : Enemy
         canAttack = false;
         attacking = true;
         navMeshAgent.speed = 0;
-        animator.CrossFade("Jump", .1f);
+        SynchedCrossFade("Jump", .1f);
         //attack windup
         yield return new WaitForSeconds(.8f);
         AudioManager.Instance.PlaySFX(AudioConstants.ExplosionBlock);
@@ -273,7 +273,7 @@ public class BossBurger : Enemy
         }
         //attack recovery
         yield return new WaitForSeconds(.17f);
-        animator.CrossFade("Idle", .5f);
+        SynchedCrossFade("Idle", .5f);
         attacking = false;
         navMeshAgent.speed = speed;
         //attack delay
@@ -301,7 +301,7 @@ public class BossBurger : Enemy
     {
         if (Runner.IsServer)
         {
-            animator.CrossFade("Die", .1f);
+            SynchedCrossFade("Die", .1f);
             await Task.Delay(1500);          
             Runner.Despawn(GetComponent<NetworkObject>());
         }

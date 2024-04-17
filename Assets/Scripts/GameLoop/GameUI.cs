@@ -26,6 +26,7 @@ public class GameUI : MonoBehaviour
     [SerializeField] private GameObject scoreText;
 
     [SerializeField] private RoundOverUI roundOverUI;
+    [SerializeField] private Image upgradesImage;
 
     [SerializeField] private VideoPlayer cutscenePlayer;
     [SerializeField] private GameObject cutSceneObj;
@@ -37,7 +38,6 @@ public class GameUI : MonoBehaviour
     private List<TMP_Text> _allObjectivesTexts;
     private Dictionary<int, TMP_Text> _scoreTexts;
     private Dictionary<int, string> _nicknameMap;
-    private int _thisPlayerId;
 
     public Action OnCutsceneCompleted;
 
@@ -119,22 +119,12 @@ public class GameUI : MonoBehaviour
     {
         _nicknameMap = nameMap;
         _scoreTexts = new Dictionary<int, TMP_Text>();
-        var players = FindObjectsOfType<Player>().ToList();
-        _thisPlayerId = -1;
-
-        foreach (var player in players)
-        {
-            if (player.HasInputAuthority)
-            {
-                _thisPlayerId = player.PlayerId;
-                break;
-            }
-        }
+        var playerId = NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId;
 
         foreach (var kv in scoreMap)
         {
             TMP_Text text = null;
-            if (kv.Key == _thisPlayerId)
+            if (kv.Key == playerId)
             {
                 var go = Instantiate(scoreText, scoreTextParent);
                 go.SetActive(true);
@@ -162,16 +152,18 @@ public class GameUI : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         SetBossHealth(false, 0);
         roundOverUI.gameObject.SetActive(show);
-        roundOverUI.ShowEndScreen(false, timerBar.fillAmount);
+        roundOverUI.ShowEndScreen(false, timerBar.fillAmount, false);
     }
 
-    public void ShowWinGameUI(bool show, bool showNextButton)
+    public void ShowWinGameUI(bool show, bool showNextButton, RewardData upgradeGiven=null)
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         SetBossHealth(false, 0);
         roundOverUI.gameObject.SetActive(show);
-        roundOverUI.ShowEndScreen(true, timerBar.fillAmount);
+        upgradesImage.sprite = upgradeGiven == null ? null : upgradeGiven.Ico;
+        roundOverUI.ShowEndScreen(true, timerBar.fillAmount,showNextButton);
+        
     }
 
     public void PlayCutscene()
@@ -196,14 +188,15 @@ public class GameUI : MonoBehaviour
 
     public string GetCurrentPlayerScore()
     {
-        return _scoreTexts.GetValueOrDefault(_thisPlayerId).text;
+        Debug.Log(_scoreTexts);
+        var txt = _scoreTexts.GetValueOrDefault(NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId);
+        return txt == null? "" : txt.text;
     }
 
     public void SetBossHealth(bool show, float val)
     {
         bossHealthbar.SetActive(show);
         bossHPFill.fillAmount = val;
-        objectivesParent.gameObject.SetActive(false);
     }
 
     public void ShakeBossHealthBar()

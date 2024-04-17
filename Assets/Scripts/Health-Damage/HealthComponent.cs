@@ -14,7 +14,11 @@ public class HealthComponent : NetworkBehaviour
     
     [FormerlySerializedAs("MaxHealth")] [SerializeField]
     private float maxHealth;
-    [Networked] public float Health { get; private set; }
+    public float Health { get; private set; } //used so that others get access to the net-syched var
+    
+    [Networked]
+    private float HealtNetSynched { get; set; }
+    
     [Networked] public bool CanDeplete { get; private set; } = true;
     [Networked] public bool HealthDepleted { get; private set; }
 
@@ -27,6 +31,7 @@ public class HealthComponent : NetworkBehaviour
     [SerializeField] private string deathSFXKey;
     
     public bool IsInitialised  { get; private set; }
+    
     private ChangeDetector _change;
 
     public Action<int> OnHealthDepleted;
@@ -50,17 +55,17 @@ public class HealthComponent : NetworkBehaviour
     {
         if(!IsInitialised)
             return;
-        
-        if (_myLocalHealth > Health)
+
+        Health = HealtNetSynched;
+        if (_myLocalHealth > HealtNetSynched)
         {
             if (_hitEffects != null)
             {
                 _hitEffects.OnHit();
                 AudioManager.Instance.PlaySFX3D(hitSFXKey, transform.position);
             }
-
-            _myLocalHealth = Health;
         }
+        _myLocalHealth = HealtNetSynched;
     }
 
     public void SetHealthDepleteStatus(bool canDeplete)
@@ -72,9 +77,9 @@ public class HealthComponent : NetworkBehaviour
     {
         _change = GetChangeDetector(ChangeDetector.Source.SimulationState);
         if (Runner.IsServer)
-            Health = maxHealth;
+            HealtNetSynched = maxHealth;
 
-        _myLocalHealth = Health;
+        _myLocalHealth = HealtNetSynched;
         CanDeplete = true;
         IsInitialised = true;
     }
@@ -89,7 +94,7 @@ public class HealthComponent : NetworkBehaviour
         if(_isInvulnerable)
             return;
         
-        var curr = Health;
+        var curr = HealtNetSynched;
         if (Value < 0)
         {
             Debug.Log("Ow!!"); 
@@ -100,9 +105,9 @@ public class HealthComponent : NetworkBehaviour
             }
         }
 
-        Health += Value;
-        Health = Mathf.Clamp(Health, 0, MaxHealth);
-        if (Health <= 0)
+        HealtNetSynched += Value;
+        HealtNetSynched = Mathf.Clamp(HealtNetSynched, 0, MaxHealth);
+        if (HealtNetSynched <= 0)
         {
             CanDeplete = false;
             Death(damager);
@@ -141,9 +146,9 @@ public class HealthComponent : NetworkBehaviour
         
         if(!IsInitialised)
             return;
-        Health = Value;
-        CanDeplete = Health > 0;
-        HealthDepleted = Health <= 0;
+        HealtNetSynched = Value;
+        CanDeplete = HealtNetSynched > 0;
+        HealthDepleted = HealtNetSynched <= 0;
     }
 
     public override void Render()
@@ -156,7 +161,7 @@ public class HealthComponent : NetworkBehaviour
         {
             switch (change)
             {
-                case nameof(Health):
+                case nameof(HealtNetSynched):
                     break;
             }
         }

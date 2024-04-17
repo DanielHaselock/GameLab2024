@@ -16,9 +16,9 @@ AvatarMask:
   - m_Path: nurbsCircle1/pasted__Hips
     m_Weight: 1
   - m_Path: nurbsCircle1/pasted__Hips/Belt_Buckle
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: nurbsCircle1/pasted__Hips/Buttons
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: nurbsCircle1/pasted__Hips/pasted__LeftLeg
     m_Weight: 1
   - m_Path: nurbsCircle1/pasted__Hips/pasted__LeftLeg/Left_Collar_Leg
@@ -48,11 +48,11 @@ AvatarMask:
   - m_Path: nurbsCircle1/pasted__Hips/pasted__RightLeg/Right_Collar_Leg
     m_Weight: 1
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2
     m_Weight: 1
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__LeftShoulder
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__LeftShoulder/Left_Collar
     m_Weight: 1
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__LeftShoulder/pasted__LeftElbow
@@ -76,7 +76,7 @@ AvatarMask:
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__Neck/pasted__Head/pasted__Hair1/pasted__Hair2/pasted__Hair3
     m_Weight: 1
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__RightShoulder
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__RightShoulder/pasted__RightElbow
     m_Weight: 1
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__RightShoulder/pasted__RightElbow/pasted__RightWrist
@@ -88,12 +88,12 @@ AvatarMask:
   - m_Path: nurbsCircle1/pasted__Hips/pasted__Spine1/pasted__Spine2/pasted__RightShoulder/Right_Collar
     m_Weight: 1
   - m_Path: nurbsCircle1/Son_Mesh
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: nurbsCircle2
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: nurbsCircle2/ikHandle2
     m_Weight: 1
   - m_Path: nurbsCircle3
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: nurbsCircle3/ikHandle1
     m_Weight: 1

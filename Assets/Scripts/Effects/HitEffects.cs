@@ -54,7 +54,7 @@ namespace Effects
             {
                 var player = GetComponent<Player>();
                 bool allowShake = player != null && player.HasInputAuthority;
-
+                Debug.Log($"Allow Shake {allowShake}");
                 var pos = transform.position;
                 if (effectSpawnPosition != null)
                     pos = effectSpawnPosition.position;

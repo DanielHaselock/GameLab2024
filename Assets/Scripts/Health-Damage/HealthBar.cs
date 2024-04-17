@@ -18,7 +18,7 @@ public class HealthBar : MonoBehaviour
         if(!GameManager.instance.gameStarted)
             return;
         
-        if(healthComponent != null)
+        if(healthComponent != null && healthComponent.IsInitialised)
             _healthBar.fillAmount = (float)healthComponent.Health / healthComponent.MaxHealth;
     }
 }

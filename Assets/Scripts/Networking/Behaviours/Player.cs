@@ -306,7 +306,7 @@ public class Player : NetworkBehaviour
             }
             else
             {
-                _anim.SetTrigger("Attack", true);
+                        _anim.SetTrigger("Attack", true);
                 _anim.Animator.SetTrigger("Attack");
             }
             
@@ -379,12 +379,15 @@ public class Player : NetworkBehaviour
     {
         AudioManager.Instance.PlaySFX(AudioConstants.Help, syncNetwork:true);
         if (Runner.IsServer)
+        {
             RPC_SetDowned(true);
+        }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_SetDowned(bool downed)
     {
+        _anim.Animator.SetTrigger("InitiateDowned");
         _anim.Animator.SetBool("Downed", downed);
     }
     

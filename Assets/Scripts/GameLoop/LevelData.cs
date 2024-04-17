@@ -17,6 +17,7 @@ namespace GameLoop
         public string BossMusicKey = "";
         public bool AllowChargedAttacks = false;
         public Sprite ScoreUISprite;
+        public RewardsMap Rewards;
         [FormerlySerializedAs("sceneIndx")] public int SceneIndx=2;
         [FormerlySerializedAs("levelTimeInSeconds")] public int LevelTimeInSeconds=180;
     }
