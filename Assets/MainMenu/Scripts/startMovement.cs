@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class startMovement : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class startMovement : MonoBehaviour
     returnMovement returnMove;
     public GameObject returnButton;
     public GameObject startGameButton;
+    public GameObject nameField;
     public GameObject cam;
     public GameObject fade;
 
@@ -68,7 +70,8 @@ public class startMovement : MonoBehaviour
                     started=false;
                     targetPoint = pointB;
                     returnButton.gameObject.SetActive(true);
-                    startGameButton.gameObject.SetActive(true);
+                    startGameButton.SetActive(true);
+                    nameField.SetActive(true);
                     fade.SetActive(false);
                     rotationSpeedCamera =1f;
                 }
