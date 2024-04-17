@@ -32,12 +32,10 @@ namespace GameLoop
             {
                 if (!UpgradesMap.ContainsKey(kv.Key))
                     UpgradesMap.Add(kv.Key, def);
-                Debug.Log("SCORE SHIT " + kv.Key + ": " + kv.Value);
                 foreach (var reward in decSortRewards)
                 {
                     if (kv.Value >= reward.MinScoreNeeded)
                     {
-                        Debug.Log("SCORE SHIT " + reward.MinScoreNeeded);
                         UpgradesMap[kv.Key] = reward; 
                         break;
                     }
