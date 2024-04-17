@@ -20,6 +20,8 @@ public class SettingsMenu : MonoBehaviour
 
     public void SetHighContrast(bool value)
     {
+        Debug.Log("here!!");
+
         if (value)
             SetAccessibilityType(AccessibilityType.HighContrast);
 
