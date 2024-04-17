@@ -524,7 +524,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
@@ -590,6 +590,7 @@ MonoBehaviour:
   materialHitEfectDelay: 0.15
   hitGameObjectFx: {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
   effectSpawnPosition: {fileID: 0}
+  hitSFX: 
 --- !u!208 &1405004618240590291
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -685,9 +686,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 15
-  _Health: 0
   _CanDeplete: 1
   _HealthDepleted: 0
+  allowTempInvulnerability: 0
+  tempInvulnerabilityDur: 1
+  healfx: {fileID: 0}
+  hitSFXKey: 
+  deathSFXKey: 
 --- !u!65 &6234381907045131362
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -844,6 +849,9 @@ MonoBehaviour:
   attackCone: 0
   knockBackForce: 1
   hittableObjects: []
+  allowHealOnKill: 0
+  healMin: 0
+  healMax: 0
 --- !u!1001 &6791741007344686028
 PrefabInstance:
   m_ObjectHideFlags: 0
