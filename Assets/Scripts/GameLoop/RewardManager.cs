@@ -36,7 +36,7 @@ namespace GameLoop
                 {
                     if (kv.Value >= reward.MinScoreNeeded)
                     {
-                        UpgradesMap[kv.Key] = reward; 
+                        UpgradesMap[kv.Key] = reward;
                         break;
                     }
                 }

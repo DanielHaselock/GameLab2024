@@ -187,7 +187,6 @@ public class GameUI : MonoBehaviour
 
     public string GetCurrentPlayerScore()
     {
-        Debug.Log(_scoreTexts);
         return _scoreTexts.GetValueOrDefault(NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId).text;
     }
 
