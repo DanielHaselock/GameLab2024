@@ -15,7 +15,7 @@ MonoBehaviour:
   BGM: battle_1
   Ambiance: 
   Objectives: {fileID: 11400000, guid: ed69d150ba76a1c4bbc9ac4743c9ec0b, type: 2}
-  ScoringMap: {fileID: 11400000, guid: 8c6e282d51a80d7478d1832428326650, type: 2}
+  ScoringMap: {fileID: 11400000, guid: 72380e7950345024986ebf915325694d, type: 2}
   BossToSpawn:
     RawGuidValue: 2f6bbf4e5b51e294e8fefd1c23ad13c1
   BossSFXKey: boss_souvlaki_explosion
