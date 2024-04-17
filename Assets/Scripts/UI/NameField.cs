@@ -12,7 +12,7 @@ public class NameField : MonoBehaviour
     {
         inputField = GetComponent<TMP_InputField>();
 
-        var randName = $"Random{Random.Range(1, 300).ToString()}";
+        var randName = $"Player{Random.Range(0, 1000):000}";
         NetworkManager.Instance.SetSessionUserNickName(randName);
 
         inputField.onValueChanged.AddListener((text) =>
