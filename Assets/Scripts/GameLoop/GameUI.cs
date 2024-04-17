@@ -68,8 +68,6 @@ public class GameUI : MonoBehaviour
         {
             Destroy(objectiveText.transform.parent.gameObject);
         }
-
-        _scoreTexts.Clear();
         _allObjectivesTexts.Clear();
         objectivesParent.gameObject.SetActive(false);
     }
