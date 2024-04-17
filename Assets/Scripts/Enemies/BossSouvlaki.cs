@@ -269,7 +269,7 @@ public class BossSouvlaki : Enemy
         {
             //GetComponent<Rigidbody>().velocity =- transform.right * 0.5f * Time.deltaTime;
             //GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(GetComponent<Rigidbody>().velocity, 5);
-            GetComponent<Rigidbody>().AddForce(transform.right * -5.5f * Time.deltaTime, ForceMode.Impulse);
+            GetComponent<Rigidbody>().AddForce(transform.right * -500.5f * Time.deltaTime, ForceMode.Impulse);
             yield return null;
         }
 
@@ -293,8 +293,9 @@ public class BossSouvlaki : Enemy
         base.OnTriggerEnter(other);
         if (rolling && other.tag.Equals("Player"))
         {
-            
-            damageComponent.InitiateAttack("Player");
+
+            other.GetComponentInChildren<HealthComponent>().UpdateHealth(-3, -1, false);
+            //damageComponent.InitiateAttack("Player");
         }
     }
     protected override void OnTriggerExit(Collider other)
