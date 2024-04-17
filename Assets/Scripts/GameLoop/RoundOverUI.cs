@@ -13,6 +13,7 @@ public class RoundOverUI : MonoBehaviour
     [SerializeField] private TMPro.TMP_Text titleText;
     [SerializeField] private Image timeLeftBar;
     [SerializeField] private TMPro.TMP_Text scoreText;
+    [SerializeField] private Image difficultyBar;
 
     [SerializeField] private Button loseMainMenuBttn;
     [SerializeField] private Button winNextLevelBttn;
@@ -57,6 +58,7 @@ public class RoundOverUI : MonoBehaviour
         if (win)
         {
             titleText.text = "WIN<size=120>!</size>";
+            difficultyBar.fillAmount = (float)LevelManager.Difficulty / 2.0f;
 
             winNextLevelBttn.onClick.AddListener(() =>
             {

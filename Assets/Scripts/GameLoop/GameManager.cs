@@ -698,9 +698,11 @@ namespace GameLoop
             AudioManager.Instance.PlayBackgroundMusic(AudioConstants.PostRound);
             if(Runner.IsServer)
                 return;
-            
+
+            LevelManager.LevelComplete(true, (float)_timeLeft.TotalSeconds);
+            RewardManager.Calculate(ScoreManager.Score, LevelManager.RewardsMap);
             var myId = NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId;
-            _gameUI.ShowWinGameUI(true, false, RewardManager.GetRewardDataForPlayer(myId));
+            _gameUI.ShowWinGameUI(true, _currentLevel < maxLevels, RewardManager.GetRewardDataForPlayer(myId));
             RPC_SafeToReset();
             ResetManager();
         }
