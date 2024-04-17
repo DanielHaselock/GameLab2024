@@ -486,7 +486,7 @@ namespace GameLoop
         private async void RPC_ShowBossSpawnVisual()
         {
             _gameUI.ShowGameTimer(false);
-            _gameUI.HideObjectives(); // no longer needed
+            _gameUI.HideObjectives();
             AudioManager.Instance.PlaySFX(AudioConstants.BossSummon);
             await Task.Delay(1500);
             LockArena();
@@ -636,8 +636,8 @@ namespace GameLoop
                 objectivesMap.Remove(key);
             }
             
-            TryUpdateGameState();
             UpdateGameUI();
+            TryUpdateGameState();
         }
         
         private void TryUpdateGameState()

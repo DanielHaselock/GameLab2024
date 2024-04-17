@@ -169,7 +169,7 @@ public class Player : NetworkBehaviour
         {
             jumpImpulse = jumpForce;
             _anim.SetTrigger("Jump", true);
-            AudioManager.Instance.PlaySFX(AudioConstants.Jump);
+            AudioManager.Instance.PlaySFX3D(AudioConstants.Jump, transform.position);
         }
         
         

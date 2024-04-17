@@ -68,7 +68,7 @@ public class HandlePickup : NetworkBehaviour
             _pickupManager.addItem(ItemsAvailable[i], () =>
             {
                 RPC_UpdateAnim(true);
-                RPC_PlaySFX(AudioConstants.Pickup);
+                RPC_PlaySFX3D(AudioConstants.Pickup);
             });
             ItemsAvailable.RemoveAt(i);
         }
@@ -79,7 +79,7 @@ public class HandlePickup : NetworkBehaviour
         _pickupManager.RemoveLatestItem(false,() =>
         {
             RPC_UpdateAnim(false);
-            RPC_PlaySFX(AudioConstants.Drop);
+            RPC_PlaySFX3D(AudioConstants.Drop);
         });
     }
 
@@ -88,7 +88,7 @@ public class HandlePickup : NetworkBehaviour
         _pickupManager.RemoveLatestItem(true, () =>
         {
             RPC_UpdateAnim(false);
-            RPC_PlaySFX(AudioConstants.Throw);
+            RPC_PlaySFX3D(AudioConstants.Throw);
         });
     }
 
@@ -99,9 +99,9 @@ public class HandlePickup : NetworkBehaviour
     }
     
     [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
-    private void RPC_PlaySFX(string key)
+    private void RPC_PlaySFX3D(string key)
     {
-        AudioManager.Instance.PlaySFX(key);
+        AudioManager.Instance.PlaySFX3D(key, transform.position);
     }
     
     private void OnDrawGizmos()
