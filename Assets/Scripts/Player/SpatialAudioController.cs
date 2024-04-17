@@ -50,6 +50,8 @@ public class SpatialAudioController : MonoBehaviour
     {
         while (true)
         {
+            footStepSource.pitch = Random.Range(.9f, 1.1f);
+            footStepSource.volume = Random.Range(.9f, 1.1f);
             footStepSource.Play();
             yield return new WaitForSeconds(footStepDelay);
         }

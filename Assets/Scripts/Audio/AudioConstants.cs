@@ -10,6 +10,9 @@ namespace Audio
 
         //Ambiance
         public static string MainAtmos = "main_atmos"; //played externally
+        public static string ForestAtmos = "forest_atmos"; //played externally
+        public static string CrispAtmos = "crisp_atmos"; //played externally
+        public static string TranquilAtmos = "tranquil_atmos"; //played externally
 
         //SFX
         public static string Click = "click";
