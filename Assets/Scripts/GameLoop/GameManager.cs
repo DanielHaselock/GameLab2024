@@ -332,10 +332,7 @@ namespace GameLoop
                 UpdateGameState(GameState.Cutscene);
                 return;
             }
-            
-            AudioManager.Instance.PlayBackgroundMusic(LevelManager.BGMKey);
-            AudioManager.Instance.PlayAmbiance(LevelManager.AmbianceKey);
-            
+ 
             var defPos = new List<Vector3> { new Vector3(0, 2, 0), new Vector3(0, 4, 0) };
             var defRot = new List<Quaternion> { Quaternion.identity, Quaternion.identity };
             var spawnPositions = new List<Vector3>();
@@ -384,9 +381,17 @@ namespace GameLoop
             }
             InitialiseScores();
             RPC_InitialiseScoreOnClients();
+            RPC_PlayLevelAudio();
             gameStarted = true;
         }
 
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_PlayLevelAudio()
+        {
+            AudioManager.Instance.PlayBackgroundMusic(LevelManager.BGMKey);
+            AudioManager.Instance.PlayAmbiance(LevelManager.AmbianceKey);
+        }
+        
         private void InitialiseScores()
         {
             var list = new List<int>();
@@ -438,7 +443,6 @@ namespace GameLoop
             UpdateGameUI();
         }
 
-        
         
         //-----------------------------------------------------------
         // Boss Spawn
