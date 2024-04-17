@@ -38,7 +38,6 @@ public class GameUI : MonoBehaviour
     private List<TMP_Text> _allObjectivesTexts;
     private Dictionary<int, TMP_Text> _scoreTexts;
     private Dictionary<int, string> _nicknameMap;
-    private int _thisPlayerId;
 
     public Action OnCutsceneCompleted;
 
@@ -120,22 +119,12 @@ public class GameUI : MonoBehaviour
     {
         _nicknameMap = nameMap;
         _scoreTexts = new Dictionary<int, TMP_Text>();
-        var players = FindObjectsOfType<Player>().ToList();
-        _thisPlayerId = -1;
-
-        foreach (var player in players)
-        {
-            if (player.HasInputAuthority)
-            {
-                _thisPlayerId = player.PlayerId;
-                break;
-            }
-        }
+        var playerId = NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId;
 
         foreach (var kv in scoreMap)
         {
             TMP_Text text = null;
-            if (kv.Key == _thisPlayerId)
+            if (kv.Key == playerId)
             {
                 var go = Instantiate(scoreText, scoreTextParent);
                 go.SetActive(true);
@@ -172,7 +161,7 @@ public class GameUI : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         SetBossHealth(false, 0);
         roundOverUI.gameObject.SetActive(show);
-        upgradesImage.sprite = upgradeGiven == null? null : upgradeGiven.Ico;
+        upgradesImage.sprite = upgradeGiven == null ? null : upgradeGiven.Ico;
         roundOverUI.ShowEndScreen(true, timerBar.fillAmount);
     }
 
@@ -198,7 +187,8 @@ public class GameUI : MonoBehaviour
 
     public string GetCurrentPlayerScore()
     {
-        return _scoreTexts.GetValueOrDefault(_thisPlayerId).text;
+        Debug.Log(_scoreTexts);
+        return _scoreTexts.GetValueOrDefault(NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId).text;
     }
 
     public void SetBossHealth(bool show, float val)
