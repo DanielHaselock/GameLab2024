@@ -12,13 +12,22 @@ EditorBuildSettings:
     path: Assets/Scenes/LevelDesign/LD_4.unity
     guid: b1048700c24e9a749b9ae0a7d6890075
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/LD_3.unity
-    guid: fe017631a9bc3554c86e2594fc59eac3
+    path: Assets/Scenes/Final Levels/Level 1/Level 1 Easy.unity
+    guid: a361b11eed8ed8b4c8936b1f9bed80a5
   - enabled: 1
-    path: Assets/Scenes/TestSceneEnemies.unity
-    guid: c807a849df5908c40b4c64d48c3172b3
+    path: Assets/Scenes/Final Levels/Level 1/Level 1 Default.unity
+    guid: 061d33b5fc689194cacacd880ef2ca72
   - enabled: 1
-    path: Assets/Scenes/Level.unity
-    guid: b4054df6cd3822349b4521cc6a66f840
+    path: Assets/Scenes/Final Levels/Level 1/Level 1 Hard.unity
+    guid: bc1dabbc14d4a5349a092234e90999ea
+  - enabled: 1
+    path: Assets/Scenes/Final Levels/Level 2/Level 2 Easy.unity
+    guid: 52dad9141c21540459049ae8857bc06a
+  - enabled: 1
+    path: Assets/Scenes/Final Levels/Level 2/Level 2 Default.unity
+    guid: 83580aa44a1bf5b4c89ddc5b6c9f9b0b
+  - enabled: 1
+    path: Assets/Scenes/Final Levels/Level 2/Level 2 Hard.unity
+    guid: b380b41724fb4144d8e73cdffdc2fd53
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 91e88473eadac4bf9a6577a5ffcf0d2e, type: 2}
