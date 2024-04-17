@@ -692,6 +692,7 @@ namespace GameLoop
             var myId = NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId;
             _gameUI.ShowWinGameUI(true, false, LevelManager.RewardsMap.Rewards[myId]);
             RPC_SafeToReset();
+            ResetManager();
         }
 
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
@@ -748,7 +749,9 @@ namespace GameLoop
             if(Runner.IsServer)
                 return;
             _gameUI.ShowLostGameUI(true);
+            
             RPC_SafeToReset();
+            ResetManager();
         }
         
         //so main logic is as such, when an enemy dies,
