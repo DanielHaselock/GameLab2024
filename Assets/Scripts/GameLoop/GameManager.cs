@@ -299,10 +299,11 @@ namespace GameLoop
                 RPC_Pause(pause);
         }
 
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
         private void RPC_Pause(bool pause)
         {
-            DoPause(pause);
+            if(Runner.IsServer)
+                DoPause(pause);
         }
 
         private async void StartLevel()
@@ -314,6 +315,8 @@ namespace GameLoop
                 Debug.LogError("Cannot call StartLevel on client");
                 return;
             }
+            
+            ScoreManager.Clear();
             IsPausable = true;
             LevelManager.LoadLevel(_currentLevel);
             _gameUI.SetBossHealth(false, 0);
@@ -438,7 +441,8 @@ namespace GameLoop
                 objectivesGUIData = new Dictionary<string, Objective>();
             foreach (var kv in objectivesMap)
             {
-                objectivesGUIData.Add(kv.Key, new Objective(kv.Value.Data));
+                if(!objectivesGUIData.ContainsKey(kv.Key))
+                    objectivesGUIData.Add(kv.Key, new Objective(kv.Value.Data));
             }
             UpdateGameUI();
         }

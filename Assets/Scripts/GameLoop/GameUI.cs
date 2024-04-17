@@ -152,7 +152,7 @@ public class GameUI : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         SetBossHealth(false, 0);
         roundOverUI.gameObject.SetActive(show);
-        roundOverUI.ShowEndScreen(false, timerBar.fillAmount);
+        roundOverUI.ShowEndScreen(false, timerBar.fillAmount, false);
     }
 
     public void ShowWinGameUI(bool show, bool showNextButton, RewardData upgradeGiven=null)
@@ -162,7 +162,8 @@ public class GameUI : MonoBehaviour
         SetBossHealth(false, 0);
         roundOverUI.gameObject.SetActive(show);
         upgradesImage.sprite = upgradeGiven == null ? null : upgradeGiven.Ico;
-        roundOverUI.ShowEndScreen(true, timerBar.fillAmount);
+        roundOverUI.ShowEndScreen(true, timerBar.fillAmount,showNextButton);
+        
     }
 
     public void PlayCutscene()

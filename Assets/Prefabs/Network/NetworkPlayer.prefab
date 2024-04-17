@@ -13059,6 +13059,10 @@ PrefabInstance:
       value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 6299918261684928984, guid: c342c6952a482c2449c59e6be8198c86, type: 3}
+      propertyPath: tempInvulnerabilityDur
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6299918261684928984, guid: c342c6952a482c2449c59e6be8198c86, type: 3}
       propertyPath: allowTempInvulnerability
       value: 1
       objectReference: {fileID: 0}

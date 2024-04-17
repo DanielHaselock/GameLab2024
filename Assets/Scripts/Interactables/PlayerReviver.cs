@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Audio;
 using Fusion;
 using UnityEngine;
 using UnityEngine.UI;
@@ -91,12 +92,18 @@ namespace Interactables
             anim.Animator.SetBool("Downed", downed);
         }
         
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void RPC_PlayRevivedSFX()
+        {
+            AudioManager.Instance.PlaySFX("revived");
+        }
+        
         private void OnReviveStarted()
         {
             ReviveTimeLeft = timeToRevive;
             Reviving = true;
 
-            if (!Runner.IsServer)
+            if (Runner.IsServer)
                 RPC_PlaySFX(true);
         }
         
@@ -109,6 +116,7 @@ namespace Interactables
             {
                 _myHealthComp.SetHealth(_myHealthComp.MaxHealth);
                 RPC_UpdateAnim(false);
+                RPC_PlayRevivedSFX();
                 OnReviveCancelled();
             }
         }
@@ -117,7 +125,7 @@ namespace Interactables
         {
             Reviving = false;
             ReviveTimeLeft = -1;
-            if (!Runner.IsServer)
+            if (Runner.IsServer)
                 RPC_PlaySFX(false);
         }
         

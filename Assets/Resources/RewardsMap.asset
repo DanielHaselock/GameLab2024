@@ -17,15 +17,15 @@ MonoBehaviour:
     WeaponIndex: 0
     MinScoreNeeded: 0
     Ico: {fileID: 0}
-  - Name: Fork
-    WeaponIndex: 1
-    MinScoreNeeded: 15
-    Ico: {fileID: 21300000, guid: 4f460e49bea04a741b6f46e204f243de, type: 3}
   - Name: Rolling Pin
     WeaponIndex: 2
     MinScoreNeeded: 30
-    Ico: {fileID: 21300000, guid: 28d4312e82f7bfc46bee5cfb8a276c87, type: 3}
+    Ico: {fileID: 21300000, guid: 4f460e49bea04a741b6f46e204f243de, type: 3}
   - Name: Spatula
     WeaponIndex: 3
     MinScoreNeeded: 50
+    Ico: {fileID: 21300000, guid: 28d4312e82f7bfc46bee5cfb8a276c87, type: 3}
+  - Name: Fork
+    WeaponIndex: 1
+    MinScoreNeeded: 70
     Ico: {fileID: 21300000, guid: 1c34b5a37558bb6488e1255d0fc5f0a3, type: 3}

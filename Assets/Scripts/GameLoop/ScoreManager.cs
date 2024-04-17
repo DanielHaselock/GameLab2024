@@ -22,5 +22,11 @@ namespace GameLoop
                 Score[id] += score;
             }
         }
+
+        public static void Clear()
+        {
+            if(Score!=null)
+                Score.Clear();
+        }
     }
 }

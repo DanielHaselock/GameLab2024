@@ -27,16 +27,21 @@ namespace GameLoop
         public static void Calculate(Dictionary<int, int> scores, RewardsMap rewardsMap)
         {
             var decSortRewards = rewardsMap.Rewards.OrderByDescending((a) => a.MinScoreNeeded);
-            var def = rewardsMap.Rewards.OrderBy((a) => a.MinScoreNeeded).ToArray()[0];
+            var def = rewardsMap.Rewards.OrderBy((a) => a.MinScoreNeeded).ToArray()[1];
             foreach (var kv in scores)
             {
                 if (!UpgradesMap.ContainsKey(kv.Key))
                     UpgradesMap.Add(kv.Key, def);
+                else
+                {
+                    UpgradesMap[kv.Key] = def;
+                }
+                
                 foreach (var reward in decSortRewards)
                 {
                     if (kv.Value >= reward.MinScoreNeeded)
                     {
-                        UpgradesMap[kv.Key] = reward; 
+                        UpgradesMap[kv.Key] = reward;
                         break;
                     }
                 }

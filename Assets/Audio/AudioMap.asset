@@ -45,7 +45,9 @@ MonoBehaviour:
       - {fileID: 8300000, guid: 28789c2a2861bf047bbb70a800012eec, type: 3}
     - Key: help
       Value:
-      - {fileID: 8300000, guid: 71119fcc6654247b585303b1ad23a1ce, type: 3}
+      - {fileID: 8300000, guid: 2b72f21ba8d70f84982c8881d5f398a9, type: 3}
+      - {fileID: 8300000, guid: 53abd407315c6df41adddab2e2427371, type: 3}
+      - {fileID: 8300000, guid: 7a0558bcf721241488523de91e448f53, type: 3}
     - Key: hit
       Value:
       - {fileID: 8300000, guid: a72ee8e1f09986c439fbe68da40ae48f, type: 3}
@@ -135,3 +137,7 @@ MonoBehaviour:
     - Key: enemy_alert
       Value:
       - {fileID: 8300000, guid: 08b15936424961e4da3217285c7ce0d9, type: 3}
+    - Key: revived
+      Value:
+      - {fileID: 8300000, guid: 6e23a44a29d5be2448e0597d5d0a372d, type: 3}
+      - {fileID: 8300000, guid: 814e5060ba68a964483170551729773d, type: 3}

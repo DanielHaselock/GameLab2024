@@ -40,11 +40,13 @@ public class RoundOverUI : MonoBehaviour
         OnNextLevelClicked -= action;
     }
 
-    public void ShowEndScreen(bool win, float timeLeftFillAmount)
+    public void ShowEndScreen(bool win, float timeLeftFillAmount, bool showNext)
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
+        winNextLevelBttn.gameObject.SetActive(showNext);
+        
         winUI.SetActive(win);
         loseUI.SetActive(!win);
         timeLeftBar.fillAmount = timeLeftFillAmount;
