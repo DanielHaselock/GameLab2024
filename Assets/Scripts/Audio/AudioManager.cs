@@ -45,7 +45,7 @@ namespace Audio
         private AudioMixerGroup _sfxMixerGroup;
         private AudioMixerGroup _sfxSpatialMixerGroup;
 
-        private HashSet<string> _sfxMemory;
+        //private HashSet<string> _sfxMemory;
 
         private bool muted = false;
 
@@ -69,7 +69,7 @@ namespace Audio
 
         private void Start()
         {
-            _sfxMemory = new HashSet<string>();
+            //_sfxMemory = new HashSet<string>();
             
             if(NetworkManager.Instance != null)
                 NetworkManager.Instance.RegisterToGeneralNetworkEvents("PlaySFX", OnNetworkSFXPlayRequested);
@@ -149,7 +149,7 @@ namespace Audio
             {
                 if (NetworkManager.Instance == null)
                 {
-                    PlaySFXLocal(sfxName, random);
+                    PlaySFXLocal3D(sfxName, random, position);
                     return;
                 }
                 
@@ -161,7 +161,7 @@ namespace Audio
             }
             else
             {
-                PlaySFXLocal(sfxName, random);
+                PlaySFXLocal3D(sfxName, random, position);
             }
         }
         
@@ -193,7 +193,7 @@ namespace Audio
             sfx.transform.parent = transform;
             sfx.outputAudioMixerGroup = _sfxMixerGroup;
             sfx.PlayOneShot(clip);
-            StartCoroutine(RemoveKeyDelayed(sfxName, 0.25f));
+            //StartCoroutine(RemoveKeyDelayed(sfxName, 0.25f));
             Destroy(sfx.gameObject, clip.length);
         }
         
@@ -209,22 +209,21 @@ namespace Audio
                 return;
             var sfx = new GameObject($"SFX_{clip.name}").AddComponent<AudioSource>();
             sfx.transform.position = position;
-            sfx.maxDistance = 4;
-            sfx.minDistance = 2;
+            sfx.maxDistance = 10;
+            sfx.minDistance = 1;
             sfx.spatialBlend = 1;
-            sfx.spatialize = true;
             sfx.transform.parent = transform;
             sfx.outputAudioMixerGroup = _sfxSpatialMixerGroup;
             sfx.PlayOneShot(clip);
-            StartCoroutine(RemoveKeyDelayed(sfxName, 0.25f));
+            //StartCoroutine(RemoveKeyDelayed(sfxName, 0.25f));
             Destroy(sfx.gameObject, clip.length);
         }
 
-        IEnumerator RemoveKeyDelayed(string key, float delay)
+        /*IEnumerator RemoveKeyDelayed(string key, float delay)
         {
             yield return new WaitForSeconds(delay);
-            _sfxMemory.Remove(key);
-        }
+            //_sfxMemory.Remove(key);
+        }*/
 
         public void MuteBGAndAmbiance(bool mute)
         {

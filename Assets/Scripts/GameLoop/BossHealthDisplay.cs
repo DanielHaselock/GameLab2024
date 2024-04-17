@@ -5,14 +5,15 @@ using UnityEngine;
 
 namespace GameLoop
 {
-    public class BossHealthDisplay : NetworkBehaviour
+    public class BossHealthDisplay : MonoBehaviour
     {
         [SerializeField] private HealthComponent _healthComponent;
 
         private GameUI _gameUI;
         private float _current;
         private bool _isDead;
-        private IEnumerator Instantiate()
+
+        private IEnumerator Start()
         {
             yield return new WaitForSeconds(1.5f);
             yield return new WaitUntil(() => _healthComponent.IsInitialised);
@@ -20,41 +21,38 @@ namespace GameLoop
             _current = _healthComponent.Health;
         }
 
-        public override void Spawned()
+        private void Update()
         {
-            StartCoroutine(Instantiate());
-        }
-
-        public override void FixedUpdateNetwork()
-        {
-            base.FixedUpdateNetwork();
-
             if (_healthComponent != null && _gameUI != null)
             {
-                RPC_UpdateHealth(true, _healthComponent.Health / _healthComponent.MaxHealth);
+                UpdateHealth(true, _healthComponent.Health / _healthComponent.MaxHealth);
             }
 
             if (_current > _healthComponent.Health)
             {
                 _current = _healthComponent.Health;
-                _gameUI.ShakeBossHealthBar();
-                if(_isDead)
+                ShakeBar();
+                if (_isDead)
                     return;
                 _isDead = true;
                 StartCoroutine(Hide());
             }
         }
-
-        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-        private void RPC_UpdateHealth(bool show, float val)
+        
+        private void UpdateHealth(bool show, float val)
         {
-            _gameUI.SetBossHealth(false, 0);
+            _gameUI.SetBossHealth(show, val);
+        }
+        
+        private void ShakeBar()
+        {
+            _gameUI.ShakeBossHealthBar();
         }
 
         IEnumerator Hide()
         {
             yield return new WaitForSeconds(0.25f);
-            _gameUI.SetBossHealth(false, 0);
+            UpdateHealth(false, 0);
         }
     }
 }

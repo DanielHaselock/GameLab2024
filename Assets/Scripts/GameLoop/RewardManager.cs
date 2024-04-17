@@ -1,29 +1,56 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 namespace GameLoop
 {
-    public class RewardManager
+    public static class RewardManager
     {
-        public Dictionary<int, int> UpgradesMap { get; private set; }
+        public static Dictionary<int, RewardData> UpgradesMap { get; private set; } = new Dictionary<int, RewardData>();
+        
+        public static RewardData GetRewardDataForPlayer(int playerId)
+        {
+            if (!UpgradesMap.ContainsKey(playerId))
+                return null;
 
-        private RewardsMap _rewardsMap;
-        
-        public RewardManager()
-        {
-            UpgradesMap = new Dictionary<int, int>();
-        }
-        
-        public int GetRewardIndex(int playerId)
-        {
-            if(!UpgradesMap.ContainsKey(playerId))
-                UpgradesMap.Add(playerId, 0);
             return UpgradesMap[playerId];
         }
         
-        public void Calculate(Dictionary<int, int> scores, RewardsMap rewardsMap)
+        public static int GetRewardIndex(int playerId)
         {
-            Debug.Log("Calculate Goal");
+            if (!UpgradesMap.ContainsKey(playerId))
+                return 0;
+            return UpgradesMap[playerId].WeaponIndex;
+        }
+        
+        public static void Calculate(Dictionary<int, int> scores, RewardsMap rewardsMap)
+        {
+            var decSortRewards = rewardsMap.Rewards.OrderByDescending((a) => a.MinScoreNeeded);
+            var def = rewardsMap.Rewards.OrderBy((a) => a.MinScoreNeeded).ToArray()[1];
+            foreach (var kv in scores)
+            {
+                if (!UpgradesMap.ContainsKey(kv.Key))
+                    UpgradesMap.Add(kv.Key, def);
+                else
+                {
+                    UpgradesMap[kv.Key] = def;
+                }
+                
+                foreach (var reward in decSortRewards)
+                {
+                    if (kv.Value >= reward.MinScoreNeeded)
+                    {
+                        UpgradesMap[kv.Key] = reward;
+                        break;
+                    }
+                }
+            }
+        }
+
+        public static void Cleanup()
+        {
+            UpgradesMap.Clear();
         }
     }
 }
