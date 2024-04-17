@@ -26,7 +26,7 @@ public class EnemyHerring : Enemy
         base.Start();
         canAttack = true;
         //Go crazy        
-        animator.CrossFade("Idle", .25f);
+        SynchedCrossFade("Idle", .25f);
         healthComponent.OnDamaged += OnAttacked;
         healthComponent.OnHealthDepleted += KillMyself;
     }
@@ -78,7 +78,7 @@ public class EnemyHerring : Enemy
 
         if (!stunned)
         {
-            animator.CrossFade("Idle", .25f);
+            SynchedCrossFade("Idle", .25f);
         }
     }
     public override void ChangeTargeting()
