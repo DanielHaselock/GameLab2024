@@ -302,7 +302,8 @@ public class BossBurger : Enemy
         if (Runner.IsServer)
         {
             SynchedCrossFade("Die", .1f);
-            await Task.Delay(1500);          
+            await Task.Delay(1500);
+            GameManager.instance.UpdateScore(0, "boss");
             Runner.Despawn(GetComponent<NetworkObject>());
         }
     }
