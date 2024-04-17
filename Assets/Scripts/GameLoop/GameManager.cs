@@ -38,8 +38,8 @@ namespace GameLoop
         private Dictionary<string, Objective> objectivesGUIData;
         private int _currentLevel = 1;
         private TimeSpan _timeLeft;
-        private GameUI _gameUI;
-        private NetworkTimer _timer;
+        public GameUI _gameUI;
+        public NetworkTimer _timer;
         private List<Player> _players;
         private List<NetworkObject> _enemies;
 
@@ -155,8 +155,8 @@ namespace GameLoop
         private void TimerTick(TimeSpan timeLeft)
         {
             this._timeLeft = timeLeft;
-            
-            if(timeLeft.TotalSeconds <= 10)
+            _gameUI.ShowGameTimer(true);
+            if (timeLeft.TotalSeconds <= 10)
                 AudioManager.Instance.PlaySFX(AudioConstants.Clock);
             
             _gameUI.UpdateTimerText(timeLeft);
@@ -374,8 +374,8 @@ namespace GameLoop
             RPC_LoadLevelObjectivesOnClient(levelPath);
             //start game timer
             NetworkLogger.Log("Starting timer");
-            _timer.StartTimer(TimeSpan.FromSeconds(LevelManager.LevelTime));
-            _gameUI.ShowGameTimer(true);
+            //_timer.StartTimer(TimeSpan.FromSeconds(LevelManager.LevelTime));
+            //_gameUI.ShowGameTimer(true);
             _players = FindObjectsOfType<Player>().ToList();
             foreach (var player in _players)
             {
