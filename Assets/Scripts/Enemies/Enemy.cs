@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Fusion;
 using Fusion.Addons.Physics;
-using Networking.Data;
 using UnityEngine.AI;
-using System.Linq;
+using Networking.Behaviours;
 
 [RequireComponent(typeof(NetworkRigidbody3D))]
 public class Enemy : NetworkBehaviour
@@ -62,7 +61,7 @@ public class Enemy : NetworkBehaviour
 
     private void ShowHealthBar()
     {
-        var player = FindObjectsOfType<Player>().First(p => p.HasInputAuthority);
+        var player = NetworkManager.Instance.GetLocalPlayer();
         var distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
         bool showHealthBar = distanceToPlayer <= 10.0f;

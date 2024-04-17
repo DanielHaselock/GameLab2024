@@ -667,7 +667,7 @@ namespace GameLoop
                 playerRewardMap.Set(player.PlayerId, reward == null ? 0 : LevelManager.RewardsMap.Rewards.IndexOf(reward));
             }
             var myId = NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId;
-            _gameUI.ShowWinGameUI(true, true, LevelManager.RewardsMap.Rewards[myId]);
+            _gameUI.ShowWinGameUI(true, true, RewardManager.UpgradesMap[myId]);
             RPC_ShowWinScreenOnClients();
             LevelManager.LevelComplete(true, _timeLeft);
             if(_players.Count < 2)

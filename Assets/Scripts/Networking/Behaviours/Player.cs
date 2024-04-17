@@ -306,7 +306,7 @@ public class Player : NetworkBehaviour
             }
             else
             {
-                _anim.SetTrigger("Attack", true);
+                        _anim.SetTrigger("Attack", true);
                 _anim.Animator.SetTrigger("Attack");
             }
             
