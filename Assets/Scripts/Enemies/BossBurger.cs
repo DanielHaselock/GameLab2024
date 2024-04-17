@@ -93,9 +93,9 @@ public class BossBurger : Enemy
                         else
                             StartCoroutine(WaitAndAttackLong());
                     }
-                    else if (Random.Range(1, 100) > 90)
+                    else if (Random.Range(1, 100) > 95)
                     {
-                        if (Random.Range(1, 100) > 50)
+                        if (Random.Range(1, 100) > 80)
                             StartCoroutine(SummoningRoar());
                         else
                             StartCoroutine(SummonWalls());
