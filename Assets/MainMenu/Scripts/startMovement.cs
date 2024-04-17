@@ -15,6 +15,7 @@ public class startMovement : MonoBehaviour
     returnMovement returnMove;
     public GameObject returnButton;
     public GameObject startGameButton;
+    public GameObject nameinput;
     public GameObject cam;
     public GameObject fade;
 
@@ -70,6 +71,7 @@ public class startMovement : MonoBehaviour
                     targetPoint = pointB;
                     returnButton.gameObject.SetActive(true);
                     startGameButton.SetActive(true);
+                    nameinput.SetActive(true);
                     fade.SetActive(false);
                     rotationSpeedCamera =1f;
                 }
