@@ -269,7 +269,7 @@ public class BossSouvlaki : Enemy
         {
             //GetComponent<Rigidbody>().velocity =- transform.right * 0.5f * Time.deltaTime;
             //GetComponent<Rigidbody>().velocity = Vector3.ClampMagnitude(GetComponent<Rigidbody>().velocity, 5);
-            GetComponent<Rigidbody>().AddForce(transform.right * -500.5f * Time.deltaTime, ForceMode.Impulse);
+            GetComponent<Rigidbody>().AddForce(transform.right * -100.5f * Time.deltaTime, ForceMode.Impulse);
             yield return null;
         }
 
