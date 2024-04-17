@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6274466031980251180}
   - component: {fileID: 6299918261684928984}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: HealthComponent
   m_TagString: Health
   m_Icon: {fileID: 0}
@@ -45,6 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 10
-  _Health: 0
   _CanDeplete: 1
   _HealthDepleted: 0
+  allowTempInvulnerability: 0
+  tempInvulnerabilityDur: 1
+  healfx: {fileID: 0}
+  hitSFXKey: 
+  deathSFXKey: 

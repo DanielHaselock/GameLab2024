@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3094383267314629863}
   - component: {fileID: 7211139797184118948}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: AttackComponent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 6680350239531692462}
   - component: {fileID: 4659312320146402520}
   - component: {fileID: 6220113864040413239}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: HealthComponent
   m_TagString: Health
   m_Icon: {fileID: 0}
@@ -229,7 +229,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 35
-  _Health: 0
   _CanDeplete: 1
   _HealthDepleted: 0
   allowTempInvulnerability: 0
