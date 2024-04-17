@@ -26,6 +26,12 @@ MonoBehaviour:
     _items:
     - Key: main_atmos
       Value: {fileID: 8300000, guid: 156e0ba89b1ad61449ae6d80753c4a7a, type: 3}
+    - Key: forest_atmos
+      Value: {fileID: 8300000, guid: 86c69501ab6ba2349b4c9cac1eb13e1a, type: 3}
+    - Key: crispy_atmos
+      Value: {fileID: 8300000, guid: 0133e6241c9bc334db596fb00a095551, type: 3}
+    - Key: tranquil_atmos
+      Value: {fileID: 8300000, guid: 2235e87b3e522e04d9027296cbfc2b70, type: 3}
   _sfxClips:
     _items:
     - Key: click
@@ -43,6 +49,8 @@ MonoBehaviour:
     - Key: jump
       Value:
       - {fileID: 8300000, guid: 28789c2a2861bf047bbb70a800012eec, type: 3}
+      - {fileID: 8300000, guid: 6c7392e215bbcc145b4f7e3ce93a9605, type: 3}
+      - {fileID: 8300000, guid: d85b7643a2102674c95b164768705189, type: 3}
     - Key: help
       Value:
       - {fileID: 8300000, guid: 2b72f21ba8d70f84982c8881d5f398a9, type: 3}
@@ -50,7 +58,9 @@ MonoBehaviour:
       - {fileID: 8300000, guid: 7a0558bcf721241488523de91e448f53, type: 3}
     - Key: hit
       Value:
-      - {fileID: 8300000, guid: a72ee8e1f09986c439fbe68da40ae48f, type: 3}
+      - {fileID: 8300000, guid: 6c6836190d7c1d64ea636b8ae923d8e5, type: 3}
+      - {fileID: 8300000, guid: 90fb634c96b03224380dbc66ee417118, type: 3}
+      - {fileID: 8300000, guid: a72b06c05f153674c8a3b1dd0fb7e177, type: 3}
     - Key: clock
       Value:
       - {fileID: 8300000, guid: 7d0c306f8fcba574d8207cde5022ddf4, type: 3}
