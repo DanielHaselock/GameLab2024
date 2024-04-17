@@ -79,6 +79,7 @@ namespace GameLoop
         
         public void ResetManager()
         {
+            Debug.Log(":::::::: Reseting Manager :::::::::::::");
             if(objectivesMap != null)
                 objectivesMap.Clear();
             
@@ -105,6 +106,7 @@ namespace GameLoop
                 _enemies.Clear();
             }
         }
+        
         private void Initialise()
         {
             IsPausable = true; //for testing
@@ -305,7 +307,7 @@ namespace GameLoop
             if(Runner.IsServer)
                 DoPause(pause);
         }
-
+        
         private async void StartLevel()
         {
             if (Runner == null)
@@ -367,13 +369,12 @@ namespace GameLoop
             objectivesMap = new Dictionary<string, Objective>();
             foreach (var objectiveData in LevelManager.Objectives)
             {
+                Debug.Log("Adding Objective " + objectiveData.key);
                 objectivesMap.Add(objectiveData.key, new Objective(objectiveData));
             }
             bossDefeated = false;
             InitialiseObjectiveTexts();
             RPC_LoadLevelObjectivesOnClient(levelPath);
-            //start game timer
-            NetworkLogger.Log("Starting timer");
             //_timer.StartTimer(TimeSpan.FromSeconds(LevelManager.LevelTime));
             //_gameUI.ShowGameTimer(true);
             _players = FindObjectsOfType<Player>().ToList();
@@ -391,6 +392,8 @@ namespace GameLoop
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void RPC_PlayLevelAudio()
         {
+            _gameUI.ShowWinGameUI(false, false, null);
+            _gameUI.ShowLostGameUI(false);
             AudioManager.Instance.PlayBackgroundMusic(LevelManager.BGMKey);
             AudioManager.Instance.PlayAmbiance(LevelManager.AmbianceKey);
         }
@@ -437,12 +440,10 @@ namespace GameLoop
 
         private void InitialiseObjectiveTexts()
         {
-            if (objectivesGUIData == null)
-                objectivesGUIData = new Dictionary<string, Objective>();
+            objectivesGUIData = new Dictionary<string, Objective>();
             foreach (var kv in objectivesMap)
             {
-                if(!objectivesGUIData.ContainsKey(kv.Key))
-                    objectivesGUIData.Add(kv.Key, new Objective(kv.Value.Data));
+                objectivesGUIData.Add(kv.Key, new Objective(kv.Value.Data));
             }
             UpdateGameUI();
         }
@@ -460,6 +461,7 @@ namespace GameLoop
             
             BossSpawning = true;
             _timer.StopTimer();
+            _gameUI.HideObjectives();
             RPC_ShowBossSpawnVisual();
             StartCoroutine(TeleportPlayerToArena());
         }
@@ -670,6 +672,7 @@ namespace GameLoop
         
         private void OnGameWon()
         {
+            LevelManager.LevelComplete(true, (float)_timeLeft.TotalSeconds);
             _timer.StopTimer();
             gameStarted = false;
             _gameUI.ShowGameTimer(false);
@@ -680,10 +683,11 @@ namespace GameLoop
                 playerRewardMap.Set(player.PlayerId, reward == null ? 0 : LevelManager.RewardsMap.Rewards.IndexOf(reward));
             }
             var myId = NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId;
-            _gameUI.ShowWinGameUI(true, true, RewardManager.GetRewardDataForPlayer(myId));
+            _gameUI.ShowWinGameUI(true, _currentLevel < maxLevels, RewardManager.GetRewardDataForPlayer(myId));
+            
             if (Runner.IsServer)
                 RPC_ShowWinScreenOnClients();
-            LevelManager.LevelComplete(true, _timeLeft);
+            
             if(_players.Count < 2)
                 ResetManager();
         }
@@ -694,17 +698,17 @@ namespace GameLoop
             AudioManager.Instance.PlayBackgroundMusic(AudioConstants.PostRound);
             if(Runner.IsServer)
                 return;
-
-            RewardManager.Calculate(ScoreManager.Score, LevelManager.RewardsMap);
+            
             var myId = NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId;
             _gameUI.ShowWinGameUI(true, false, RewardManager.GetRewardDataForPlayer(myId));
             RPC_SafeToReset();
             ResetManager();
         }
 
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
         private void RPC_SafeToReset()
         {
+            Debug.Log(">>>> Safe to Reset <<<<<");
             ResetManager();
         }
         
@@ -738,10 +742,10 @@ namespace GameLoop
         private void OnGameLost()
         {
             Debug.Log("Game Lost");
+            LevelManager.LevelComplete(true, (float)_timeLeft.TotalSeconds);
             _timer.StopTimer();
             gameStarted = false;
             _gameUI.ShowGameTimer(false);
-            LevelManager.LevelComplete(false, _timeLeft);
             RPC_ShowLoseScreenOnClients();
             _gameUI.ShowLostGameUI(true);
             

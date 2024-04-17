@@ -955,7 +955,7 @@ MonoBehaviour:
   materialHitEfectDelay: 0.15
   hitGameObjectFx: {fileID: 4021103657954561961, guid: 96357db8e466ef04e93f6df1eb63ba3d, type: 3}
   effectSpawnPosition: {fileID: 3195579266264590425}
-  hitSFX: 
+  hitSFX: hit
 --- !u!114 &7680099387822621415
 MonoBehaviour:
   m_ObjectHideFlags: 0

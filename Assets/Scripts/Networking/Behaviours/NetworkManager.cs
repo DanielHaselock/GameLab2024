@@ -449,6 +449,7 @@ namespace Networking.Behaviours
             }
 
             _connectedPlayers.Remove(player);
+            ResetGame();
             if (!runner.IsServer)
                 return;
             OnPlayerLeftOnServer(runner, player);
@@ -499,6 +500,7 @@ namespace Networking.Behaviours
 
         public void OnDisconnectedFromServer(Fusion.NetworkRunner runner, NetDisconnectReason reason)
         {
+            ResetGame();
         }
 
         public void OnConnectRequest(Fusion.NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request,

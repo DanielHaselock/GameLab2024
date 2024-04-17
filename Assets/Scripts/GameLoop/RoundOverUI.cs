@@ -50,7 +50,9 @@ public class RoundOverUI : MonoBehaviour
         winUI.SetActive(win);
         loseUI.SetActive(!win);
         timeLeftBar.fillAmount = timeLeftFillAmount;
-        scoreText.text = gameUI.GetCurrentPlayerScore();
+        
+        if(win)
+            scoreText.text = gameUI.GetCurrentPlayerScore();
 
         if (win)
         {

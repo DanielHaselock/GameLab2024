@@ -85,22 +85,20 @@ public static class LevelManager
         Objectives = new List<ObjectiveData>(lvlData.Objectives.objectives);
     }
     
-    public static void LevelComplete(bool win, TimeSpan timeLeft)
+    public static void LevelComplete(bool win, float timeLeft)
     {
-        _data = null;
-        ScoreMap.Clear();
-        Objectives.Clear();
-        
         // if lost or remaining time is about 10 sec
-        if (!win || (win && timeLeft.TotalSeconds <= 10))
+        if (!win || (win && timeLeft <= 15))
         {
+            Debug.Log("We have decicided Easy!");
             difficulty = LevelDifficulty.Easy;
             return;
         }
         
         // more than 2 minutes make it hard
-        if (timeLeft.TotalSeconds >= 120)
+        if (timeLeft >= 120)
         {
+            Debug.Log("We have decicided Hard!");
             difficulty = LevelDifficulty.Hard;
             return;
         }
