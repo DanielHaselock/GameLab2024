@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BGM: later_level
   Ambiance: 
-  Objectives: {fileID: 11400000, guid: 8aed840f8d8d04e618051f1548391c8f, type: 2}
+  Objectives: {fileID: 11400000, guid: 894a93d066a106b4cb2b5d999f1ba1e4, type: 2}
   ScoringMap: {fileID: 11400000, guid: 72380e7950345024986ebf915325694d, type: 2}
   BossToSpawn:
     RawGuidValue: 2c9fd5401e030074689393afd3d2c9ce

@@ -18,3 +18,17 @@ MonoBehaviour:
       Value: 10
     - Key: bellpepper
       Value: 15
+    - Key: feta
+      Value: 20
+    - Key: bread
+      Value: 25
+    - Key: lettuce
+      Value: 10
+    - Key: mustard
+      Value: 30
+    - Key: tomato
+      Value: 10
+    - Key: herring
+      Value: 5
+    - Key: hotdog
+      Value: 25

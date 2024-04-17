@@ -16,7 +16,7 @@ MonoBehaviour:
   - Name: Pan
     WeaponIndex: 0
     MinScoreNeeded: 0
-    Ico: {fileID: 0}
+    Ico: {fileID: 21300000, guid: d79c2eb152edb6f47b8ab1ea52dd1eaf, type: 3}
   - Name: Rolling Pin
     WeaponIndex: 2
     MinScoreNeeded: 30
