@@ -680,8 +680,9 @@ namespace GameLoop
                 playerRewardMap.Set(player.PlayerId, reward == null ? 0 : LevelManager.RewardsMap.Rewards.IndexOf(reward));
             }
             var myId = NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId;
-            _gameUI.ShowWinGameUI(true, true, RewardManager.UpgradesMap[myId]);
-            RPC_ShowWinScreenOnClients();
+            _gameUI.ShowWinGameUI(true, true, RewardManager.GetRewardDataForPlayer(myId));
+            if (Runner.IsServer)
+                RPC_ShowWinScreenOnClients();
             LevelManager.LevelComplete(true, _timeLeft);
             if(_players.Count < 2)
                 ResetManager();
@@ -693,8 +694,10 @@ namespace GameLoop
             AudioManager.Instance.PlayBackgroundMusic(AudioConstants.PostRound);
             if(Runner.IsServer)
                 return;
+
+            RewardManager.Calculate(ScoreManager.Score, LevelManager.RewardsMap);
             var myId = NetworkManager.Instance.GetLocalPlayer().InputAuthority.PlayerId;
-            _gameUI.ShowWinGameUI(true, false, LevelManager.RewardsMap.Rewards[myId]);
+            _gameUI.ShowWinGameUI(true, false, RewardManager.GetRewardDataForPlayer(myId));
             RPC_SafeToReset();
             ResetManager();
         }
