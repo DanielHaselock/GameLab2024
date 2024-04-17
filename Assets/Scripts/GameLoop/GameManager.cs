@@ -461,6 +461,7 @@ namespace GameLoop
             
             BossSpawning = true;
             _timer.StopTimer();
+            _gameUI.HideObjectives();
             RPC_ShowBossSpawnVisual();
             StartCoroutine(TeleportPlayerToArena());
         }

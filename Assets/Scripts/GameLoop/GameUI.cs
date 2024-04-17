@@ -70,7 +70,6 @@ public class GameUI : MonoBehaviour
         }
 
         _scoreTexts.Clear();
-        
         _allObjectivesTexts.Clear();
         objectivesParent.gameObject.SetActive(false);
     }
