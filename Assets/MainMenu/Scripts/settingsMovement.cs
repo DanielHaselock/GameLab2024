@@ -8,6 +8,7 @@ public class settingsMovement : MonoBehaviour
     public GameObject cam;
     private Transform targetPoint;
     public GameObject settingsLeaveButton;
+    public GameObject settingsMenu;
     public GameObject fade;
     void Start()
     {
@@ -32,6 +33,7 @@ public class settingsMovement : MonoBehaviour
             {
                 settingsClicked = false;
                 settingsLeaveButton.gameObject.SetActive(true);
+                settingsMenu.SetActive(true);
                 fade.SetActive(false);
             }
         }
